@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+</head>
+
+<body>
+    <form method="POST" action="">
+        {% csrf_token %}
+        <h3>Регистрация пользователя</h3>
+
+        <div class="form-field">
+            {{form.username.errors}}
+            {{form.username}}
+        </div>
+        <div class="form-field">
+            {{form.password1.errors}}
+            {{form.password1}}
+        </div>
+        <div class="form-field">
+            {{form.password2.errors}}
+            {{form.password2}}
+        </div>
+        
+        <div class="form-field">
+            {{profile_form.fullname}}
+        </div>
+        <div class="form-field">
+            {{profile_form.email}}
+        </div>
+        <div class="form-field">
+            {{profile_form.mobile_phone}}
+        </div>
+        <div class="form-field">
+            {{profile_form.gender}}
+        </div>
+        <div class="form-field">
+            {{profile_form.age}}
+        </div>
+        <div class="form-field">
+            {{profile_form.category}}
+        </div>
+        <div class="form-field">
+            {{profile_form.rating}}
+        </div>
+        <div class="form-field">
+            {{profile_form.role}}
+        </div>
+        
+
+        <hr>
+        <input id="form-button" class="" type="submit" value="Create Profile">
+        <br>
+        {{form.non_field_errors}}
+        <p>Есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+    </form>
+</body>
+
+</html>

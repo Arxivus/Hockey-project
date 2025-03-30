@@ -64,8 +64,12 @@ WSGI_APPLICATION = 'webProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Spartakovez',
+        'USER': 'postgres',
+        'PASSWORD': 'postgreArxivus',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -110,3 +114,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'home'

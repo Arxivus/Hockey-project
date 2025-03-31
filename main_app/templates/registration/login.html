@@ -3,4 +3,6 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Войти</button>
+    |
+    <a href="{% url 'home' %}">Войти как гость</a>
 </form>

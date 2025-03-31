@@ -1,0 +1,28 @@
+{% extends 'pattern.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
+{% endblock %}
+
+{% block title %}
+    <title>Личный кабинет</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <section class="user-profile">
+            <div class="user-info">
+                <img src="{% static 'images/user-avatar.jpg' %}">
+                <h3>{{ profile.fullname }}</h3>
+                <p><b>{{ profile.role }}</b></p>
+                <p>Email адрес: {{ profile.email }}</p>
+                <p>Телефон: {{ profile.mobile_phone }}</p>
+                <p>Пол: {{ profile.gender }}</p>
+                <p>Возраст: {{ profile.age }}</p>
+                <p>Спортивный разряд: {{ profile.category }}</p>
+                <p>Рейтинг игрока: {{ profile.rating }}</p>
+            </div>
+        </section>
+    </div>
+{% endblock %}

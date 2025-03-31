@@ -10,9 +10,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/header-footer.css' %}">
     {% block link %}{% endblock %}
-    <title>
-        {% block title %}{% endblock %}
-    </title>
+    {% block title %}{% endblock %}
 </head>
 
 <body>
@@ -30,6 +28,9 @@
                     <li>
                         <a href="{% url 'about_us' %}" class="menu-item">О нас</a>
                     <li>
+                    <li>
+                        <a href="{% url 'user' %}">Личный кабинет</a>
+                    </li>
                 </ul>
                 <div class="user">
                     {% if user.is_authenticated %}

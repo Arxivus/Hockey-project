@@ -1,18 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{% block title %}My Site{% endblock %}</title>
-</head>
-<body>
-    <header>
-        {% if user.is_authenticated %}
-            <p>Добро пожаловать, {{ user.username }}! <a href="{% url 'logout' %}">Выйти</a></p>
-        {% else %}
-            <p><a href="{% url 'login' %}">Войти</a> | <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-        {% endif %}
-    </header>
+{% extends 'pattern.html' %}
+{% load static %}
 
-    {% block content %}
-    {% endblock %}
-</body>
-</html>
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/home-style.css' %}">
+{% endblock %}
+
+{% block title %}
+Объявления
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section class="text-content">
+        <h2>Главные события предстоящей недели:</h2>
+        <img class="announcement-img" src="{% static 'images/hockey.jpg' %}" alt="Изображение команды хоккеистов">
+        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Totam veritatis quas, quos voluptate ab vel
+            assumenda aperiam numquam natus reiciendis voluptatum, odit facere amet iusto eos! Cum adipisci vero
+            non?Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae cupiditate numquam odio? Quos dicta
+            voluptate molestias voluptates sit, nesciunt, ratione ipsam possimus quod, ipsum excepturi hic in itaque ut
+            dolore?Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora saepe natus ut labore, dignissimos
+            quibusdam sapiente maxime facere. Earum adipisci ut nobis, dolorem doloribus voluptatem inventore at harum
+            possimus hic.
+        </p>
+    </section>
+</div>
+{% endblock %}

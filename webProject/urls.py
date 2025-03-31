@@ -3,7 +3,9 @@ from django.urls import path, include
 from main_app import views 
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home_page, name='home'),
+    path('tournaments/', views.tournaments_page, name='tournaments'),
+    path('about_us/', views.about_us_page, name='about_us'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', views.login_view, name='login'),

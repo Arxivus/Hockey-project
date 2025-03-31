@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -14,45 +14,54 @@
 
         <div class="form-field">
             {{form.username.errors}}
+            {{form.username.label_tag}}
             {{form.username}}
         </div>
         <div class="form-field">
             {{form.password1.errors}}
+            {{form.password1.label_tag}}
             {{form.password1}}
         </div>
         <div class="form-field">
             {{form.password2.errors}}
+            {{form.password2.label_tag}}
             {{form.password2}}
         </div>
         
         <div class="form-field">
+            {{profile_form.fullname.label_tag}}
             {{profile_form.fullname}}
         </div>
         <div class="form-field">
+            {{profile_form.email.label_tag}}
             {{profile_form.email}}
         </div>
         <div class="form-field">
+            {{profile_form.mobile_phone.label_tag}}
             {{profile_form.mobile_phone}}
         </div>
         <div class="form-field">
+            {{profile_form.gender.label_tag}}
             {{profile_form.gender}}
         </div>
         <div class="form-field">
+            {{profile_form.age.label_tag}}
             {{profile_form.age}}
         </div>
         <div class="form-field">
+            {{profile_form.category.label_tag}}
             {{profile_form.category}}
         </div>
         <div class="form-field">
+            {{profile_form.rating.label_tag}}
             {{profile_form.rating}}
         </div>
         <div class="form-field">
+            {{profile_form.role.label_tag}}
             {{profile_form.role}}
         </div>
-        
-
-        <hr>
-        <input id="form-button" class="" type="submit" value="Create Profile">
+        <br>
+        <input id="form-button" class="" type="submit" value="Создать профиль">
         <br>
         {{form.non_field_errors}}
         <p>Есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>

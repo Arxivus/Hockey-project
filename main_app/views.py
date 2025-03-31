@@ -4,8 +4,14 @@ from django.contrib import messages
 from .models import Profile
 from .forms import createUserForm, profileForm, loginForm
 
-def home(request):
+def home_page(request):
     return render(request, 'home.html')
+
+def tournaments_page(request):
+    return render(request, 'tournaments.html')
+
+def about_us_page(request):
+    return render(request, 'about_us.html')
 
 def login_view(request):
     if request.method == 'POST':

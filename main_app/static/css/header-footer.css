@@ -1,0 +1,51 @@
+@media (min-width: 1200px) {
+    .container {
+      max-width: 900px;
+    }
+}
+
+.logo {
+    max-height: 40px;
+}
+
+.user {
+    display: flex;
+    gap: 10px;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+
+ul {
+    list-style-type: none; 
+    margin: 0;
+    padding: 0;
+}
+
+.menu-list {
+    display: flex;
+    gap: 15px;
+}
+
+header {
+    background-color: lightgray;
+    padding: 20px 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+footer {
+    color: #fff;
+    background-color: black;
+    padding: 20px 0;
+}
+
+section {
+    margin-bottom: 50px;
+}

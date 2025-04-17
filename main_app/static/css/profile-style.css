@@ -1,5 +1,5 @@
 img {
-    max-width: 100px;
+    
 }
 
 p, h3 {
@@ -13,10 +13,35 @@ p, h3 {
     padding: 50px 0;
 }
 
+.user-fullname {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.user-fullname p {
+    font-size: 25px;
+}
+
+.user-card {
+    display: flex;
+    padding: 66px;
+    gap: 100px;
+    background-color: #BCDEED;
+}
+
 .user-info {
     display: flex;
     flex-direction: column;
-    padding: 30px;
-    border: 2px solid gray;
-    border-radius: 16px;
+    padding: 40px;
+    background-color: #fff;
+}
+
+.user-role {
+    padding: 8px 90px;
+    color: #fff;
+    background-color:#C23636;
+    border-radius: 40px;
+    margin-bottom: 40px;
 }

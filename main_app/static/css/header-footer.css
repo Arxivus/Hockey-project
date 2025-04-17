@@ -1,15 +1,16 @@
 @media (min-width: 1200px) {
     .container {
-      max-width: 900px;
+      max-width: 1100px;
     }
 }
 
-.logo {
-    max-height: 40px;
+.logo, .user-icon {
+    max-height: 45px;
 }
 
 .user {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
@@ -40,15 +41,31 @@ ul {
     gap: 15px;
 }
 
+.menu-item, .user-link {
+    padding: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.menu-item:hover, .user-link:hover {
+    color: #C23636;
+    transition: color 0.2s ease-in-out;
+}
+
 header {
-    background-color: lightgray;
+    background-color: #000;
     padding: 20px 0;
+    margin-bottom: 50px;
 }
 
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header-content a, .header-content p {
+    font-size: 18px;
 }
 
 footer {

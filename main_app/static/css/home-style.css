@@ -3,9 +3,25 @@
     flex-direction: column;
 }
 
-.announcement-img {
+/* .announcement-img { 
     display: block;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 16px;
+} */
+
+.line {
+    height: 1px;
+    background-color: #f00;
+    margin-bottom: 20px;
+}
+
+.announsments-title {
+    padding-left: 50px;
+    margin-bottom: 10px;
+}
+
+.announsment {
+    background-color: #BCDEED;
+    padding: 10px 15px;
 }

@@ -20,24 +20,25 @@
                 <img class="logo" src="{% static 'images/logo.png' %}" alt="Логотип">
                 <ul class="menu-list">
                     <li>
-                        <a href="{% url 'home' %}" class="menu-item">Объявления</a>
+                        <a href="{% url 'home' %}" class="menu-item">Главная</a>
                     <li>
                     <li>
-                        <a href="{% url 'tournaments' %}" class="menu-item">Расписание</a>
+                        <a href="{% url 'tournaments' %}" class="menu-item">Турниры</a>
                     <li>
                     <li>
-                        <a href="{% url 'about_us' %}" class="menu-item">О нас</a>
+                        <a href="{% url 'about_us' %}" class="menu-item">Рейтинг</a>
                     <li>
-                    <li>
-                        <a href="{% url 'user' %}">Личный кабинет</a>
-                    </li>
                 </ul>
                 <div class="user">
                     {% if user.is_authenticated %}
-                        <p>{{ user.username }} <a href="{% url 'logout' %}">Выйти</a></p>
+                        <img class="user-icon" src="{% static 'images/user-icon.png' %}" alt="Иконка пользователя">
+                        <a href="{% url 'user' %}" class="user-link">{{ user.username }}</a>
+                        <p class="menu-item">|</p>
+                        <a href="{% url 'logout' %}" class="user-link">Выйти</a>
                     {% else %}
-                        <a href="{% url 'login' %}">Войти</a>
-                        <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+                        <a href="{% url 'login' %}" class="user-link">Войти</a>
+                        <p class="menu-item">|</p>
+                        <a href="{% url 'register' %}" class="user-link">Зарегистрироваться</a>
                     {% endif %}
                 </div>
             </div>

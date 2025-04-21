@@ -29,5 +29,5 @@ class profileForm(forms.ModelForm):
         }
 
 class loginForm(forms.Form):
-    username = forms.CharField(max_length=100)
-    password = forms.CharField(max_length=100)
+    username = forms.CharField(label='Логин', max_length=100)
+    password = forms.CharField(label='Пароль', max_length=100)

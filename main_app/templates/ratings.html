@@ -1,0 +1,32 @@
+{% extends 'pattern.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
+<link rel="stylesheet" href="{% static 'css/ratings-style.css' %}"> 
+{% endblock %}
+
+{% block title %}
+<title>Рейтинг</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Таблицы рейтингов</h1>
+        <section class="ratings_block">
+            <table class="competitors-rate-table">
+                <tr>
+                    <th>Участник</th>
+                    <th>Текущий рейтинг</th>
+                </tr>
+                {% for competitor in competitors %}
+                    <tr>
+                        <td>{{ competitor.fullname }}</td>
+                        <td>{{ competitor.rating }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+h1 {
+    margin-bottom: 50px;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid #000;
+    width: 700px;
+}
+
+th,
+td {
+  border: 2px solid #000;
+  padding: 8px 16px;
+}

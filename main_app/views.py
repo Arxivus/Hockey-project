@@ -11,8 +11,9 @@ def home_page(request):
 def tournaments_page(request):
     return render(request, 'tournaments.html')
 
-def about_us_page(request):
-    return render(request, 'about_us.html')
+def ratings_page(request):
+    competitors = Profile.objects.all().order_by('-rating')
+    return render(request, 'ratings.html', { 'competitors' : competitors })
 
 def login_view(request):
     if request.method == 'POST':
@@ -55,3 +56,10 @@ def register_view(request):
 def user_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'user_profile.html', { 'profile': profile })
+
+
+def get_competitors(request):
+    if request.metod == 'POST':
+        competitors = Profile.objects.all()
+        return render(request, 'ratings.html', { 'competitors' : competitors })
+            

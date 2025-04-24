@@ -14,3 +14,21 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.fullname
+
+
+TEAM_ROLE = (
+    ('forward','нападающий'),
+    ('defender', 'защитник'),
+    ('goalkeeper','вратарь')
+)
+
+class TestBalancer(models.Model):
+    name = models.CharField(max_length=50)
+    rating = models.IntegerField()
+    role = models.CharField(choices=TEAM_ROLE, default='forward')
+    age = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+

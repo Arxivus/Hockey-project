@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Profile
+from .models import Profile, TestBalancer
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .team_generator import generate_teams
 
 def home_page(request):
     return render(request, 'home.html')
@@ -62,4 +64,32 @@ def get_competitors(request):
     if request.metod == 'POST':
         competitors = Profile.objects.all()
         return render(request, 'ratings.html', { 'competitors' : competitors })
+
+
+
+def generate_teams_view(request):
+    if request.method == 'GET':
+        try:
+            players = TestBalancer.objects.all().values()
+            pl_list = list(players)
+            teams = generate_teams(pl_list)
             
+            teams_data = []
+            for team in teams:
+                teams_data.append({
+                    'total_rating': team['total_rating'],
+                    'goalkeeper': {'name': team['goalkeeper']['name'], 'rate': team['goalkeeper']['rating']},
+                    'defenders': [{'name': d['name'], 'rate': d['rating']} for d in team['defenders']],
+                    'forwards': [{'name': f['name'], 'rate': f['rating']} for f in team['forwards']]
+                })
+            
+            return JsonResponse({
+                'status': 'success',
+                'teams': teams_data
+            }) #list(players)
+        
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)

@@ -1,0 +1,42 @@
+.tournament-title {
+    display: flex;
+    justify-content: center;
+}
+
+.matches {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+.generate-btn {
+    background-color: #C23636;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+}
+
+.team-card {
+    max-width: max-content;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    background-color: #fff;
+}
+
+.match-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border: 3px solid #000;
+    border-radius: 20px;
+    background-color: #BCDEED;
+}
+
+.match-teams {
+    display: flex;
+    gap: 30px;
+}

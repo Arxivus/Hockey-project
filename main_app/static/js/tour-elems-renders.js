@@ -1,39 +1,4 @@
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-const csrftoken = getCookie('csrftoken');
-
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const generateBtn = document.querySelector('.generate-btn');
-    const matchesTable = document.querySelector('.matches');
-
-    getGeneratedMatches(matchesTable)
-
-    generateBtn.addEventListener('click', function() {
-        fetch('/tournaments/generate-teams/', 
-        {
-            method: 'GET',
-            headers: { 'X-CSRFToken': csrftoken }
-        })
-        .then(response => response.json())
-        .then(data => renderMatches(data['matches'], matchesTable)) 
-        .catch(error => console.error('Ошибка получения данных:', error))
-    })
-});
+import { saveMatchScore } from './fetch-requests.js';
 
 function renderMatches(matches, matchesTable) { 
     console.log(matches);
@@ -143,26 +108,6 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, t
     return matchCard
 }
 
-function getGeneratedMatches(matchesTable) { 
-    fetch('/tournaments/get-stored-matches/', 
-        {
-            method: 'GET',
-            headers: { 'X-CSRFToken': csrftoken }
-        })
-        .then(response => response.json())
-        .then(data => renderMatches(data['matches'], matchesTable))  
-        .catch(error => console.error('Ошибка получения данных:', error))
+export {
+    renderMatches
 }
-
-
-function saveMatchScore(matchId, score1, score2) {
-    fetch(`/tournaments/save-match/${matchId}/`, 
-    {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrftoken },
-        body: JSON.stringify({ team1_score: score1, team2_score: score2 })
-    })
-    .then(response => response.json())
-    .then(data => console.log(data['message']))
-    .catch(error => console.error('Ошибка сохранения:', error))
-} 

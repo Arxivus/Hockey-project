@@ -14,57 +14,155 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.querySelector('.generate-btn');
     const matchesTable = document.querySelector('.matches');
 
+    getGeneratedMatches(matchesTable)
+
     generateBtn.addEventListener('click', function() {
-        fetch('http://127.0.0.1:8000/tournaments/generate-teams/', 
+        fetch('/tournaments/generate-teams/', 
         {
             method: 'GET',
             headers: { 'X-CSRFToken': csrftoken }
         })
         .then(response => response.json())
-        .then(data => renderTeams(data['teams'], matchesTable)) 
-        .catch(error => console.error('Ошибка:', error))
+        .then(data => renderMatches(data['matches'], matchesTable)) 
+        .catch(error => console.error('Ошибка получения данных:', error))
     })
 });
 
-function renderTeams(teams, matchesTable) {
-    console.log(teams);
+function renderMatches(matches, matchesTable) { 
+    console.log(matches);
+    for (let i = 0; i < matches.length; i++) {
+        const match = matches[i]
+        const matchRating = match['matchRating']
+        
+        const matchId = match['match_id'] 
+        const team1_score = match['team1_score']
+        const team2_score = match['team2_score']
 
-    for (let i = 0; i < teams.length - 1; i++) {
-        const team1Card = getTeamCard(teams[i], i);
-        const team2Card = getTeamCard(teams[i + 1], i + 1);
+        const team1Card = getTeamCard(match['team1_players'])
+        const team2Card = getTeamCard(match['team2_players'])
 
-        const matchRating = Math.floor((teams[i].total_rating + teams[i + 1].total_rating) / 12)
-        const matchCard = getMatchCard(team1Card, team2Card, matchRating)
-        matchesTable.append(matchCard)
+        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, team2_score)  
+        matchCard.setAttribute('data-uuid', matchId) 
+
+        matchesTable.prepend(matchCard)
     }
 }
 
-function getTeamCard(team, index) {
-    return card = `<div class="team-card">
-            <h5>Команда ${index + 1}</h5>
-            <p><strong>Вратарь:</strong> ${team.goalkeeper.name}</p>
-            <p><strong>Защитники:</strong> ${team.defenders.map(d => d.name).join(', ')}</p>
-            <p><strong>Нападающие:</strong> ${team.forwards.map(f => f.name).join(', ')}</p>
-        </div>`
+function createTeamRoleEl(roleName, rolePlayers) {
+    const roleEl = document.createElement('span');
+    roleEl.textContent = `${roleName}:`
+
+    const playersBlock = document.createElement('div')
+    playersBlock.classList.add('team-roles')
+    playersBlock.append(roleEl)
+
+    rolePlayers.forEach((player) => {
+        const playerEl = document.createElement('p');
+        playerEl.textContent = `${player.name}, ${player.rate}`
+        playersBlock.append(playerEl)
+    }); 
+    
+    return playersBlock
 }
 
-function getMatchCard(team1Card, team2Card, matchRating) {
-    const matchCard = document.createElement('div');
+function getTeamCard(team) {
+    const teamCard = document.createElement('div')
+    teamCard.classList.add('team-card')
+   
+    const teamTitle = document.createElement('h5');
+    teamTitle.textContent = 'Состав команды:'
+    teamCard.append(teamTitle)
+   
+    const teamRoles = Object.keys(team)
+    for (let i = 0; i < teamRoles.length; i++) {
+        const roleName = teamRoles[i]
+        const rolePlayers = team[roleName];
+
+        const teamRoleEl = createTeamRoleEl(roleName, rolePlayers)
+        teamCard.append(teamRoleEl)
+    }
+    
+    return teamCard
+}
+
+function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, team2_score) {
+    const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
-    const matchTeams = document.createElement('div');
-    matchTeams.classList.add('match-teams')
-    matchTeams.innerHTML += team1Card
-    matchTeams.innerHTML += team2Card
-    
-    const matchTitle = document.createElement('h4');
+    const matchTitle = document.createElement('h4')
     matchTitle.classList.add('match-title')
     matchTitle.textContent = `Микроматч / Средний рейтинг: ${matchRating}`
 
-    matchCard.append(matchTitle, matchTeams)
+    const matchTeams = document.createElement('div')
+    matchTeams.classList.add('match-teams')
+    matchTeams.append(team1Card, team2Card)
+    
+    const matchScoreEl = document.createElement('div');
+    matchScoreEl.classList.add('match-score')
+
+    const matchScoreTitle = document.createElement('h5')
+    matchScoreTitle.classList.add('match-score-title')
+    matchScoreTitle.textContent = 'Итоговый счет: '
+
+    const team1Score = document.createElement('input')
+    team1Score.classList.add('team1-score-input')
+    team1Score.setAttribute('type', 'number')
+    team1Score.value = team1_score
+
+    const separatorEl = document.createElement('p')
+    separatorEl.textContent = ':'
+
+    const team2Score = document.createElement('input')
+    team2Score.classList.add('team2-score-input')
+    team2Score.setAttribute('type', 'number')
+    team2Score.value = team2_score
+
+    const saveScoreBtn = document.createElement('button')
+    saveScoreBtn.classList.add('save-score-btn')
+    saveScoreBtn.setAttribute('data-uuid', matchId);
+    saveScoreBtn.textContent = 'Сохранить счет'
+
+    saveScoreBtn.addEventListener('click', (event) => {
+        const currentCard = event.currentTarget.closest('.match-card')
+        const score1 = currentCard.querySelector('.team1-score-input').value
+        const score2 = currentCard.querySelector('.team2-score-input').value
+        
+        saveMatchScore(matchId, score1, score2);
+    })
+   
+    matchScoreEl.append(matchScoreTitle, team1Score, separatorEl, team2Score, saveScoreBtn)
+
+    matchCard.append(matchTitle, matchTeams, matchScoreEl)
     return matchCard
 }
+
+function getGeneratedMatches(matchesTable) { 
+    fetch('/tournaments/get-stored-matches/', 
+        {
+            method: 'GET',
+            headers: { 'X-CSRFToken': csrftoken }
+        })
+        .then(response => response.json())
+        .then(data => renderMatches(data['matches'], matchesTable))  
+        .catch(error => console.error('Ошибка получения данных:', error))
+}
+
+
+function saveMatchScore(matchId, score1, score2) {
+    fetch(`/tournaments/save-match/${matchId}/`, 
+    {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrftoken },
+        body: JSON.stringify({ team1_score: score1, team2_score: score2 })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data['message']))
+    .catch(error => console.error('Ошибка сохранения:', error))
+} 

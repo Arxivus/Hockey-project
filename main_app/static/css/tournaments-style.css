@@ -26,6 +26,14 @@
     background-color: #fff;
 }
 
+.team-roles {
+    margin-bottom: 15px;
+}
+
+.team-roles span {
+    font-weight: 600;
+}
+
 .match-card {
     display: flex;
     flex-direction: column;
@@ -39,4 +47,36 @@
 .match-teams {
     display: flex;
     gap: 30px;
+}
+
+.team1-score-input,
+.team2-score-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+}
+
+.match-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.match-score-title {
+    margin-bottom: 0;
+}
+
+.match-score p {
+    font-size: 20px;
+    width: max-content;
+}
+
+.save-score-btn {
+    background-color: #C23636;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
 }

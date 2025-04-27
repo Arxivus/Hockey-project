@@ -13,4 +13,6 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
     path('tournaments/generate-teams/', views.generate_teams_view, name='generate_teams'),
+    path('tournaments/get-stored-matches/', views.get_stored_matches_view, name='get_stored_matches'),
+    path('tournaments/save-match/<uuid:match_id>/', views.save_match_view, name='save_match'),
 ]

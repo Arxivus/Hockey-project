@@ -25,7 +25,7 @@ class profileForm(forms.ModelForm):
             "age": "Возраст:",
             "category": "Разряд:",
             "rating": "Рейтинг:",
-            "role": "Роль(участник/тренер/судья):"
+            "role": "Роль(спортсмен/тренер/судья):"
         }
 
 class loginForm(forms.Form):

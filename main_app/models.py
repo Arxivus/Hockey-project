@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 
 
@@ -8,16 +9,22 @@ GENDER_TYPE = (
     ('W', 'женский')
 )
 
+SITE_ROLE = (
+    ('S', 'спортсмен'),
+    ('C', 'тренер'),
+    ('R', 'судья')
+)
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,)
     fullname = models.CharField(max_length=200)
     email = models.CharField(max_length=100, unique=True)
     mobile_phone = models.CharField(max_length=20, unique=True)
     gender = models.CharField(choices=GENDER_TYPE, default='M')
-    age = models.IntegerField()
+    age = models.IntegerField(validators=[ MinValueValidator(6),  MaxValueValidator(90) ])
     category = models.CharField(max_length=100)
     rating = models.IntegerField(null=True)
-    role = models.CharField(max_length=100)
+    role = models.CharField(choices=SITE_ROLE, default='S')
 
     def __str__(self):
         return self.fullname

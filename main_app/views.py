@@ -15,8 +15,8 @@ def tournaments_page(request):
     return render(request, 'tournaments.html')
 
 def ratings_page(request):
-    competitors = Profile.objects.all().order_by('-rating')
-    return render(request, 'ratings.html', { 'competitors' : competitors })
+    
+    return render(request, 'ratings.html')
 
 def login_view(request):
     if request.method == 'POST':
@@ -61,10 +61,21 @@ def user_profile(request):
     return render(request, 'user_profile.html', { 'profile': profile })
 
 
-def get_competitors(request):
-    if request.metod == 'POST':
-        competitors = Profile.objects.all()
-        return render(request, 'ratings.html', { 'competitors' : competitors })
+def get_competitors_view(request):
+    if request.method == 'GET':
+        try:
+            competitors = Profile.objects.all().order_by('-rating').values()
+            comp_list = list(competitors)
+            return JsonResponse({
+                    'status': 'success',
+                    'competitors': comp_list
+            }) 
+        
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
 
 
 def get_stored_matches_view(request): 

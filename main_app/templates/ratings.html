@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/ratings-style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/ratings-style.css' %}">
+    <script type="module" src="{% static 'js/rate-table-render.js' %}"></script> 
 {% endblock %}
 
 {% block title %}
@@ -11,21 +12,11 @@
 
 {% block content %}
     <div class="container">
-        <h1>Таблицы рейтингов</h1>
-        <section class="ratings_block">
+        <section class="ratings-block">
+            <h1>Таблицы рейтингов</h1>
             <table class="competitors-rate-table">
-                <tr>
-                    <th>Участник</th>
-                    <th>Текущий рейтинг</th>
-                </tr>
-                {% for competitor in competitors %}
-                    <tr>
-                        <td>{{ competitor.fullname }}</td>
-                        <td>{{ competitor.rating }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            
+
+            </table>  
         </section>
     </div>
 {% endblock %}

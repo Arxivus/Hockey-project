@@ -1,4 +1,5 @@
 import { renderMatches } from './tour-elems-renders.js'
+import { renderRatingsTable } from './rate-table-render.js'
 
 function getCookie(name) {
     let cookieValue = null;
@@ -51,8 +52,20 @@ function saveMatchScore(matchId, score1, score2) {
     .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
+function getCompetitors() {
+    fetch('/ratings/get-competitors/', 
+    {
+        method: 'GET',
+        headers: { 'X-CSRFToken': csrftoken }
+    })
+    .then(response => response.json())
+    .then(data => renderRatingsTable(data['competitors']))
+    .catch(error => console.error('Ошибка получения данных:', error))
+} 
+
 export {
     generateMatches,
     getGeneratedMatches,
-    saveMatchScore
+    saveMatchScore,
+    getCompetitors
 }

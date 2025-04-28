@@ -5,7 +5,7 @@
 }
 
 body {
-    background-color: #000;
+    background-color: #111111;
 }
 
 .login-form-block {
@@ -28,7 +28,7 @@ body {
 .form-btn {
     background-color: #C23636;
     padding: 10px 30px;
-    border: none;
+    border: 2px solid #C23636;
     border-radius: 20px;
 }
 
@@ -36,7 +36,13 @@ body {
 .login-form-title, 
 a, 
 label {
+    margin-bottom: 0;
     color: #fff;
+}
+
+.form-btn:hover {
+    border: 2px solid #fff;
+    transition: color 0.2s ease-in-out;
 }
 
 label {
@@ -47,8 +53,11 @@ label {
 .login-form input {
     width: 100%;
     height: 40px;
+    font-size: 18px;
+    padding-left: 10px;
     border: none;
     border-radius: 4px;
+    background-color: #D9D9D9;
 }
 
 .login-form {
@@ -74,4 +83,3 @@ label {
     gap: 20px;
     font-size: 20px;
 }
-

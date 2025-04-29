@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     getGeneratedMatches(matchesTable)
 
     generateBtn.addEventListener('click', function() {
-        generateMatches()
+        generateMatches(matchesTable)
     })
 });
-
-

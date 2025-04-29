@@ -7,6 +7,7 @@ from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .team_generator import generate_teams
+#from .rating_update import startGenerating
 
 def home_page(request):
     return render(request, 'home.html')
@@ -66,16 +67,10 @@ def get_competitors_view(request):
         try:
             competitors = Profile.objects.all().order_by('-rating').values()
             comp_list = list(competitors)
-            return JsonResponse({
-                    'status': 'success',
-                    'competitors': comp_list
-            }) 
+            return JsonResponse({'status': 'success', 'competitors': comp_list}) 
         
         except Exception as e:
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            }, status=500)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 def get_stored_matches_view(request): 
@@ -83,10 +78,7 @@ def get_stored_matches_view(request):
         matches = Micromatch.objects.all().order_by('created_at').values()
         matches_list = list(matches)
 
-        return JsonResponse({
-                'status': 'success',
-                'matches': matches_list
-            }) 
+        return JsonResponse({'status': 'success', 'matches': matches_list}) 
         
 
 def generate_teams_view(request):
@@ -94,7 +86,8 @@ def generate_teams_view(request):
         try:
             players = TestBalancer.objects.all().values()
             pl_list = list(players)
-            teams = generate_teams(pl_list)
+            #startGenerating(pl_list)
+            teams = generate_teams(pl_list) # ?
 
             matches = []
             for i in range(0, len(teams) - 1, 2):
@@ -132,16 +125,10 @@ def generate_teams_view(request):
                         team2_score = None,
                     )
             
-            return JsonResponse({
-                'status': 'success',
-                'matches': matches
-            }) 
+            return JsonResponse({'status': 'success', 'matches': matches}) 
         
         except Exception as e:
-            return JsonResponse({
-                'status': 'error',
-                'message': str(e)
-            }, status=500)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
 def save_match_view(request, match_id):
@@ -167,3 +154,10 @@ def save_match_view(request, match_id):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
+        
+""" def startGenerating_view():
+    players = TestBalancer.objects.all().values()
+    pl_list = list(players)
+    first_match = startGenerating(pl_list)
+
+    return JsonResponse({'status': 'success', 'match': first_match}) """

@@ -17,13 +17,19 @@
             <form method="POST" class="login-form">
                 <h3 class="login-form-title">Войти в профиль</h3>
                 {% csrf_token %}
-                <div class="login-form-fields">
-                    {% for field in form %}
-                    <div>
-                        {{ field.label_tag }}
-                        {{ field }}
+                <div class="login-form-elements">
+                    <div class="login-form-fields">
+                        {% for field in form %}
+                        <div>
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    <div class="login-form-links">
+                        <a href="">Забыли пароль?</a>
+                        <a href="{% url 'register' %}">Регистрация</a>
+                    </div>
                 </div>
                 <div class="login-form-btns">
                     <button type="submit" class="form-btn">Войти</button>

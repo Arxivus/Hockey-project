@@ -5,9 +5,9 @@ def generate_teams(players):
 
     for pl in players:
         match pl['role']:
-            case '1': forwards.append(pl)
-            case '2': defenders.append(pl)
-            case '3': goalkeepers.append(pl)
+            case 'forward': forwards.append(pl)
+            case 'defender': defenders.append(pl)
+            case 'goalkeeper': goalkeepers.append(pl)
     
     teams = balance_teams(forwards, defenders, goalkeepers)
     optimize_teams(teams)

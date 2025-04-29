@@ -37,14 +37,24 @@ TEAM_ROLE = (
 )
 
 class TestBalancer(models.Model):
+    player_id = models.IntegerField(unique=True, editable=False, null=True)
     name = models.CharField(max_length=50)
     rating = models.IntegerField()
     role = models.CharField(choices=TEAM_ROLE, default='forward')
     age = models.IntegerField()
     gender = models.CharField(choices=GENDER_TYPE, default='M')
+    matches_played = models.IntegerField(default=0)
+    goals_scored = models.IntegerField(default=0)
+    goals_taken = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.player_id:
+            last_obj = TestBalancer.objects.order_by('-player_id').first()
+            self.player_id = 1 if not last_obj else last_obj.player_id + 1
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.player_id}: {self.name}"
     
 
 class Micromatch(models.Model):

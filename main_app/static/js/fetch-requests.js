@@ -18,7 +18,7 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
-function generateMatches() {
+function generateMatches(matchesTable) {
     fetch('/tournaments/generate-teams/', 
         {
             method: 'GET',
@@ -42,25 +42,25 @@ function getGeneratedMatches(matchesTable) {
 
 function saveMatchScore(matchId, score1, score2) {
     fetch(`/tournaments/save-match/${matchId}/`, 
-    {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrftoken },
-        body: JSON.stringify({ team1_score: score1, team2_score: score2 })
-    })
-    .then(response => response.json())
-    .then(data => console.log(data['message']))
-    .catch(error => console.error('Ошибка сохранения:', error))
+        {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ team1_score: score1, team2_score: score2 })
+        })
+        .then(response => response.json())
+        .then(data => console.log(data['message']))
+        .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
 function getCompetitors() {
     fetch('/ratings/get-competitors/', 
-    {
-        method: 'GET',
-        headers: { 'X-CSRFToken': csrftoken }
-    })
-    .then(response => response.json())
-    .then(data => renderRatingsTable(data['competitors']))
-    .catch(error => console.error('Ошибка получения данных:', error))
+        {
+            method: 'GET',
+            headers: { 'X-CSRFToken': csrftoken }
+        })
+        .then(response => response.json())
+        .then(data => renderRatingsTable(data['competitors']))
+        .catch(error => console.error('Ошибка получения данных:', error))
 } 
 
 export {

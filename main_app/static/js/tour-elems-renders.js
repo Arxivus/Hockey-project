@@ -1,7 +1,7 @@
 import { saveMatchScore } from './fetch-requests.js';
 
 function renderMatches(matches, matchesTable) { 
-    console.log(matches);
+    /*console.log(matches);*/
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         const matchRating = match['matchRating']

@@ -1,0 +1,80 @@
+from itertools import combinations
+
+goals_with_matrix = [] # [i][j] - кол-во забитых голов i команде с j
+forwards, defenders, goalkeepers  = [], [], []
+
+def startGenerating(pl_list):
+    global goals_with_matrix
+
+    pl_count = len(pl_list)
+    goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
+
+    global forwards, defenders, goalkeepers
+
+    for pl in pl_list:
+        match pl['role']:
+            case '1': forwards.append(pl)
+            case '2': defenders.append(pl)
+            case '3': goalkeepers.append(pl)
+
+    first_match_teams = generateMatch()
+    return first_match_teams
+    # собрать две команды, используя балансер
+    # вернуть матч в качестве json на страницу
+
+    # ввод счета
+    # после нажатия кнопки "сохранить" отправить POST-запрос матчем, id игроков по командам
+    # далее обновить матрицу, поля игроков со счетом, вызвать функцию обновления рейтинга:
+    #   составить ур-я в матричном виде: AX = B
+    #   проверить на !=0 коэффициенты
+    #   в функции решить систему, получив новые рейтинги для каждого игрока
+    #   присвоить полученные рейтинги по id
+
+    # нажатие кнопки генерации еще одного матча
+    # снова вызов generateMatch()
+
+def generateMatch(): # заменить ею team_generator ------------------- протестить -----------------
+    
+    fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], -x['rating']))
+    df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], -x['rating']))
+    gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], -x['rating']))
+    
+    # Выбираем вратарей с наименьшим количеством матчей
+    team1_gk, team2_gk = gk_sorted[:2]
+    
+    best_diff = float('inf')
+    best_teams = []
+    
+    # Берем топ-8 нападающих и топ-6 защитников (для оптимизации)
+    top_fw = fw_sorted[:8]
+    top_df = df_sorted[:6]
+
+    for fw_combo in combinations(top_fw, 6):
+        for df_combo in combinations(top_df, 4):
+            # Формируем команды
+            team1_fw = fw_combo[:3]
+            team2_fw = fw_combo[3:]
+            
+            team1_df = df_combo[:2]
+            team2_df = df_combo[2:]
+            
+            rating1 = team1_gk['rating'] + sum(p['rating'] for p in team1_fw) + sum(p['rating'] for p in team1_df)
+            rating2 = team2_gk['rating'] + sum(p['rating'] for p in team2_fw) + sum(p['rating'] for p in team2_df)
+            
+            diff = abs(rating1 - rating2)
+            
+            if diff < best_diff:
+                best_diff = diff
+                best_teams = [
+                    {'goalkeeper': team1_gk, 'defenders': team1_df, 'forwards': team1_fw, 'total_rating': rating1},
+                    {'goalkeeper': team2_gk, 'defenders': team2_df, 'forwards': team2_fw, 'total_rating': rating2}
+                ]
+                
+                if best_diff == 0:
+                    break
+    
+    return best_teams
+
+
+def update_goals_matrix():
+    return

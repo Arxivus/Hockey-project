@@ -6,11 +6,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function renderRatingsTable(competitors) {
     console.log(competitors);
-    const rateTable = document.querySelector('.competitors-rate-table');
+    const rateTable = document.querySelector('.table-rows');
+    const tableHeaders = document.createElement('table');
+    tableHeaders.classList.add('table-headers')
+
+    const ratingsBlock = document.querySelector('.ratings-block');
+
+    const rateTableHeaders = createTableRow('№', 'ФИО', 'Возраст', 'Рейтинг')
+    tableHeaders.append(rateTableHeaders)
+
+    ratingsBlock.prepend(tableHeaders)
 
     for (let i = 0; i < competitors.length; i++) {
         const competitor = competitors[i];
-        const row = createTableRow(i+1, competitor['fullname'], `${competitor['age']} лет`, competitor['rating'])
+        const row = createTableRow(i+1, competitor['fullname'], competitor['age'], competitor['rating'])
 
         rateTable.append(row)
     }
@@ -21,7 +30,6 @@ function createTableRow() {
 
     for (let i = 0; i < arguments.length; i++) {
         const value = arguments[i];
-
         const tableData = document.createElement('td'); 
         tableData.textContent = value
         tableRow.append(tableData)

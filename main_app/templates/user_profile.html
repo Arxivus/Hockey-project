@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block link %}
-    <link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
     <link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
 {% endblock %}
 
 {% block title %}
@@ -11,25 +11,24 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <section class="user-profile">
+    <section class="user-card-section">
+        <div class="container">
             <div class="user-card">
                 <div class="user-fullname">
-                    <img src="{% static 'images/user-avatar.png' %}">
+                    <img class="user-avatar" src="{% static 'images/user-avatar.png' %}">
                     <p>{{ profile.fullname }}</p>
                 </div>
                 <div class="user-info">
                     <div class="user-role">
-                        <p><b>{{ profile.role }}</b></p>
+                        <p><b>{{ profile.get_role_display }}</b></p>
                     </div>
-                    <p>Email адрес: <b>{{ profile.email }}</b></p>
+                    <p>Email: <b>{{ profile.email }}</b></p>
                     <p>Телефон: <b>{{ profile.mobile_phone }}</b></p>
-                    <p>Пол: <b>{{ profile.gender }}</b></p>
                     <p>Возраст: <b>{{ profile.age }}</b></p>
-                    <p>Спортивный разряд: <b>{{ profile.category }}</b></p>
+                    <p>Уровень подготовки: <b>{{ profile.category }}</b></p>
                     <p>Рейтинг игрока: <b>{{ profile.rating }}</b></p>
                 </div>
             </div>
-        </section>
     </div>
+    </section>
 {% endblock %}

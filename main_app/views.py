@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Profile, TestBalancer, Micromatch, uuid
+from .models import Profile, TestBalancer, Micromatch, Announsment, uuid
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -10,7 +10,9 @@ from .team_generator import generate_teams
 #from .rating_update import startGenerating
 
 def home_page(request):
-    return render(request, 'home.html')
+    announsments = Announsment.objects.all().values()
+    announs_list = list(announsments) 
+    return render(request, 'home.html', { 'announs_list' : announs_list})
 
 def tournaments_page(request):
     return render(request, 'tournaments.html')

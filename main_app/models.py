@@ -39,7 +39,7 @@ TEAM_ROLE = (
 class TestBalancer(models.Model):
     player_id = models.IntegerField(unique=True, editable=False, null=True)
     name = models.CharField(max_length=50)
-    rating = models.IntegerField()
+    rating = models.IntegerField(null=True)
     role = models.CharField(choices=TEAM_ROLE, default='forward')
     age = models.IntegerField()
     gender = models.CharField(choices=GENDER_TYPE, default='M')
@@ -67,4 +67,9 @@ class Micromatch(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class Announsment(models.Model):
+    title = models.CharField(max_length=150)
+    text = models.TextField(max_length=500)
 
+    def __str__(self):
+        return self.title

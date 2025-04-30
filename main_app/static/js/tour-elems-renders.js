@@ -7,13 +7,11 @@ function renderMatches(matches, matchesTable) {
         const matchRating = match['matchRating']
         
         const matchId = match['match_id'] 
-        const team1_score = match['team1_score']
-        const team2_score = match['team2_score']
 
-        const team1Card = getTeamCard(match['team1_players'])
-        const team2Card = getTeamCard(match['team2_players'])
+        const team1Card = getTeamCard(match['team1_players'], match['team1_score'], 1)
+        const team2Card = getTeamCard(match['team2_players'], match['team2_score'], 2)
 
-        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, team2_score)  
+        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId)  
         matchCard.setAttribute('data-uuid', matchId) 
 
         matchesTable.prepend(matchCard)
@@ -37,13 +35,21 @@ function createTeamRoleEl(roleName, rolePlayers) {
     return playersBlock
 }
 
-function getTeamCard(team) {
+function getTeamCard(team, team_score, num) {
     const teamCard = document.createElement('div')
     teamCard.classList.add('team-card')
+
+    const team1Score = document.createElement('input')
+    team1Score.classList.add(`team${num}-score-input`)
+    team1Score.setAttribute('type', 'number')
+    team1Score.value = team_score
    
     const teamTitle = document.createElement('h5');
-    teamTitle.textContent = 'Состав команды:'
-    teamCard.append(teamTitle)
+    teamTitle.textContent = 'Состав команды'
+    teamCard.append(team1Score, teamTitle)
+
+    const teamPlayersBlock = document.createElement('div');
+    teamPlayersBlock.classList.add('team-players-block')
    
     const teamRoles = Object.keys(team)
     for (let i = 0; i < teamRoles.length; i++) {
@@ -51,43 +57,35 @@ function getTeamCard(team) {
         const rolePlayers = team[roleName];
 
         const teamRoleEl = createTeamRoleEl(roleName, rolePlayers)
-        teamCard.append(teamRoleEl)
+        teamPlayersBlock.append(teamRoleEl)
     }
     
+    teamCard.append(teamPlayersBlock)
     return teamCard
 }
 
-function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, team2_score) {
+function getMatchCard(team1Card, team2Card, matchRating, matchId) {
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
     const matchTitle = document.createElement('h4')
     matchTitle.classList.add('match-title')
-    matchTitle.textContent = `Микроматч / Средний рейтинг: ${matchRating}`
+    matchTitle.textContent = `Матч / Средний рейтинг: ${matchRating}`
 
-    const matchTeams = document.createElement('div')
-    matchTeams.classList.add('match-teams')
-    matchTeams.append(team1Card, team2Card)
+    const matchPlaceBlock = document.createElement('div')
+    matchPlaceBlock.classList.add('match-place')
     
-    const matchScoreEl = document.createElement('div');
-    matchScoreEl.classList.add('match-score')
+    const matchPlace = document.createElement('h4'); 
+    matchPlace.textContent = '12:00 / Поле №'
 
-    const matchScoreTitle = document.createElement('h5')
-    matchScoreTitle.classList.add('match-score-title')
-    matchScoreTitle.textContent = 'Итоговый счет: '
+    matchPlaceBlock.append(matchTitle, matchPlace)
 
-    const team1Score = document.createElement('input')
-    team1Score.classList.add('team1-score-input')
-    team1Score.setAttribute('type', 'number')
-    team1Score.value = team1_score
+    const matchSaveBlock = document.createElement('div');
+    matchSaveBlock.classList.add('match-save')
 
-    const separatorEl = document.createElement('p')
-    separatorEl.textContent = ':'
-
-    const team2Score = document.createElement('input')
-    team2Score.classList.add('team2-score-input')
-    team2Score.setAttribute('type', 'number')
-    team2Score.value = team2_score
+    const VS = document.createElement('img');
+    VS.classList.add('vs-img')
+    VS.setAttribute('src', '/static/images/vs.png')
 
     const saveScoreBtn = document.createElement('button')
     saveScoreBtn.classList.add('save-score-btn')
@@ -101,10 +99,14 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_score, t
         
         saveMatchScore(matchId, score1, score2);
     })
-   
-    matchScoreEl.append(matchScoreTitle, team1Score, separatorEl, team2Score, saveScoreBtn)
+    
+    matchSaveBlock.append(VS, saveScoreBtn)
 
-    matchCard.append(matchTitle, matchTeams, matchScoreEl)
+    const matchTeams = document.createElement('div')
+    matchTeams.classList.add('match-teams')
+    matchTeams.append(team1Card, matchSaveBlock, team2Card)
+
+    matchCard.append(matchPlaceBlock, matchTeams)
     return matchCard
 }
 

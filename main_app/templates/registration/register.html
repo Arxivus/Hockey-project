@@ -20,57 +20,59 @@
                 <h3 class="register-form-title">Регистрация</h3>
                 {% csrf_token %}
                 <div class="register-form-fields">
-                    <div class="disp-none">
-                        <div class="form-field">
-                            {{form.username.errors}}
-                            {{form.username.label_tag}}
-                            {{form.username}}
-                        </div>
-                        <div class="form-field">
-                            {{form.password1.errors}}
-                            {{form.password1.label_tag}}
-                            {{form.password1}}
-                        </div>
-                        <div class="form-field">
-                            {{form.password2.errors}}
-                            {{form.password2.label_tag}}
-                            {{form.password2}}
-                        </div>
-                    </div>
-                    
                     <div class="form-main-info">
                         <div class="form-field">
                             {{profile_form.fullname.label_tag}}
+                            {{profile_form.fullname.errors}}
                             {{profile_form.fullname}}
                         </div>
                         <div class="form-field">
                             {{profile_form.email.label_tag}}
+                            {{profile_form.email.errors}}
                             {{profile_form.email}}
                         </div>
                         <div class="form-field">
                             {{profile_form.mobile_phone.label_tag}}
+                            {{profile_form.mobile_phone.errors}}
                             {{profile_form.mobile_phone}}
+                        </div>
+                    </div>
+                    <div class="form-main-info">
+                        <div class="form-field">
+                            {{form.username.label_tag}}
+                            {{form.username.errors}}
+                            {{form.username}}
+                        </div>
+                        <div class="form-field">
+                            {{form.password1.label_tag}}
+                            {{form.password1.errors}}
+                            {{form.password1}}
+                        </div>
+                        <div class="form-field">
+                            {{form.password2.label_tag}}
+                            {{form.password2.errors}}
+                            {{form.password2}}
                         </div>
                     </div>
                     <div class="form-additional-info">
                         <div class="form-field">
                             {{profile_form.gender.label_tag}}
+                            {{profile_form.gender.errors}}
                             {{profile_form.gender}}
                         </div>
                         <div class="form-field">
                             {{profile_form.age.label_tag}}
+                            {{profile_form.gender.errors}}
                             {{profile_form.age}}
                         </div>
                         <div class="form-field">
                             {{profile_form.category.label_tag}}
+                            {{profile_form.category.errors}}
                             {{profile_form.category}}
-                        </div>
-                        <div class="form-field disp-none">
-                            {{profile_form.rating.label_tag}}
-                            {{profile_form.rating}}
                         </div>
                         <div class="form-field">
                             {{profile_form.role.label_tag}}
+                            {{profile_form.role.errors}}
                             {{profile_form.role}}
                         </div>
                     </div>

@@ -1,3 +1,21 @@
+@font-face {
+    font-family: 'KumarOne';
+    src: local('KumarOne'),
+        url('../fonts/KumarOne-Regular.woff2') format('woff2'),
+        url('../fonts/KumarOne-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: local('Manrope'),
+        url('../fonts/Manrope-Regular.woff2') format('woff2'),
+        url('../fonts/KumarOne-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none; 
@@ -8,6 +26,11 @@ input[type="number"]:hover,
 input[type="number"]:focus {
     appearance: none;
     -moz-appearance: textfield;
+}
+
+a, p, span, td,
+h1, h2, h3, h4, h5 {
+    font-family: Mangrope, sans-serif;
 }
 
 body {
@@ -42,4 +65,14 @@ section {
 
 h1, h2, h3, h4, h5 {
     margin-bottom: 15px;
+}
+
+.line {
+    height: 1px;
+    background-color: #f00;
+    margin-bottom: 50px;
+}
+
+h3 {
+    padding-left: 50px;
 }

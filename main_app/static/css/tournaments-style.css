@@ -1,33 +1,52 @@
-.tournament-title {
-    display: flex;
-    justify-content: center;
-}
-
 .matches {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    gap: 80px;
 }
 
 .generate-btn {
-    background-color: #C23636;
-    padding: 10px 30px;
+    padding: 10px 20px;
+    font-size: 20px;
     border: none;
-    border-radius: 20px;
+    border-radius: 15px;
     color: #fff;
+    background-color: #C23636;
 }
 
 .team-card {
-    max-width: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
     padding: 20px;
-    margin-bottom: 30px;
     border-radius: 20px;
+    background-color: rgba(65, 65, 65, 1);
+}
+
+.team-players-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    gap: 8px;
+    border-radius: 15px;
     background-color: #fff;
 }
 
-.team-roles {
-    margin-bottom: 15px;
+.team-players-block p {
+    font-size: 18px;
+}
+
+.team-players-block span {
+    font-size: 16px;
+}
+
+.team-card h5 {
+    align-self: center;
+    margin: 0;
+    color: #fff;
 }
 
 .team-roles span {
@@ -35,48 +54,60 @@
 }
 
 .match-card {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    border: 3px solid #000;
-    border-radius: 20px;
-    background-color: #BCDEED;
+    gap: 20px;
+    padding: 30px 40px;
+    border-radius: 15px;
+    background-color: rgba(121, 82, 82, 0.41);
+}
+
+.match-place {
+    display: flex;
+    justify-content: space-between;
+}
+
+.match-place h4 {
+    margin-bottom: 0;
 }
 
 .match-teams {
     display: flex;
+    align-items: center;
     gap: 30px;
 }
 
 .team1-score-input,
 .team2-score-input {
-    width: 40px;
-    height: 40px;
+    width: 120px;
+    height: 120px;
+    font-size: 100px;
+    font-family: KumarOne, sans-serif;
     text-align: center;
     border: none;
     border-radius: 10px;
-}
-
-.match-score {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.match-score-title {
-    margin-bottom: 0;
-}
-
-.match-score p {
-    font-size: 20px;
-    width: max-content;
+    color: #fff;
+    padding-top: 20px;    
+    background-color: rgba(65, 65, 65, 1);
 }
 
 .save-score-btn {
-    background-color: #C23636;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 20px;
+    width: max-content;
+    align-self: center;
+    padding: 10px 20px;
+    font-size: 20px;
+    border: 2px solid #C23636;
+    border-radius: 15px;
     color: #fff;
+    background-color: #C23636;
+}
+
+.form-save:hover {
+    border: 2px solid #fff;
+    transition: color 0.2s ease-in-out;
+}
+
+.vs-img {
+    max-width: 150px;
 }

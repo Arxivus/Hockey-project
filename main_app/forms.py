@@ -7,14 +7,14 @@ class createUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ""
+        self.fields['password1'].label = "Пароль"
+        self.fields['password2'].label = "Подтверждение пароля"
 
     class Meta:
         model = User
         fields = ['username', 'password1', 'password2']
         labels = {
             "username": "Логин",
-            "password1": "Пароль",
-            "password2": "Подтверждение пароля"
         }
 
 class profileForm(forms.ModelForm):
@@ -24,7 +24,7 @@ class profileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['fullname', 'email', 'mobile_phone', 'gender', 'age', 'category', 'rating', 'role']
+        fields = ['fullname', 'email', 'mobile_phone', 'gender', 'age', 'category', 'role']
         labels = {
             "fullname": "ФИО",
             "email": "Email",
@@ -32,9 +32,9 @@ class profileForm(forms.ModelForm):
             "gender": "Пол",
             "age": "Возраст",
             "category": "Уровень подготовки",
-            "rating": "Рейтинг",
+            
             "role": "Роль"
-        }
+        } #"rating": "Рейтинг", 'rating',
 
 class loginForm(forms.Form):
     def __init__(self, *args, **kwargs):

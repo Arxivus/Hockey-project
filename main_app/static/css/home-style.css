@@ -1,20 +1,11 @@
-.text-content {
+.announsments-list {
     display: flex;
     flex-direction: column;
-}
-
-.line {
-    height: 1px;
-    background-color: #f00;
-    margin-bottom: 20px;
-}
-
-h3 {
-    padding-left: 50px;
-    margin-bottom: 10px;
+    gap: 16px;
 }
 
 .announsment {
-    background-color: #BCDEED;
-    padding: 10px 15px;
+    border-radius: 18px;
+    padding: 20px 40px;
+    background-image: linear-gradient(90deg,rgba(221, 229, 242, 1) 40%, rgba(234, 186, 187, 1) 80%);
 }

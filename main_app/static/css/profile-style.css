@@ -1,44 +1,51 @@
+.user-card-section {
+    background-image: linear-gradient(rgba(116, 138, 163, 0.6) 0%, rgba(134, 79, 80, 0.5) 90%);
+}
+
 img {
-    
+    height: 280px;
 }
 
 p, h3 {
     max-width: max-content;
 }
 
-.user-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 50px 0;
-}
-
 .user-fullname {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    padding: 30px 0;
+    gap: 20px;
 }
 
 .user-fullname p {
-    font-size: 25px;
+    font-size: 30px;
+    text-align: center;
 }
 
 .user-card {
     display: flex;
-    padding: 66px;
-    gap: 100px;
-    background-color: #BCDEED;
+    padding: 50px 0;
+    gap: 75px;
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    gap: 12px;
     padding: 40px;
-    background-color: #fff;
+    border-radius: 15px;
+    background-color: #F0F0F0;
+}
+
+.user-info p {
+    font-size: 20px;
 }
 
 .user-role {
+    width: max-content;
+    align-self: center;
     padding: 8px 90px;
     color: #fff;
     background-color:#C23636;

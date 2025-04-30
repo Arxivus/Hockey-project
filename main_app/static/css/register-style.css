@@ -6,6 +6,9 @@
 
 body {
     background-color: #111111;
+    background-image: url("../images/login-background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .register-form-block {
@@ -17,12 +20,6 @@ body {
     overflow: auto;
     width: 100%;
     height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-image: url("../images/login-background.png");
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .register-form {
@@ -34,6 +31,7 @@ body {
     gap: 60px;
     background-color: rgb(255, 255, 255, 0.24);
     border-radius: 36px;
+    margin: 50px;
 }
 
 .register-form-fields {

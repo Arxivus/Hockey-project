@@ -62,8 +62,8 @@ class Micromatch(models.Model):
     matchRating = models.IntegerField()
     team1_players = models.JSONField()
     team2_players = models.JSONField()
-    team1_score = models.IntegerField(null=True)
-    team2_score = models.IntegerField(null=True)
+    team1_score = models.IntegerField(default=0)
+    team2_score = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

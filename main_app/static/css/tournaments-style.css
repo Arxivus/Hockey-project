@@ -1,3 +1,13 @@
+.tour-generation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.tour-generation h4 {
+    margin: 0;
+}
+
 .matches {
     display: flex;
     flex-direction: column;
@@ -8,7 +18,7 @@
 .generate-btn {
     padding: 10px 20px;
     font-size: 20px;
-    border: none;
+    border: 2px solid #C23636;
     border-radius: 15px;
     color: #fff;
     background-color: #C23636;
@@ -92,6 +102,10 @@
     background-color: rgba(65, 65, 65, 1);
 }
 
+.empty {
+    border: 2px solid #fff;
+}
+
 .save-score-btn {
     width: max-content;
     align-self: center;
@@ -103,7 +117,8 @@
     background-color: #C23636;
 }
 
-.form-save:hover {
+.form-save:hover, 
+.generate-btn:hover {
     border: 2px solid #fff;
     transition: color 0.2s ease-in-out;
 }

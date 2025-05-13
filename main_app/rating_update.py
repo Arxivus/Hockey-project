@@ -10,12 +10,13 @@ def startGenerating(pl_list):
     goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
 
     global forwards, defenders, goalkeepers
+    forwards, defenders, goalkeepers  = [], [], []
 
     for pl in pl_list:
         match pl['role']:
-            case '1': forwards.append(pl)
-            case '2': defenders.append(pl)
-            case '3': goalkeepers.append(pl)
+            case 'forward': forwards.append(pl)
+            case 'defender': defenders.append(pl)
+            case 'goalkeeper': goalkeepers.append(pl)
 
     first_match_teams = generateMatch()
     return first_match_teams
@@ -35,19 +36,21 @@ def startGenerating(pl_list):
 
 def generateMatch(): # заменить ею team_generator ------------------- протестить -----------------
     
-    fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], -x['rating']))
-    df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], -x['rating']))
-    gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], -x['rating']))
+    fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['rating']))
+    df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['rating']))
+    gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['rating']))
     
     # Выбираем вратарей с наименьшим количеством матчей
-    team1_gk, team2_gk = gk_sorted[:2]
+    team1_gk, team2_gk = gk_sorted[0], gk_sorted[1]
     
     best_diff = float('inf')
     best_teams = []
     
-    # Берем топ-8 нападающих и топ-6 защитников (для оптимизации)
+    # Берем т8 нападающих и 6 защитников (для оптимизации)
     top_fw = fw_sorted[:8]
     top_df = df_sorted[:6]
+
+    print(team1_gk, team2_gk)
 
     for fw_combo in combinations(top_fw, 6):
         for df_combo in combinations(top_df, 4):

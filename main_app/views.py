@@ -6,8 +6,8 @@ from .models import Profile, TestBalancer, Micromatch, Announsment, uuid
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .team_generator import generate_teams
-#from .rating_update import startGenerating
+from .team_generator import generate_teams, getMatchObject
+from .rating_update import startGenerating
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
@@ -88,8 +88,8 @@ def generate_teams_view(request):
         try:
             players = TestBalancer.objects.all().values()
             pl_list = list(players)
-            #startGenerating(pl_list)
-            teams = generate_teams(pl_list) # ?
+            teams = startGenerating(pl_list)
+            #teams = generate_teams(pl_list) # ?
 
             matches = []
             for i in range(0, len(teams) - 1, 2):
@@ -97,25 +97,7 @@ def generate_teams_view(request):
                 team2 = teams[i + 1]
                 match_uniq_id = uuid.uuid4()
 
-                match = {
-                    'match_id': match_uniq_id,
-                    'matchRating': round((team1['total_rating'] + team2['total_rating']) / 12),
-                    
-                    'team1_players' : {
-                        'Вратарь': [{'name': team1['goalkeeper']['name'], 'rate': team1['goalkeeper']['rating']}],
-                        'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team1['defenders']],
-                        'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team1['forwards']]
-                    },
-
-                    'team2_players' : {
-                        'Вратарь': [{'name': team2['goalkeeper']['name'], 'rate': team2['goalkeeper']['rating']}],
-                        'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team2['defenders']],
-                        'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team2['forwards']]
-                    },
-
-                    'team1_score' : '',
-                    'team2_score' : '',
-                }
+                match = getMatchObject(match_uniq_id, team1, team2)
                 matches.append(match)
 
                 Micromatch.objects.create(
@@ -123,8 +105,6 @@ def generate_teams_view(request):
                         matchRating = match['matchRating'],
                         team1_players = match['team1_players'],
                         team2_players = match['team2_players'],
-                        team1_score = None,
-                        team2_score = None,
                     )
             
             return JsonResponse({'status': 'success', 'matches': matches}) 

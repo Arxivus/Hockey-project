@@ -39,14 +39,14 @@ function getTeamCard(team, team_score, num) {
     const teamCard = document.createElement('div')
     teamCard.classList.add('team-card')
 
-    const team1Score = document.createElement('input')
-    team1Score.classList.add(`team${num}-score-input`)
-    team1Score.setAttribute('type', 'number')
-    team1Score.value = team_score
+    const teamScore = document.createElement('input')
+    teamScore.classList.add(`team${num}-score-input`)
+    teamScore.setAttribute('type', 'number')
+    teamScore.value = team_score
    
     const teamTitle = document.createElement('h5');
     teamTitle.textContent = 'Состав команды'
-    teamCard.append(team1Score, teamTitle)
+    teamCard.append(teamScore, teamTitle)
 
     const teamPlayersBlock = document.createElement('div');
     teamPlayersBlock.classList.add('team-players-block')

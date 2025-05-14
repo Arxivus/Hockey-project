@@ -7,6 +7,7 @@ urlpatterns = [
     path('user/', views.user_profile, name='user'),
     path('tournaments/', views.tournaments_page, name='tournaments'),
     path('tournaments/generate-teams/', views.generate_teams_view, name='generate_teams'),
+    path('tournaments/get-next-match/', views.get_next_match_view, name='get_next_match'),
     path('tournaments/get-stored-matches/', views.get_stored_matches_view, name='get_stored_matches'),
     path('tournaments/save-match/<uuid:match_id>/', views.save_match_view, name='save_match'),
     path('ratings/', views.ratings_page, name='ratings'),

@@ -6,8 +6,7 @@ from .models import Profile, TestBalancer, Micromatch, Announsment, uuid
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .team_generator import generate_teams, getMatchObject
-from .rating_update import startGenerating
+from .rating_update import startGenerating, generateMatch, getMatchObject
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
@@ -83,35 +82,49 @@ def get_stored_matches_view(request):
         return JsonResponse({'status': 'success', 'matches': matches_list}) 
         
 
+def save_and_get_match(teams):
+    matchContainer = []
+    team1 = teams[0]
+    team2 = teams[1]
+    match_uniq_id = uuid.uuid4()
+    match = getMatchObject(match_uniq_id, team1, team2)
+    matchContainer.append(match)
+
+    Micromatch.objects.create(
+            match_id = match['match_id'],
+            matchRating = match['matchRating'],
+            team1_players = match['team1_players'],
+            team2_players = match['team2_players'],
+    )
+
+    return matchContainer
+
+
 def generate_teams_view(request):
     if request.method == 'GET':
         try:
             players = TestBalancer.objects.all().values()
             pl_list = list(players)
             teams = startGenerating(pl_list)
-            #teams = generate_teams(pl_list) # ?
-
-            matches = []
-            for i in range(0, len(teams) - 1, 2):
-                team1 = teams[i]
-                team2 = teams[i + 1]
-                match_uniq_id = uuid.uuid4()
-
-                match = getMatchObject(match_uniq_id, team1, team2)
-                matches.append(match)
-
-                Micromatch.objects.create(
-                        match_id = match['match_id'],
-                        matchRating = match['matchRating'],
-                        team1_players = match['team1_players'],
-                        team2_players = match['team2_players'],
-                    )
-            
-            return JsonResponse({'status': 'success', 'matches': matches}) 
+            matchContainer = save_and_get_match(teams)
+        
+            return JsonResponse({'status': 'success', 'matches': matchContainer})
         
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+
+def get_next_match_view(request):
+    if request.method == 'GET':
+        try:
+            teams = generateMatch()
+            matchContainer = save_and_get_match(teams)
+
+            return JsonResponse({'status': 'success', 'matches': matchContainer})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        
 
 def save_match_view(request, match_id):
     if request.method == 'POST':
@@ -136,10 +149,3 @@ def save_match_view(request, match_id):
                 'status': 'error',
                 'message': str(e)
             }, status=500)
-        
-""" def startGenerating_view():
-    players = TestBalancer.objects.all().values()
-    pl_list = list(players)
-    first_match = startGenerating(pl_list)
-
-    return JsonResponse({'status': 'success', 'match': first_match}) """

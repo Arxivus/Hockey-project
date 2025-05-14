@@ -18,8 +18,8 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
-function generateMatches(matchesTable) {
-    fetch('/tournaments/generate-teams/', 
+function getMatchesData(matchesTable, url) {
+    fetch(url, 
         {
             method: 'GET',
             headers: { 'X-CSRFToken': csrftoken }
@@ -29,15 +29,16 @@ function generateMatches(matchesTable) {
         .catch(error => console.error('Ошибка получения данных:', error))
 }
 
-function getGeneratedMatches(matchesTable) { 
-    fetch('/tournaments/get-stored-matches/', 
-        {
-            method: 'GET',
-            headers: { 'X-CSRFToken': csrftoken }
-        })
-        .then(response => response.json())
-        .then(data => renderMatches(data['matches'], matchesTable))  
-        .catch(error => console.error('Ошибка получения данных:', error))
+function generateMatches(matchesTable, url) {
+    getMatchesData(matchesTable, url)
+}
+
+function getNextMatch(matchesTable, url) {
+    getMatchesData(matchesTable, url)
+}
+
+function getGeneratedMatches(matchesTable, url) {
+    getMatchesData(matchesTable, url)
 }
 
 function saveMatchScore(matchId, score1, score2) {
@@ -65,6 +66,7 @@ function getCompetitors() {
 
 export {
     generateMatches,
+    getNextMatch,
     getGeneratedMatches,
     saveMatchScore,
     getCompetitors

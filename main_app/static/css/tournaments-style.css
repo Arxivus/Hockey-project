@@ -1,3 +1,17 @@
+button {
+    padding: 10px 20px;
+    font-size: 20px;
+    border: 2px solid #C23636;
+    border-radius: 15px;
+    color: #fff;
+    background-color: #C23636;
+}
+
+button:hover {
+    border: 2px solid #fff;
+    transition: color 0.2s ease-in-out;
+}
+
 .tour-generation {
     display: flex;
     align-items: center;
@@ -8,20 +22,16 @@
     margin: 0;
 }
 
+.next-match-btn {
+    background-color: #533131;
+    border-color: #533131;
+}
+
 .matches {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 80px;
-}
-
-.generate-btn {
-    padding: 10px 20px;
-    font-size: 20px;
-    border: 2px solid #C23636;
-    border-radius: 15px;
-    color: #fff;
-    background-color: #C23636;
 }
 
 .team-card {
@@ -109,18 +119,6 @@
 .save-score-btn {
     width: max-content;
     align-self: center;
-    padding: 10px 20px;
-    font-size: 20px;
-    border: 2px solid #C23636;
-    border-radius: 15px;
-    color: #fff;
-    background-color: #C23636;
-}
-
-.form-save:hover, 
-.generate-btn:hover {
-    border: 2px solid #fff;
-    transition: color 0.2s ease-in-out;
 }
 
 .vs-img {

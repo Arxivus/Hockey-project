@@ -81,3 +81,27 @@ def generateMatch(): # заменить ею team_generator ------------------- 
 
 def update_goals_matrix():
     return
+
+
+def getMatchObject(id, team1, team2):
+    match = {
+        'match_id': id,
+        'matchRating': round((team1['total_rating'] + team2['total_rating']) / 12),
+                    
+        'team1_players' : {
+            'Вратарь': [{'name': team1['goalkeeper']['name'], 'rate': team1['goalkeeper']['rating']}],
+            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team1['defenders']],
+            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team1['forwards']]
+        },
+
+        'team2_players' : {
+            'Вратарь': [{'name': team2['goalkeeper']['name'], 'rate': team2['goalkeeper']['rating']}],
+            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team2['defenders']],
+            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team2['forwards']]
+        },
+
+        'team1_score' : 0,
+        'team2_score' : 0,
+    }
+
+    return match

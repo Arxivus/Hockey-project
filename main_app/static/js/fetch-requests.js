@@ -41,12 +41,17 @@ function getGeneratedMatches(matchesTable, url) {
     getMatchesData(matchesTable, url)
 }
 
-function saveMatchScore(matchId, score1, score2) {
+function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId) {
     fetch(`/tournaments/save-match/${matchId}/`, 
         {
             method: 'POST',
             headers: { 'X-CSRFToken': csrftoken },
-            body: JSON.stringify({ team1_score: score1, team2_score: score2 })
+            body: JSON.stringify({ 
+                team1_score: score1,
+                team2_score: score2,
+                team1_playersId: team1_playersId,
+                team2_playersId: team2_playersId
+            })
         })
         .then(response => response.json())
         .then(data => console.log(data['message']))

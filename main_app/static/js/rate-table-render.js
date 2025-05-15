@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function renderRatingsTable(competitors) {
-    console.log(competitors);
     const rateTable = document.querySelector('.table-rows');
     const tableHeaders = document.createElement('table');
     tableHeaders.classList.add('table-headers')

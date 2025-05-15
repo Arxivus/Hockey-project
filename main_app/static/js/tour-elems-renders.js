@@ -1,17 +1,17 @@
 import { saveMatchScore } from './fetch-requests.js';
 
 function renderMatches(matches, matchesTable) { 
-    /*console.log(matches);*/
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         const matchRating = match['matchRating']
-        
         const matchId = match['match_id'] 
-
         const team1Card = getTeamCard(match['team1_players'], match['team1_score'], 1)
         const team2Card = getTeamCard(match['team2_players'], match['team2_score'], 2)
 
-        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId)  
+        const team1_playersId = getTeamPlayersId(match['team1_players'])
+        const team2_playersId = getTeamPlayersId(match['team2_players'])
+
+        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId)  
         matchCard.setAttribute('data-uuid', matchId) 
 
         matchesTable.prepend(matchCard)
@@ -50,7 +50,7 @@ function getTeamCard(team, team_score, num) {
 
     const teamPlayersBlock = document.createElement('div');
     teamPlayersBlock.classList.add('team-players-block')
-   
+    
     const teamRoles = Object.keys(team)
     for (let i = 0; i < teamRoles.length; i++) {
         const roleName = teamRoles[i]
@@ -64,7 +64,7 @@ function getTeamCard(team, team_score, num) {
     return teamCard
 }
 
-function getMatchCard(team1Card, team2Card, matchRating, matchId) {
+function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId) {
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
@@ -74,10 +74,8 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId) {
 
     const matchPlaceBlock = document.createElement('div')
     matchPlaceBlock.classList.add('match-place')
-    
     const matchPlace = document.createElement('h4'); 
     matchPlace.textContent = '12:00 / Поле №'
-
     matchPlaceBlock.append(matchTitle, matchPlace)
 
     const matchSaveBlock = document.createElement('div');
@@ -91,15 +89,13 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId) {
     saveScoreBtn.classList.add('save-score-btn')
     saveScoreBtn.setAttribute('data-uuid', matchId);
     saveScoreBtn.textContent = 'Сохранить счет'
-
     saveScoreBtn.addEventListener('click', (event) => {
         const currentCard = event.currentTarget.closest('.match-card')
         const score1 = currentCard.querySelector('.team1-score-input').value
         const score2 = currentCard.querySelector('.team2-score-input').value
-        
-        saveMatchScore(matchId, score1, score2);
+        saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId);
     })
-    
+
     matchSaveBlock.append(VS, saveScoreBtn)
 
     const matchTeams = document.createElement('div')
@@ -108,6 +104,22 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId) {
 
     matchCard.append(matchPlaceBlock, matchTeams)
     return matchCard
+}
+
+function getTeamPlayersId(team) {
+    const players_id = []
+    const teamRoles = Object.keys(team)
+
+    for (let i = 0; i < teamRoles.length; i++) {
+        const teamRole = teamRoles[i]
+        const rolePlayers = team[teamRole]
+
+        rolePlayers.forEach((player) => {
+            players_id.push(player.id)
+        });   
+    }
+
+    return players_id
 }
 
 export {

@@ -1,4 +1,5 @@
 import uuid
+import json
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -36,8 +37,8 @@ TEAM_ROLE = (
     ('goalkeeper','вратарь')
 )
 
-class TestBalancer(models.Model):
-    player_id = models.IntegerField(unique=True, editable=False, null=True)
+class Competitor(models.Model):
+    player_id = models.IntegerField(primary_key=True, unique=True, editable=False) #null=True
     name = models.CharField(max_length=50)
     rating = models.IntegerField(null=True)
     role = models.CharField(choices=TEAM_ROLE, default='forward')
@@ -49,15 +50,31 @@ class TestBalancer(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.player_id:
-            last_obj = TestBalancer.objects.order_by('-player_id').first()
+            last_obj = Competitor.objects.order_by('-player_id').first()
             self.player_id = 1 if not last_obj else last_obj.player_id + 1
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.player_id}: {self.name}"
+        return f"{self.player_id}: {self.name}, {self.role}"
     
 
+class Tournament(models.Model):
+    tour_id = models.IntegerField(primary_key=True, unique=True, editable=False)
+    date = models.DateField(auto_now_add=True)
+    goal_matrix = models.JSONField(default=list)
+
+    def save(self, *args, **kwargs):
+        if not self.tour_id:
+            last_obj = Tournament.objects.order_by('-tour_id').first()
+            self.tour_id = 1 if not last_obj else last_obj.tour_id + 1
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Турнир №{self.tour_id}"
+
+
 class Micromatch(models.Model):
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True, related_name='matches')
     match_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     matchRating = models.IntegerField()
     team1_players = models.JSONField()
@@ -65,6 +82,9 @@ class Micromatch(models.Model):
     team1_score = models.IntegerField(default=0)
     team2_score = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Микроматч {self.created_at}"
 
 
 class Announsment(models.Model):

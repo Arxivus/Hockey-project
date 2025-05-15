@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     getGeneratedMatches(matchesTable, '/tournaments/get-stored-matches/')
 
     generateBtn.addEventListener('click', function() {
-        generateMatches(matchesTable, '/tournaments/generate-teams/')
+        generateMatches(matchesTable, '/tournaments/start-new/')
     })
 
     getNextMatchBtn.addEventListener('click', function() {

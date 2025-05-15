@@ -1,25 +1,19 @@
 from itertools import combinations
 
-forwards, defenders, goalkeepers  = [], [], []
-
-def startGenerating(pl_list): # функция для ресета турнира
-    """ pl_count = len(pl_list)
-    goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ] """
-
-    global forwards, defenders, goalkeepers
+def splitByRole(pl_list): 
     forwards, defenders, goalkeepers  = [], [], []
-
     for pl in pl_list:
         match pl['role']:
             case 'forward': forwards.append(pl)
             case 'defender': defenders.append(pl)
             case 'goalkeeper': goalkeepers.append(pl)
 
-    first_match_teams = generateMatch()
-    return first_match_teams
+    return forwards, defenders, goalkeepers
 
 
-def generateMatch(): 
+def generateMatch(pl_list):
+    forwards, defenders, goalkeepers = splitByRole(pl_list)
+
     fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['rating']))
     df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['rating']))
     gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['rating']))

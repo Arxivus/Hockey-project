@@ -5,7 +5,7 @@ from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uu
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .match_generator import startGenerating, generateMatch, getMatchObject
+from .match_generator import generateMatch, getMatchObject
 from .rating_update import updateRatings, updateGoalsMatrix
 
 def home_page(request):
@@ -75,7 +75,6 @@ def get_competitors_view(request):
 
 def get_stored_matches_view(request): 
     if request.method == 'GET':
-        #matches = Micromatch.objects.all().order_by('created_at').values()
         last_tournament = Tournament.objects.order_by('-tour_id').first()
         if last_tournament:
             matches = Micromatch.objects.filter(tournament=last_tournament).order_by('created_at').values()
@@ -106,18 +105,17 @@ def getSavedMatch(tournament, teams):
     return matchContainer
 
 
-def generate_teams_view(request): # запуск нового турнира
+def start_new_tour_view(request): # запуск нового турнира (нужно обновлять страницу?)
     if request.method == 'GET':
         try:
             players = Competitor.objects.all().values()
             pl_list = list(players)
-            pl_count = len(pl_list)
-            print(pl_list)
-            goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
 
+            pl_count = len(pl_list)
+            goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
             tournament = Tournament.objects.create(goal_matrix = goals_with_matrix)
             
-            teams = startGenerating(pl_list)
+            teams = generateMatch(pl_list)
             matchContainer = getSavedMatch(tournament, teams)
         
             return JsonResponse({'status': 'success', 'matches': matchContainer})
@@ -129,9 +127,14 @@ def generate_teams_view(request): # запуск нового турнира
 def get_next_match_view(request): # следующий матч турнира
     if request.method == 'GET':
         try:
-            teams = generateMatch()
-            tournament = Tournament.objects.last()
-            matchContainer = getSavedMatch(tournament, teams) #------------------------------------------------------
+            players = Competitor.objects.all().values()
+            pl_list = list(players)
+
+            tournament = Tournament.objects.order_by('-tour_id').first()
+
+            teams = generateMatch(pl_list)
+            matchContainer = getSavedMatch(tournament, teams)
+
             return JsonResponse({'status': 'success', 'matches': matchContainer})
 
         except Exception as e:
@@ -143,18 +146,22 @@ def save_match_view(request, match_id):
         try:
             match = Micromatch.objects.get(match_id=match_id)
             data = json.loads(request.body)
-            score1 = data['team1_score']
-            score2 = data['team2_score']
+            new_score1 = int(data['team1_score'])
+            new_score2 = int(data['team2_score'])
 
-            match.team1_score = score1
-            match.team2_score = score2
+            diff_score1 = new_score1 - int(match.team1_score)
+            diff_score2 = new_score2 - int(match.team2_score)
+
+            match.team1_score = new_score1
+            match.team2_score = new_score2
             match.save()
 
             team1_playersId = data['team1_playersId']
             team2_playersId = data['team2_playersId']
 
-            updateGoalsMatrix(score1, score2, team1_playersId, team2_playersId)
-            updateRatings(score1, score2, team1_playersId, team2_playersId)
+            tournament = match.tournament
+            updateGoalsMatrix(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId)
+            updateRatings(tournament, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Match saved'})
 

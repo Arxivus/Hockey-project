@@ -61,7 +61,7 @@ class Competitor(models.Model):
 class Tournament(models.Model):
     tour_id = models.IntegerField(primary_key=True, unique=True, editable=False)
     date = models.DateField(auto_now_add=True)
-    goal_matrix = models.JSONField(default=list)
+    played_with_matrix = models.JSONField(default=list)
 
     def save(self, *args, **kwargs):
         if not self.tour_id:

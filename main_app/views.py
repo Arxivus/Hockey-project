@@ -6,7 +6,7 @@ from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, getMatchObject
-from .rating_update import updateRatings, updateGoalsMatrix
+from .rating_update import updateRatings, updatMatchesPlayedMatrix
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
@@ -105,15 +105,15 @@ def getSavedMatch(tournament, teams):
     return matchContainer
 
 
-def start_new_tour_view(request): # запуск нового турнира (нужно обновлять страницу?)
+def start_new_tour_view(request): # запуск нового турнира (нужно обновлять страницу?) 
     if request.method == 'GET':
         try:
             players = Competitor.objects.all().values()
             pl_list = list(players)
 
             pl_count = len(pl_list)
-            goals_with_matrix = [ [0 for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
-            tournament = Tournament.objects.create(goal_matrix = goals_with_matrix)
+            played_with_matrix = [ [[0,0] for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
+            tournament = Tournament.objects.create(played_with_matrix = played_with_matrix)
             
             teams = generateMatch(pl_list)
             matchContainer = getSavedMatch(tournament, teams)
@@ -160,8 +160,9 @@ def save_match_view(request, match_id):
             team2_playersId = data['team2_playersId']
 
             tournament = match.tournament
-            updateGoalsMatrix(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId)
-            updateRatings(tournament, team1_playersId, team2_playersId)
+
+            updatMatchesPlayedMatrix(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId)
+            #updateRatings(tournament, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Match saved'})
 

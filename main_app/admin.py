@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Profile, Competitor, Micromatch, Announsment, Tournament
 
 class TournamentAdmin(admin.ModelAdmin):
-    fields = ('tour_id', 'date', 'goal_matrix')
+    fields = ('tour_id', 'date', 'played_with_matrix')
     readonly_fields = ('tour_id', 'date')  
 
 admin.site.register(Profile)

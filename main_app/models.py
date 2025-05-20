@@ -55,7 +55,7 @@ class Competitor(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.player_id}: {self.name}, {self.role}"
+        return f"ID: {self.player_id}, {self.name}, {self.role}, {self.age}"
     
 
 class Tournament(models.Model):
@@ -72,6 +72,17 @@ class Tournament(models.Model):
     def __str__(self):
         return f"Турнир №{self.tour_id}"
 
+
+class TourGroupPlayer(models.Model):
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='groups')
+    group_id = models.IntegerField()
+    group_age_pool = models.JSONField(default=tuple)
+    group_gender = models.CharField() 
+    player = models.ForeignKey(Competitor, on_delete=models.CASCADE, related_name='groups')
+
+    def __str__(self):
+        return f"Группа {self.group_age_pool[0]}-{self.group_age_pool[1]} лет, ID игрока: {self.player.player_id}"
+   
 
 class Micromatch(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True, related_name='matches')

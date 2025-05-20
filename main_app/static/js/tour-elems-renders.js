@@ -1,6 +1,11 @@
 import { saveMatchScore } from './fetch-requests.js';
 
-function renderMatches(matches, matchesTable) { 
+function renderMatches(matches, matchesTable) {
+    if (matches === undefined) {
+        console.log('Nothing to render');
+        return
+    } 
+
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
         const matchRating = match['matchRating']

@@ -1,34 +1,24 @@
-from .models import Competitor, Tournament
+from .models import Competitor
 import numpy as np
 
 # протестировать изменение рейтингов
-# добавить pool игрокам
+# добавить pool 
 
-
-def updatMatchesPlayedMatrix(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId): 
-    matrix = tournament.played_with_matrix
+def updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId): 
     all_match_id = list(team1_playersId) + list(team2_playersId)
 
     for id in all_match_id:
         player = Competitor.objects.get(player_id=id)
-        player.matches_played += 1
 
         if id in team1_playersId:
             player.goals_scored += diff_score1
             player.goals_taken += diff_score2
 
         else:
-            player.goals_scored += diff_score2  # нужно сохранять объект игрока при изменении счета
+            player.goals_scored += diff_score2 
             player.goals_taken += diff_score1
 
-        for other_id in all_match_id:
-            if (other_id in team1_playersId and id in team1_playersId) or (other_id in team2_playersId and id in team2_playersId):
-                matrix[id][other_id][0] += 1
-            else:
-                matrix[id][other_id][1] += 1
-    
-    tournament.played_with_matrix = matrix
-    tournament.save()  
+        player.save()
 
 # -------------------------------------------------------------------------------------------
 
@@ -48,7 +38,6 @@ def getNewRatings(A, B, pl_count, players_pool_id):
     B_full = np.hstack([B, B_reg])
 
     return np.linalg.lstsq(A, B, rcond=None)[0]
-
 
 
 def getSumRatings(players_pool):

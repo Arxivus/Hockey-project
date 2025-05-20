@@ -25,11 +25,18 @@ function getMatchesData(matchesTable, url) {
             headers: { 'X-CSRFToken': csrftoken }
         })
         .then(response => response.json())
-        .then(data => renderMatches(data['matches'], matchesTable)) 
+        .then(data => {
+            if (data['message']) {
+                console.log(data['message']);
+            }
+            renderMatches(data['matches'], matchesTable);
+        }) 
         .catch(error => console.error('Ошибка получения данных:', error))
 }
 
 function generateMatches(matchesTable, url) {
+    const matchesBlock = document.querySelector('.matches');
+    matchesBlock.innerHTML = ''
     getMatchesData(matchesTable, url)
 }
 

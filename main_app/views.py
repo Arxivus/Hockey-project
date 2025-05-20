@@ -5,8 +5,8 @@ from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uu
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .match_generator import generateMatch, getMatchObject
-from .rating_update import updateRatings, updatMatchesPlayedMatrix
+from .match_generator import generateMatch, getMatchObject, splitIntoGroups, updatePlayersMatrix
+from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
@@ -86,12 +86,13 @@ def get_stored_matches_view(request):
         return JsonResponse({'status': 'success', 'matches': matches_list}) 
         
 
-def getSavedMatch(tournament, teams): 
+def getSavedMatch(tournament, teams, pl_in_team): 
     matchContainer = []
     team1 = teams[0]
     team2 = teams[1]
     match_uniq_id = uuid.uuid4()
-    match = getMatchObject(match_uniq_id, team1, team2)
+    match = getMatchObject(match_uniq_id, team1, team2, pl_in_team)
+    updatePlayersMatrix(tournament, team1, team2)
     matchContainer.append(match)
 
     Micromatch.objects.create(
@@ -108,17 +109,24 @@ def getSavedMatch(tournament, teams):
 def start_new_tour_view(request): # запуск нового турнира (нужно обновлять страницу?) 
     if request.method == 'GET':
         try:
-            players = Competitor.objects.all().values()
-            pl_list = list(players)
+            Competitor.objects.update(
+                matches_played = 0,
+                goals_scored = 0,
+                goals_taken = 0,
+            )
 
-            pl_count = len(pl_list)
-            played_with_matrix = [ [[0,0] for _  in range(pl_count + 1)] for _ in range(pl_count + 1) ]
-            tournament = Tournament.objects.create(played_with_matrix = played_with_matrix)
+            players = Competitor.objects.all()
+            pl_list = list(players.values())
+            size = Competitor.objects.all().order_by('-player_id').first().player_id + 1
             
-            teams = generateMatch(pl_list)
-            matchContainer = getSavedMatch(tournament, teams)
+            played_with_matrix = [ [[0,0] for _  in range(size)] for _ in range(size) ]
+            tournament = Tournament.objects.create(played_with_matrix = played_with_matrix)
+
+            splitIntoGroups(tournament, players)
+            teams, pl_in_team = generateMatch(pl_list)
+            matchContainer = getSavedMatch(tournament, teams, pl_in_team)
         
-            return JsonResponse({'status': 'success', 'matches': matchContainer})
+            return JsonResponse({'status': 'success', 'message': 'New tournament has been started', 'matches': matchContainer})
         
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
@@ -129,11 +137,13 @@ def get_next_match_view(request): # следующий матч турнира
         try:
             players = Competitor.objects.all().values()
             pl_list = list(players)
-
             tournament = Tournament.objects.order_by('-tour_id').first()
 
-            teams = generateMatch(pl_list)
-            matchContainer = getSavedMatch(tournament, teams)
+            teams, pl_in_team = generateMatch(pl_list)
+            if pl_in_team is None:
+                return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
+
+            matchContainer = getSavedMatch(tournament, teams, pl_in_team)
 
             return JsonResponse({'status': 'success', 'matches': matchContainer})
 
@@ -161,7 +171,7 @@ def save_match_view(request, match_id):
 
             tournament = match.tournament
 
-            updatMatchesPlayedMatrix(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId)
+            updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId)
             #updateRatings(tournament, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Match saved'})

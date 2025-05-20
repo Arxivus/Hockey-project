@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Competitor, Micromatch, Announsment, Tournament
+from .models import Profile, Competitor, Micromatch, Announsment, Tournament, TourGroupPlayer
 
 class TournamentAdmin(admin.ModelAdmin):
     fields = ('tour_id', 'date', 'played_with_matrix')
@@ -10,5 +10,6 @@ admin.site.register(Competitor)
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(Micromatch)
 admin.site.register(Announsment)
+admin.site.register(TourGroupPlayer)
 
 

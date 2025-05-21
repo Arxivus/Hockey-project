@@ -38,7 +38,8 @@ TEAM_ROLE = (
 )
 
 class Competitor(models.Model):
-    player_id = models.IntegerField(primary_key=True, unique=True, editable=False) #null=True
+    player_id = models.IntegerField(primary_key=True, unique=True, editable=False) 
+    group_id = models.IntegerField(null=True)
     name = models.CharField(max_length=50)
     rating = models.IntegerField(null=True)
     role = models.CharField(choices=TEAM_ROLE, default='forward')
@@ -73,15 +74,16 @@ class Tournament(models.Model):
         return f"Турнир №{self.tour_id}"
 
 
-class TourGroupPlayer(models.Model):
+class TournamentGroup(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='groups')
     group_id = models.IntegerField()
     group_age_pool = models.JSONField(default=tuple)
+    age_spread = models.IntegerField(default=1)
     group_gender = models.CharField() 
-    player = models.ForeignKey(Competitor, on_delete=models.CASCADE, related_name='groups')
+    stopped_played = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Группа {self.group_age_pool[0]}-{self.group_age_pool[1]} лет, ID игрока: {self.player.player_id}"
+        return f"Группа №{self.group_id}, {self.group_age_pool[0]}-{self.group_age_pool[1]} лет, {self.group_gender}"
    
 
 class Micromatch(models.Model):

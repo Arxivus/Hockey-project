@@ -1,51 +1,21 @@
 from itertools import combinations
-from .models import TourGroupPlayer, Competitor
+from .models import TournamentGroup, Competitor
+from .players_functions import splitByRole
 
-def addPlayerToGroup(tournament, group_id, group_age_pool, group_gender, player):
-    TourGroupPlayer.objects.create(
-        tournament = tournament,
-        group_id = group_id,
-        group_age_pool = group_age_pool,
-        group_gender = group_gender,
-        player = player
-    )
-
-def splitIntoGroups(tournament, players):
-    age_groups = [(1, (7, 10)), (2, (11, 13)), (3, (14, 16)), (4, (17, 99))]
-    
-    for player in players:
-        age, gender = player.age, player.gender
-        for group_num, (min_age, max_age) in age_groups:
-            if min_age <= age <= max_age:
-                addPlayerToGroup(tournament, group_num, (min_age, max_age), gender, player)
-
-
-def splitByRole(pl_list): 
-    forwards, defenders, goalkeepers  = [], [], []
-    for pl in pl_list:
-        match pl['role']:
-            case 'forward': forwards.append(pl)
-            case 'defender': defenders.append(pl)
-            case 'goalkeeper': goalkeepers.append(pl)
-
-    return forwards, defenders, goalkeepers
-
-# ------------------------------------------------------------------------------------------------------------------------------
 
 def getBalancedTeams(fw_sorted, df_sorted, gk_sorted, pl_in_team):
-    # Выбираем вратарей с наименьшим количеством матчей
     best_diff = float('inf')
     best_teams = []
     fw_in_team = round(pl_in_team / 2)
     have_gk = len(gk_sorted) != 0 
     
-    # Берем т8 нападающих и 6 защитников (для оптимизации)
+    # Берем т8 нападающих и т6 защитников (для оптимизации)
     top_fw = fw_sorted[:8]
     top_df = df_sorted[:6]
 
     for fw_combo in combinations(top_fw, fw_in_team * 2):
         for df_combo in combinations(top_df, 4):
-            # Формируем команды
+            
             team1_fw, team2_fw = fw_combo[:fw_in_team], fw_combo[fw_in_team:]
             team1_df, team2_df = df_combo[:2], df_combo[2:]
             rating1, rating2 = 0, 0
@@ -80,30 +50,34 @@ def getBalancedTeams(fw_sorted, df_sorted, gk_sorted, pl_in_team):
 
 
 def generateMatch(pl_list):
-    youngest_group_pl = TourGroupPlayer.objects.order_by('group_id').first()
+    groups = TournamentGroup.objects.order_by('group_id').all()
+    for group in groups:
+        if group.stopped_played:
+            continue
 
-    if youngest_group_pl is None:
-        return (None, None)
+        else:
+            id = group.group_id
+            players = Competitor.objects.filter(group_id=id).values()
 
-    else:
-        id = youngest_group_pl.group_id
-        players_ids = TourGroupPlayer.objects.filter(group_id = id).values_list('player_id', flat=True)
-        players = Competitor.objects.filter(player_id__in=players_ids).values()
-        pl_list = list(players)
-        pl_in_team = 6
+            if players == None or len(players) < 8:
+                print('not enough players in', id)
+                continue
 
-        if id == 1:
-            pl_in_team = 4
+            pl_list = list(players)
 
-        forwards, defenders, goalkeepers = splitByRole(pl_list)
+            if group.group_age_pool[1] <= 10:
+                pl_in_team = 4
+            else:
+                pl_in_team = 6
 
-        fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['rating']))
-        df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['rating']))
-        gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['rating']))
-        
+            forwards, defenders, goalkeepers = splitByRole(pl_list)
 
-        best_teams = getBalancedTeams(fw_sorted, df_sorted, gk_sorted, pl_in_team)
-        return (best_teams, pl_in_team)
+            fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['rating']))
+            df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['rating']))
+            gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['rating']))
+            
+            best_teams = getBalancedTeams(fw_sorted, df_sorted, gk_sorted, pl_in_team)
+            return (best_teams, pl_in_team)
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,37 +105,3 @@ def getMatchObject(id, team1, team2, pl_in_team):
         match['team2_players']['Вратарь'] = [{'id': g['player_id'], 'name': g['name'], 'rate': g['rating']} for g in team2['goalkeeper']]
 
     return match
-
-
-def getTeamPlayersId(team):
-    players_id = []
-    del team['total_rating']
-    roles_players_arr = team.values()
-    
-    for roles_players in roles_players_arr:
-        for player in roles_players:
-            players_id.append(player['player_id'])
-
-    return players_id
-
-
-
-def updatePlayersMatrix(tournament, team1, team2):
-    team1_playersId = getTeamPlayersId(team1)
-    team2_playersId = getTeamPlayersId(team2)
-  
-    all_match_id = list(team1_playersId) + list(team2_playersId)
-    matrix = tournament.played_with_matrix
-    for id in all_match_id:
-        player = Competitor.objects.get(player_id=id)
-        player.matches_played += 1
-        player.save()
-        print(len(matrix))
-        for other_id in all_match_id:
-            if (other_id in team1_playersId and id in team1_playersId) or (other_id in team2_playersId and id in team2_playersId):
-                matrix[id][other_id][0] += 1
-            else:
-                matrix[id][other_id][1] += 1
-        print(2)
-    tournament.played_with_matrix = matrix
-    tournament.save() 

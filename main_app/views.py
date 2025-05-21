@@ -5,7 +5,8 @@ from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uu
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .match_generator import generateMatch, getMatchObject, splitIntoGroups, updatePlayersMatrix
+from .match_generator import generateMatch, getMatchObject
+from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
@@ -62,7 +63,7 @@ def user_profile(request):
     return render(request, 'user_profile.html', { 'profile': profile })
 
 
-def get_competitors_view(request):
+def get_competitors_view(request): # получение списка игроков для таблицы рейтингов
     if request.method == 'GET':
         try:
             competitors = Profile.objects.all().order_by('-rating').values()
@@ -73,7 +74,7 @@ def get_competitors_view(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
-def get_stored_matches_view(request): 
+def get_stored_matches_view(request): # получение сранее сгенерированных матчей последнего турнира
     if request.method == 'GET':
         last_tournament = Tournament.objects.order_by('-tour_id').first()
         if last_tournament:
@@ -86,7 +87,7 @@ def get_stored_matches_view(request):
         return JsonResponse({'status': 'success', 'matches': matches_list}) 
         
 
-def getSavedMatch(tournament, teams, pl_in_team): 
+def getSavedMatch(tournament, teams, pl_in_team): # сохранение матча в базе
     matchContainer = []
     team1 = teams[0]
     team2 = teams[1]
@@ -106,10 +107,11 @@ def getSavedMatch(tournament, teams, pl_in_team):
     return matchContainer
 
 
-def start_new_tour_view(request): # запуск нового турнира (нужно обновлять страницу?) 
+def start_new_tour_view(request): # запуск нового турнира  ----------------------------------------------------
     if request.method == 'GET':
         try:
             Competitor.objects.update(
+                group_id = 0,
                 matches_played = 0,
                 goals_scored = 0,
                 goals_taken = 0,
@@ -122,17 +124,31 @@ def start_new_tour_view(request): # запуск нового турнира (н
             played_with_matrix = [ [[0,0] for _  in range(size)] for _ in range(size) ]
             tournament = Tournament.objects.create(played_with_matrix = played_with_matrix)
 
-            splitIntoGroups(tournament, players)
+            age_groups = [
+                (1, (7, 10), 'M'), 
+                (2, (7, 10), 'W'), 
+                (3, (11, 13), 'M'), 
+                (4, (11, 13), 'W'), 
+                (5, (14, 16), 'M'),
+                (6, (14, 16), 'W'),
+                (7, (17, 99), 'M'),
+                (8, (17, 99), 'W'),
+            ]
+            generateGroups(tournament, age_groups)
+            splitIntoGroups(players, age_groups)
+
             teams, pl_in_team = generateMatch(pl_list)
+            if pl_in_team is None:
+                return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
+            
             matchContainer = getSavedMatch(tournament, teams, pl_in_team)
-        
             return JsonResponse({'status': 'success', 'message': 'New tournament has been started', 'matches': matchContainer})
         
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
-def get_next_match_view(request): # следующий матч турнира
+def get_next_match_view(request): # получение следующего матча турнира
     if request.method == 'GET':
         try:
             players = Competitor.objects.all().values()
@@ -144,14 +160,13 @@ def get_next_match_view(request): # следующий матч турнира
                 return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
 
             matchContainer = getSavedMatch(tournament, teams, pl_in_team)
-
             return JsonResponse({'status': 'success', 'matches': matchContainer})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
         
 
-def save_match_view(request, match_id):
+def save_match_view(request, match_id): # сохранение результатов матча, обновление Rt
     if request.method == 'POST':
         try:
             match = Micromatch.objects.get(match_id=match_id)

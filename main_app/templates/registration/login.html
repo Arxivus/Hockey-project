@@ -14,7 +14,8 @@
 <body>
     <div class="container">
         <div class="login-form-block">
-            <form method="POST" class="login-form">
+            <div class="login-form-box">
+                <form method="POST" class="login-form">
                 <h3 class="login-form-title">Войти в профиль</h3>
                 {% csrf_token %}
                 <div class="login-form-elements">
@@ -33,9 +34,12 @@
                 </div>
                 <div class="login-form-btns">
                     <button type="submit" class="form-btn">Войти</button>
-                    <button class="form-btn"><a href="{% url 'home' %}">Войти как гость</a></button>
+                    
                 </div>
             </form>
+            <button class="form-btn"><a href="{% url 'home' %}">Войти как гость</a></button>
+            </div>
+            
         </div>
     </div>
 </body>

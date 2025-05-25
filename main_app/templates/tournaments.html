@@ -14,11 +14,13 @@
     <div class="container">
         <h3>Турниры</h3>
         <div class="line"></div>
-        <section class="tour-generation">
-            <h4>Создание турнира:</h4>
-            <button class="generate-btn">Начать Турнир</button>
-            <button class="next-match-btn">Следующий матч</button>
-        </section>
+        {% if perms.main_app.can_generate_tour %}
+            <section class="tour-generation">
+                <h4>Создание турнира:</h4>
+                <button class="generate-btn">Начать Турнир</button>
+                <button class="next-match-btn">Следующий матч</button>
+            </section>
+        {% endif %}
         <section class="matches"></section>
     </div>
 {% endblock %}

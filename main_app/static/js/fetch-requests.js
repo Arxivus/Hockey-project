@@ -17,6 +17,15 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+function getPermissions(url) {
+    return fetch(url, {
+            method: 'GET',
+            headers: { 'X-CSRFToken': csrftoken }
+        })
+        .then(response => response.json())
+        .then(data => data)
+}
+
 
 function getMatchesData(matchesTable, url) {
     fetch(url, 
@@ -81,5 +90,6 @@ export {
     getNextMatch,
     getGeneratedMatches,
     saveMatchScore,
-    getCompetitors
+    getCompetitors,
+    getPermissions
 }

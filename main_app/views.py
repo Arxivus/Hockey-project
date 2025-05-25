@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import F
 from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uuid
 from .forms import createUserForm, profileForm, loginForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, getMatchObject
 from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups
@@ -57,6 +57,13 @@ def register_view(request):
         
     return render(request, 'registration/register.html', {'form': form, 'profile_form': profile_form })
 
+#@permission_required('myapp.can_save_score', raise_exception=True)
+def get_user_permissions(request):
+    if request.method == 'GET':
+        return JsonResponse ({
+            'canSaveScore': request.user.has_perm('main_app.can_save_score'),
+        })
+
 
 @login_required
 def user_profile(request):
@@ -107,7 +114,7 @@ def getSavedMatch(tournament, teams, pl_in_team): # сохранение мат�
 
     return matchContainer
 
-
+@permission_required('myapp.can_start_tour', raise_exception=True)
 def start_new_tour_view(request): # запуск нового турнира 
     if request.method == 'GET':
         try:
@@ -149,7 +156,7 @@ def start_new_tour_view(request): # запуск нового турнира
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-
+@permission_required('myapp.can_generate_match', raise_exception=True)
 def get_next_match_view(request): # получение следующего матча турнира
     if request.method == 'GET':
         try:

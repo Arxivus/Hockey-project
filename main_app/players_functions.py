@@ -30,6 +30,8 @@ def updatePlayersMatrix(tournament, team1, team2):
 
 
 def generateGroups(tournament, age_groups):
+    TournamentGroup.objects.all().delete()
+    
     for group_num, age_pool, gender_letter in age_groups:
         spread = 1
         if age_pool[0] == 14:

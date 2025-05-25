@@ -1,6 +1,6 @@
-import { saveMatchScore } from './fetch-requests.js';
+import { getPermissions, saveMatchScore } from './fetch-requests.js';
 
-function renderMatches(matches, matchesTable) {
+async function renderMatches(matches, matchesTable) {
     if (matches === undefined) {
         console.log('Nothing to render');
         return
@@ -16,7 +16,7 @@ function renderMatches(matches, matchesTable) {
         const team1_playersId = getTeamPlayersId(match['team1_players'])
         const team2_playersId = getTeamPlayersId(match['team2_players'])
 
-        const matchCard = getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId)  
+        const matchCard = await getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId)  
         matchCard.setAttribute('data-uuid', matchId) 
 
         matchesTable.prepend(matchCard)
@@ -69,7 +69,7 @@ function getTeamCard(team, team_score, num) {
     return teamCard
 }
 
-function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId) {
+async function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId) {
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
@@ -89,20 +89,23 @@ function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersI
     const VS = document.createElement('img');
     VS.classList.add('vs-img')
     VS.setAttribute('src', '/static/images/vs.png')
+    matchSaveBlock.append(VS)
 
-    const saveScoreBtn = document.createElement('button')
-    saveScoreBtn.classList.add('save-score-btn')
-    saveScoreBtn.setAttribute('data-uuid', matchId);
-    saveScoreBtn.textContent = 'Сохранить счет'
-    saveScoreBtn.addEventListener('click', (event) => {
+    const perms = await getPermissions('/tournaments/check-permissions/')
+    
+    if (perms['canSaveScore']) {
+        const saveScoreBtn = document.createElement('button')
+        saveScoreBtn.classList.add('save-score-btn')
+        saveScoreBtn.setAttribute('data-uuid', matchId);
+        saveScoreBtn.textContent = 'Сохранить счет'
+        matchSaveBlock.append(saveScoreBtn)
+        saveScoreBtn.addEventListener('click', (event) => {
         const currentCard = event.currentTarget.closest('.match-card')
         const score1 = currentCard.querySelector('.team1-score-input').value
         const score2 = currentCard.querySelector('.team2-score-input').value
         saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId);
-    })
-
-    matchSaveBlock.append(VS, saveScoreBtn)
-
+    })}
+    
     const matchTeams = document.createElement('div')
     matchTeams.classList.add('match-teams')
     matchTeams.append(team1Card, matchSaveBlock, team2Card)

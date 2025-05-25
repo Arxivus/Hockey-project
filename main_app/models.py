@@ -65,6 +65,11 @@ class Tournament(models.Model):
     date = models.DateField(auto_now_add=True)
     played_with_matrix = models.JSONField(default=list)
 
+    class Meta:
+        permissions = [
+            ("can_start_tour", "Can start new tournament"),
+        ]
+
     def save(self, *args, **kwargs):
         if not self.tour_id:
             last_obj = Tournament.objects.order_by('-tour_id').first()
@@ -97,8 +102,16 @@ class Micromatch(models.Model):
     team2_score = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = [
+            ("can_save_score", "Can save match score"),
+            ("can_generate_match", "Can generate new match"),
+        ]
+
     def __str__(self):
         return f"Микроматч {self.created_at}"
+    
+    
 
 
 class Announsment(models.Model):

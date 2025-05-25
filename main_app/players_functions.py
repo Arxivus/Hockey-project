@@ -2,13 +2,8 @@ from .models import TournamentGroup, Competitor
 
 def getTeamPlayersId(team):
     players_id = []
-    del team['total_rating']
-    roles_players_arr = team.values()
-    
-    for roles_players in roles_players_arr:
-        for player in roles_players:
-            players_id.append(player['player_id'])
-
+    for player in team:
+        players_id.append(player['player_id'])
     return players_id
 
 

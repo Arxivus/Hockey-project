@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import F
 from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uuid
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required
@@ -107,7 +108,7 @@ def getSavedMatch(tournament, teams, pl_in_team): # сохранение мат�
     return matchContainer
 
 
-def start_new_tour_view(request): # запуск нового турнира  ----------------------------------------------------
+def start_new_tour_view(request): # запуск нового турнира 
     if request.method == 'GET':
         try:
             Competitor.objects.update(
@@ -115,6 +116,7 @@ def start_new_tour_view(request): # запуск нового турнира  --
                 matches_played = 0,
                 goals_scored = 0,
                 goals_taken = 0,
+                start_rating = F('rating')
             )
 
             players = Competitor.objects.all()
@@ -142,7 +144,7 @@ def start_new_tour_view(request): # запуск нового турнира  --
                 return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
             
             matchContainer = getSavedMatch(tournament, teams, pl_in_team)
-            return JsonResponse({'status': 'success', 'message': 'New tournament has been started', 'matches': matchContainer})
+            return JsonResponse({'status': 'success', 'message': 'New tournament has been started', 'matches': matchContainer}) 
         
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)

@@ -42,6 +42,7 @@ class Competitor(models.Model):
     group_id = models.IntegerField(null=True)
     name = models.CharField(max_length=50)
     rating = models.IntegerField(null=True)
+    start_rating = models.IntegerField(null=True)
     role = models.CharField(choices=TEAM_ROLE, default='forward')
     age = models.IntegerField()
     gender = models.CharField(choices=GENDER_TYPE, default='M')
@@ -56,7 +57,7 @@ class Competitor(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"ID: {self.player_id}, {self.name}, {self.role}, {self.age}"
+        return f"ID: {self.player_id}, {self.name}, {self.role}, {self.age}, matches: {self.matches_played}"
     
 
 class Tournament(models.Model):

@@ -22,10 +22,13 @@ def updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_play
 
 # -------------------------------------------------------------------------------------------
 
-def changeRatingValue(players_pool_id, new_ratings):
-    print('---------------------------New Ratings-------------------------------')
-    print(players_pool_id)
-    print(new_ratings)
+def changeRatingValue(players_pool_id, match_players_id, new_ratings):
+    for i in range(len(new_ratings)):
+        id = players_pool_id[i]
+        if id in match_players_id:
+            player = Competitor.objects.get(player_id=id)
+            player.rating = new_ratings[i]
+            player.save()
 
 
 def getNewRatings(A, B, pl_count, players_pool_id):
@@ -59,8 +62,8 @@ def addEquationInSystem(matches_played_matrix, player, match_players_id, A_matri
     pl_in_team = len(match_players_id)/2
     i = 0
     for id in players_pool:
-        matches_with = matches_played_matrix[player.id][id][0] 
-        matches_against = matches_played_matrix[player.id][id][1]
+        matches_with = matches_played_matrix[player.player_id][id][0] 
+        matches_against = matches_played_matrix[player.player_id][id][1]
         coeff = 1 / (player.matches_played * pl_in_team)
 
         A_matrix[pos][i] = coeff * matches_with - coeff * matches_against
@@ -70,7 +73,10 @@ def addEquationInSystem(matches_played_matrix, player, match_players_id, A_matri
 
 def updateRatings(tournament, team1_playersId, team2_playersId):
     matches_played_matrix = tournament.played_with_matrix
-    players_pool_id = Competitor.objects.get(player_id=team1_playersId[0]).pool
+
+    group_id = Competitor.objects.get(player_id=team1_playersId[0]).group_id
+    players_pool_id = list(Competitor.objects.filter(group_id=group_id).values_list('player_id', flat=True)) # пул id игроков матча
+
     pl_count = len(players_pool_id)
     match_players_id = list(team1_playersId) + list(team2_playersId)
 
@@ -90,4 +96,4 @@ def updateRatings(tournament, team1_playersId, team2_playersId):
     new_ratings = getNewRatings(coeff_matrix, res_matrix, pl_count, players_pool_id) # новые рейтинги всех игроков матча
     rounded_ratings = [round(i) for i in new_ratings]
 
-    changeRatingValue(players_pool_id, rounded_ratings)
+    changeRatingValue(players_pool_id, match_players_id, rounded_ratings)

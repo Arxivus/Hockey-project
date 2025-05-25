@@ -116,7 +116,7 @@ def start_new_tour_view(request): # запуск нового турнира
                 matches_played = 0,
                 goals_scored = 0,
                 goals_taken = 0,
-                start_rating = F('rating')
+                #start_rating = F('rating')
             )
 
             players = Competitor.objects.all()
@@ -189,7 +189,7 @@ def save_match_view(request, match_id): # сохранение результа�
             tournament = match.tournament
 
             updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId)
-            #updateRatings(tournament, team1_playersId, team2_playersId)
+            updateRatings(tournament, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Match saved'})
 

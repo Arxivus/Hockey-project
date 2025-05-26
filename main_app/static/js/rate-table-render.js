@@ -18,7 +18,7 @@ function renderRatingsTable(competitors) {
 
     for (let i = 0; i < competitors.length; i++) {
         const competitor = competitors[i];
-        const row = createTableRow(i+1, competitor['fullname'], competitor['age'], competitor['rating'])
+        const row = createTableRow(i+1, competitor['name'], competitor['age'], competitor['rating'])
 
         rateTable.append(row)
     }

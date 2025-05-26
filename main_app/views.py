@@ -7,12 +7,12 @@ from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, getMatchObject
-from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups
+from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups, addToCompetitors
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
-    announs_list = list(announsments) 
+    announs_list = list(reversed(announsments)) 
     return render(request, 'home.html', {'announs_list' : announs_list})
 
 def tournaments_page(request):
@@ -71,10 +71,24 @@ def user_profile(request):
     return render(request, 'user_profile.html', { 'profile': profile })
 
 
+@login_required
+def register_to_tournament(request):
+    profile = Profile.objects.get(user=request.user)
+    already_register = Competitor.objects.filter(profile=profile).exists()
+    if already_register:
+        return redirect('user')
+    else:
+        try:
+            addToCompetitors(profile)
+        except:
+            print('Cant add')
+        return redirect('user')
+
+
 def get_competitors_view(request): # получение списка игроков для таблицы рейтингов
     if request.method == 'GET':
         try:
-            competitors = Profile.objects.all().order_by('-rating').values()
+            competitors = Competitor.objects.all().order_by('-rating').values()
             comp_list = list(competitors)
             return JsonResponse({'status': 'success', 'competitors': comp_list}) 
         

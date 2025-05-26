@@ -31,10 +31,9 @@ class profileForm(forms.ModelForm):
             "mobile_phone": "Телефон",
             "gender": "Пол",
             "age": "Возраст",
-            "category": "Уровень подготовки",
-            
-            "role": "Роль"
-        } #"rating": "Рейтинг", 'rating',
+            "category": "Уровень подготовки", 
+            "role": "Роль игрока"
+        } 
 
 class loginForm(forms.Form):
     def __init__(self, *args, **kwargs):

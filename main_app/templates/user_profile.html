@@ -31,4 +31,15 @@
             </div>
     </div>
     </section>
+    {% if not perms.main_app.cant_reg_in_tour %}
+        <section class="tournament-block">
+            <div class="container">
+                <div class="tournament-register">
+                    <h4>Нажмите на кнопку ниже, чтобы принять участие в турнире!</h4>
+                    <p class="register-comment"><i>*Подробнее можно узнать в объявлении на главной странице</i></p>
+                    <button><a href="{% url 'register_to_tour' %}">Участвовать в турнире</a></button>
+                </div>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

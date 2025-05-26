@@ -1,4 +1,38 @@
 from .models import TournamentGroup, Competitor
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def addToCompetitors(profile):
+    fullname = profile.fullname
+    split_name = fullname.split()
+    fs_name = split_name[0]
+    if len(split_name) >= 2:
+        fs_name = split_name[0] + ' ' + split_name[1]
+    
+    rating = 0
+    if profile.rating:
+        rating = profile.rating
+    else:
+        match profile.age:
+            case int() if profile.age <= 10:
+                rating = profile.age * 100
+            case int() if 10 < profile.age <= 14: 
+                rating = profile.age * 150
+            case int( ) if 14 < profile.age <= 16:
+                rating = 2200
+            case int( ) if profile.age > 16:
+                rating = 2500   
+
+    Competitor.objects.create(
+        profile=profile,
+        name=fs_name,
+        age=profile.age,
+        role=profile.role,
+        gender=profile.gender,
+        rating=rating,
+        start_rating=rating
+    )
+
 
 def getTeamPlayersId(team):
     players_id = []

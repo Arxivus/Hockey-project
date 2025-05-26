@@ -10,10 +10,10 @@ GENDER_TYPE = (
     ('W', 'женский')
 )
 
-SITE_ROLE = (
-    ('S', 'спортсмен'),
-    ('C', 'тренер'),
-    ('R', 'судья')
+TEAM_ROLE = (
+    ('forward','нападающий'),
+    ('defender', 'защитник'),
+    ('goalkeeper','вратарь')
 )
 
 class Profile(models.Model):
@@ -23,29 +23,30 @@ class Profile(models.Model):
     mobile_phone = models.CharField(max_length=20, unique=True)
     gender = models.CharField(choices=GENDER_TYPE, default='M')
     age = models.IntegerField(validators=[ MinValueValidator(6),  MaxValueValidator(90) ])
-    category = models.CharField(max_length=100)
-    rating = models.IntegerField(null=True)
-    role = models.CharField(choices=SITE_ROLE, default='S')
+    category = models.CharField(max_length=100, null=True, blank=True)
+    rating = models.IntegerField(null=True, default=0)
+    role = models.CharField(choices=TEAM_ROLE, default='forward', null=True, blank=True)
+
+    class Meta:
+        permissions = [
+            ("cant_reg_in_tour", "Cannot register in tournament"),
+        ]
 
     def __str__(self):
         return self.fullname
 
 
-TEAM_ROLE = (
-    ('forward','нападающий'),
-    ('defender', 'защитник'),
-    ('goalkeeper','вратарь')
-)
-
 class Competitor(models.Model):
     player_id = models.IntegerField(primary_key=True, unique=True, editable=False) 
-    group_id = models.IntegerField(null=True)
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=50)
-    rating = models.IntegerField(null=True)
-    start_rating = models.IntegerField(null=True)
     role = models.CharField(choices=TEAM_ROLE, default='forward')
     age = models.IntegerField()
     gender = models.CharField(choices=GENDER_TYPE, default='M')
+
+    rating = models.IntegerField(null=True)
+    start_rating = models.IntegerField(null=True)
+    group_id = models.IntegerField(null=True)
     matches_played = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     goals_taken = models.IntegerField(default=0)

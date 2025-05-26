@@ -76,3 +76,18 @@ h1, h2, h3, h4, h5 {
 h3 {
     padding-left: 50px;
 }
+
+button {
+    max-width: max-content;
+    padding: 10px 20px;
+    font-size: 20px;
+    border: 2px solid #C23636;
+    border-radius: 15px;
+    color: #fff;
+    background-color: #C23636;
+}
+
+button:hover {
+    border: 2px solid #fff;
+    transition: color 0.2s ease-in-out;
+}

@@ -26,6 +26,10 @@ body {
     height: 100%;   
 }
 
+.login-form-block a {
+    align-self: center;
+}
+
 .login-form-elements {
     display: flex;
     flex-direction: column;
@@ -34,7 +38,6 @@ body {
 
 .form-btn {
     width: max-content;
-    align-self: center;
     background-color: #C23636;
     padding: 10px 30px;
     border: 2px solid #C23636;

@@ -11,6 +11,10 @@ body {
     background-size: cover;
 }
 
+.errorlist {
+    color: #fd0101;
+}
+
 .register-form-block {
     display: flex;
     flex-direction: column;

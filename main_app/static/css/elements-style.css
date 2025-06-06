@@ -45,6 +45,7 @@ p {
 
 a {
     text-decoration: none;
+    max-width: max-content;
 }
 
 main {
@@ -90,4 +91,10 @@ button {
 button:hover {
     border: 2px solid #fff;
     transition: color 0.2s ease-in-out;
+}
+
+button:active {
+    color: #C23636;
+    border: 2px solid #C23636;
+    background-color: #fff;
 }

@@ -74,15 +74,14 @@ function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersI
         .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
-function getCompetitors() {
-    fetch('/ratings/get-competitors/', 
-        {
-            method: 'GET',
-            headers: { 'X-CSRFToken': csrftoken }
-        })
-        .then(response => response.json())
-        .then(data => renderRatingsTable(data['competitors']))
-        .catch(error => console.error('Ошибка получения данных:', error))
+async function getCompetitors() {
+    let response = await fetch('/ratings/get-competitors/', 
+    {
+        method: 'GET',
+        headers: { 'X-CSRFToken': csrftoken }
+    }).catch(error => console.error('Ошибка получения данных:', error))
+
+    return await response.json()
 } 
 
 export {

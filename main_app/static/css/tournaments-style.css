@@ -27,6 +27,12 @@ button:hover {
     border-color: #533131;
 }
 
+.next-match-btn:active {
+    color: #533131;
+    border-color: #533131;
+    background-color: #fff;
+}
+
 .matches {
     display: flex;
     flex-direction: column;
@@ -80,7 +86,7 @@ button:hover {
     gap: 20px;
     padding: 30px 40px;
     border-radius: 15px;
-    background-color: rgba(121, 82, 82, 0.41);
+    background-color: rgba(217, 228, 242, 1);
 }
 
 .match-place {

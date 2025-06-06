@@ -15,8 +15,18 @@
         <h3>Рейтинг</h3>
         <div class="line"></div>    
         <section class="ratings-block">
-            <table class="table-rows">
-            </table>  
+            <div class="table-filter">
+                <h4>Cортировать: </h4>
+                <select class="filter">
+                    <option value="-rating">---------</option>
+                    <option value="M">Пол (сначала мужской)</option>
+                    <option value="W">Пол (сначала женский)</option>
+                    <option value="-age">Возраст (по убыванию)</option>
+                    <option value="age">Возраст (по возрастанию)</option>
+                </select>
+            </div>
+            <div class="table-headers-block"></div>
+            <table class="table-rows"></table>  
         </section>
     </div>
 {% endblock %}

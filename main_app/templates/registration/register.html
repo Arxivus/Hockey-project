@@ -50,7 +50,25 @@
                         </div>
                         <div class="form-field">
                             {{form.password2.label_tag}}
-                            {{form.password2.errors}}
+                            {% if form.password2.errors %}
+                                <ul>
+                                    {% for error in form.password2.errors %}
+                                        {% if error == "This password is too short. It must contain at least 8 characters." %}
+                                            <li class="errorlist">Пароль слишком короткий (меньше 8 символов)</li>
+                                        {% elif error == "This password is too common." %}
+                                            <li class="errorlist">Пароль слишком простой</li>
+                                        {% elif error == "This password is entirely numeric." %}
+                                            <li class="errorlist">Пароль не может состоять только из цифр</li>
+                                        {% elif error == "This field is required." %}
+                                            <li class="errorlist">Пароль обязателен для заполнения</li>
+                                        {% elif error == "The two password fields didn’t match." %}
+                                            <li class="errorlist">Пароли не совпадают</li>
+                                        {% else %}
+                                            <li class="errorlist">{{ error }}</li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                             {{form.password2}}
                         </div>
                     </div>
@@ -62,7 +80,7 @@
                         </div>
                         <div class="form-field">
                             {{profile_form.age.label_tag}}
-                            {{profile_form.gender.errors}}
+                            {{profile_form.age.errors}}
                             {{profile_form.age}}
                         </div>
                         <div class="form-field">

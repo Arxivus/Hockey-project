@@ -57,7 +57,7 @@ def register_view(request):
         
     return render(request, 'registration/register.html', {'form': form, 'profile_form': profile_form })
 
-#@permission_required('myapp.can_save_score', raise_exception=True)
+
 def get_user_permissions(request):
     if request.method == 'GET':
         return JsonResponse ({

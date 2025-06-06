@@ -1,5 +1,5 @@
 import uuid
-import json
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -16,16 +16,30 @@ TEAM_ROLE = (
     ('goalkeeper','вратарь')
 )
 
+CATEGORY_TYPE = (
+    ('новичок','новичок'),
+    ('любитель', 'любитель'),
+    ('III юношеский','III юношеский'),
+    ('II юношеский','II юношеский'),
+    ('I юношеский','I юношеский'),
+    ('III спортивный','III спортивный'),
+    ('II спортивный','II спортивный'),
+    ('I спортивный','I спортивный'),
+    ('КМС','КМС'),
+    ('ГР','ГР'),
+    ('МСМК','МСМК')
+)
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,)
     fullname = models.CharField(max_length=200)
-    email = models.CharField(max_length=100, unique=True)
-    mobile_phone = models.CharField(max_length=20, unique=True)
-    gender = models.CharField(choices=GENDER_TYPE, default='M')
-    age = models.IntegerField(validators=[ MinValueValidator(6),  MaxValueValidator(90) ])
-    category = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=100)
+    mobile_phone = models.CharField(max_length=20)
+    gender = models.CharField(choices=GENDER_TYPE)
+    age = models.IntegerField(validators=[ MinValueValidator(6),  MaxValueValidator(80) ])
+    category = models.CharField(choices=CATEGORY_TYPE, null=True, blank=True)
     rating = models.IntegerField(null=True, default=0)
-    role = models.CharField(choices=TEAM_ROLE, default='forward', null=True, blank=True)
+    role = models.CharField(choices=TEAM_ROLE, null=True, blank=True)
 
     class Meta:
         permissions = [

@@ -1,4 +1,4 @@
-from .models import Competitor
+from .models import Competitor, Profile
 import numpy as np
 
 # протестировать изменение рейтингов
@@ -29,6 +29,9 @@ def changeRatingValue(players_pool_id, match_players_id, new_ratings):
             player = Competitor.objects.get(player_id=id)
             player.rating = new_ratings[i]
             player.save()
+            if player.profile is not None:
+                player.profile.rating = new_ratings[i]
+                player.profile.save()
 
 
 def getNewRatings(A, B, pl_count, players_pool_id):

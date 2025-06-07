@@ -7,10 +7,42 @@ button {
     background-color: #C23636;
 }
 
+/**/
+
 button:hover {
     border: 2px solid #fff;
     transition: color 0.2s ease-in-out;
 }
+
+.tournament-register {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 40px;
+    border-radius: 15px;
+    background-color: rgba(239, 226, 226, 1);
+}
+
+.register-btn {
+    padding: 20px 30px;
+}
+
+.register-btn:disabled {
+    color: lightgray;
+    background-color: gray;
+    border: none;
+    cursor: default;
+}
+
+.register-comment {
+    color: gray;
+    margin-bottom: 15px;
+}
+
+a {
+    color: #fff;
+}
+
+/**/
 
 .tour-generation {
     display: flex;
@@ -84,7 +116,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 30px 40px;
+    padding: 40px;
     border-radius: 15px;
     background-color: rgba(217, 228, 242, 1);
 }

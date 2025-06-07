@@ -1,5 +1,6 @@
 from django import forms
 import re
+from django.contrib.auth import authenticate
 from .models import Profile
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
@@ -12,7 +13,7 @@ class createUserForm(UserCreationForm):
         self.label_suffix = ""
         self.fields['username'].label = "Логин"
         self.fields['password1'].label = "Пароль"
-        self.fields['password2'].label = "Подтверждение пароля"
+        self.fields['password2'].label = "Повторите пароль"
 
         self.fields['password1'].error_messages = {
             'required': _('Пароль обязателен для заполнения'),  
@@ -92,3 +93,13 @@ class loginForm(forms.Form):
         
     username = forms.CharField(label='Логин', max_length=100)
     password = forms.CharField(label='Пароль', max_length=100)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+        print(user)
+        if user is None:
+            raise ValidationError("Неверный логин или пароль")
+        return cleaned_data

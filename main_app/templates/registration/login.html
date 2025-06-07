@@ -20,12 +20,16 @@
                 {% csrf_token %}
                 <div class="login-form-elements">
                     <div class="login-form-fields">
-                        {% for field in form %}
                         <div>
-                            {{ field.label_tag }}
-                            {{ field }}
+                            {{form.username.label_tag}}
+                            {{form.non_field_errors}}
+                            {{form.username}}
                         </div>
-                        {% endfor %}
+                        <div>
+                            {{form.password.label_tag}}
+                            {{form.password.errors}}
+                            {{form.password}}
+                        </div>
                     </div>
                     <div class="login-form-links">
                         <a href="">Забыли пароль?</a>

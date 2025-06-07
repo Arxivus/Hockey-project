@@ -5,8 +5,9 @@ from main_app import views
 urlpatterns = [
     path('', views.home_page, name='home'),
     path('user/', views.user_profile, name='user'),
-    path('user/reg-in-tour', views.register_to_tournament, name='register_to_tour'),
     path('tournaments/', views.tournaments_page, name='tournaments'),
+    path('tournaments/reg-in-tour', views.register_to_tournament, name='register_to_tour'),
+    path('tournaments/check-register/', views.check_register, name='check_register'),
     path('tournaments/start-new/', views.start_new_tour_view, name='start_new_tour'),
     path('tournaments/get-next-match/', views.get_next_match_view, name='get_next_match'),
     path('tournaments/check-permissions/', views.get_user_permissions, name='get_user_permissions'),

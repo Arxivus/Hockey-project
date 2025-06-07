@@ -7,7 +7,7 @@ from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, getMatchObject
-from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups, addToCompetitors
+from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups, addToCompetitors, isRegister
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
@@ -28,9 +28,8 @@ def login_view(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
+            login(request, user)
+            return redirect('home')
     else:
         form = loginForm()
     return render(request, 'registration/login.html', {'form': form})
@@ -73,16 +72,19 @@ def user_profile(request):
 
 @login_required
 def register_to_tournament(request):
-    profile = Profile.objects.get(user=request.user)
-    already_register = Competitor.objects.filter(profile=profile).exists()
-    if already_register:
-        return redirect('user')
+    if isRegister(request):
+        return redirect('tournaments')
     else:
         try:
-            addToCompetitors(profile)
+            addToCompetitors(request)
         except:
             print('Cant add')
-        return redirect('user')
+        return redirect('tournaments')
+    
+@login_required
+def check_register(request):
+    if isRegister(request):
+        return JsonResponse({ 'status': 'success', 'value': True }) 
 
 
 def get_competitors_view(request): # получение списка игроков для таблицы рейтингов

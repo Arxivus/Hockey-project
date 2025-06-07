@@ -1,8 +1,16 @@
-from .models import TournamentGroup, Competitor
+from .models import TournamentGroup, Competitor, Profile
 from django.contrib.auth.decorators import login_required
 
+
+def isRegister(request):
+    profile = Profile.objects.get(user=request.user)
+    already_register = Competitor.objects.filter(profile=profile).exists()
+    return True if already_register else False
+
+
 @login_required
-def addToCompetitors(profile):
+def addToCompetitors(request):
+    profile = Profile.objects.get(user=request.user)
     fullname = profile.fullname
     split_name = fullname.split()
     fs_name = split_name[0]

@@ -1,4 +1,5 @@
 import uuid
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -60,7 +61,7 @@ class Competitor(models.Model):
 
     rating = models.IntegerField(null=True)
     start_rating = models.IntegerField(null=True)
-    group_id = models.IntegerField(null=True)
+    group_id = models.IntegerField(null=True, blank=True)
     matches_played = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     goals_taken = models.IntegerField(default=0)
@@ -115,7 +116,7 @@ class Micromatch(models.Model):
     team2_players = models.JSONField()
     team1_score = models.IntegerField(default=0)
     team2_score = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now())
 
     class Meta:
         permissions = [
@@ -124,7 +125,7 @@ class Micromatch(models.Model):
         ]
 
     def __str__(self):
-        return f"Микроматч {self.created_at}"
+        return f"Микроматч дата: {self.created_at.astimezone().strftime('%d-%m-%Y')} / время: {self.created_at.astimezone().strftime('%H:%M')}"
     
     
 

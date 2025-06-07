@@ -1,5 +1,5 @@
 import { renderMatches } from './tour-elems-renders.js'
-import { renderRatingsTable } from './rate-table-render.js'
+
 
 function getCookie(name) {
     let cookieValue = null;
@@ -84,11 +84,22 @@ async function getCompetitors() {
     return await response.json()
 } 
 
+async function checkRegisterStatus() {
+    let response = await fetch('/tournaments/check-register/', 
+    {
+        method: 'GET',
+        headers: { 'X-CSRFToken': csrftoken }
+    }).catch(error => console.error('Ошибка обращения', error))
+
+    return await response.json()
+}
+
 export {
     generateMatches,
     getNextMatch,
     getGeneratedMatches,
     saveMatchScore,
     getCompetitors,
-    getPermissions
+    getPermissions,
+    checkRegisterStatus
 }

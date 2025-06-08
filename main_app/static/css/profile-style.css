@@ -2,12 +2,16 @@
     background-image: linear-gradient(rgba(116, 138, 163, 0.6) 0%, rgba(134, 79, 80, 0.5) 90%);
 }
 
-img {
+.user-avatar {
     height: 280px;
 }
 
 p, h3 {
     max-width: max-content;
+}
+
+h3 {
+    margin-bottom: 25px;
 }
 
 .user-fullname {
@@ -33,10 +37,17 @@ p, h3 {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 60px;
     padding: 40px;
     border-radius: 15px;
     background-color: #F0F0F0;
+}
+
+.user-info-items {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
 }
 
 .user-info p {
@@ -44,13 +55,92 @@ p, h3 {
 }
 
 .user-role {
-    width: max-content;
+    max-width: max-content;
     align-self: center;
     padding: 8px 90px;
     color: #fff;
     background-color:#C23636;
     border-radius: 40px;
     margin-bottom: 40px;
+}
+
+.profile-edit {
+    align-self: center;
+    justify-self: flex-end;
+    color: #2282B9;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.profile-edit:hover {
+    text-decoration: underline;
+}
+
+.modal-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.modal-save-btn {
+    align-self: center;
+    padding: 10px 20px;
+}
+
+.form-error {
+    color: #fd0101;
+    margin-bottom: 5px;
+
+}
+
+.modal-edit {
+    position: fixed;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    border-radius: 15px;
+    background-color: #fff;
+    z-index: 9999;
+}
+
+.modal-edit h3 {
+    margin-bottom: 25px;
+    padding: 0;
+}
+
+.modal-edit input,
+.modal-edit select {
+    padding: 5px 10px;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 9998;
+    display: none;
+}
+
+#overlay.show {
+    display: block;
+}
+
+.edit-profile-form {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 /* .tournament-register {
@@ -70,3 +160,38 @@ p, h3 {
 a {
     color: #fff;
 } */
+
+@media (max-width: 960px) {
+    .user-card {
+        flex-direction: column;
+        gap: 23px;
+        padding: 0;
+    }
+
+    .user-fullname {
+        padding: 0;
+    }
+
+    .user-card-section {
+        background-image: none;
+        background-color: #fff;
+    }
+
+    .user-info {
+        padding: 16px 25px;
+        gap: 40px;
+    }
+
+    .user-role {
+        padding: 5px 35px;
+        margin-bottom: 20px;
+    }
+
+    .user-avatar {
+        height: 105px;
+    }
+
+    .user-fullname p {
+        font-size: 23px;
+    }
+}

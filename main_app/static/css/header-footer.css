@@ -1,6 +1,6 @@
 @media (min-width: 1200px) {
     .container {
-      max-width: 900px;
+      max-width: 960px;
     }
 }
 
@@ -54,4 +54,12 @@ footer {
     color: #fff;
     background-color: black;
     padding: 20px 0;
+}
+
+@media (max-width: 392px) {
+    header {
+        margin-bottom: 25px;
+    }
+
+   
 }

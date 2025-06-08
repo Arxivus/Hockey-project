@@ -73,23 +73,27 @@ async function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_pl
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
+    const matchTitleBlock = document.createElement('div');
+    matchTitleBlock.classList.add('match-title-block')
+    
     const matchTitle = document.createElement('h4')
     matchTitle.classList.add('match-title')
-    matchTitle.textContent = `Матч / Средний рейтинг: ${matchRating}`
+    matchTitle.textContent = 'Матч'
+    matchTitleBlock.append(matchTitle)
 
     const matchPlaceBlock = document.createElement('div')
     matchPlaceBlock.classList.add('match-place')
     const matchPlace = document.createElement('h4'); 
-    matchPlace.textContent = '12:00 / Поле №'
-    matchPlaceBlock.append(matchTitle, matchPlace)
+    matchPlace.textContent = '12:00 / Поле №1'
+    matchPlaceBlock.append(matchTitleBlock, matchPlace)
 
     const matchSaveBlock = document.createElement('div');
     matchSaveBlock.classList.add('match-save')
 
-    const VS = document.createElement('img');
+    /* const VS = document.createElement('img');
     VS.classList.add('vs-img')
     VS.setAttribute('src', '/static/images/vs.png')
-    matchSaveBlock.append(VS)
+    matchSaveBlock.append(VS) */
 
     const perms = await getPermissions('/tournaments/check-permissions/')
     
@@ -98,7 +102,7 @@ async function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_pl
         saveScoreBtn.classList.add('save-score-btn')
         saveScoreBtn.setAttribute('data-uuid', matchId);
         saveScoreBtn.textContent = 'Сохранить счет'
-        matchSaveBlock.append(saveScoreBtn)
+        matchTitleBlock.append(saveScoreBtn)
         saveScoreBtn.addEventListener('click', (event) => {
         const currentCard = event.currentTarget.closest('.match-card')
         const score1 = currentCard.querySelector('.team1-score-input').value

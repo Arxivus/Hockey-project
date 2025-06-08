@@ -69,6 +69,21 @@ def user_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'user_profile.html', { 'profile': profile })
 
+@login_required
+def user_edit_profile(request):
+    if request.method == 'POST':
+        profile = get_object_or_404(Profile, user=request.user)
+        data = json.loads(request.body)
+        values = data['newValues']
+
+        profile.role = values[0] if values[0] != '' else profile.role
+        profile.email = values[1] if values[1] != '' else profile.email
+        profile.mobile_phone = values[2] if values[2] != '' else profile.mobile_phone
+        profile.age = values[3] if values[3] != '' else profile.age
+        profile.category = values[4] if values[4] != '' else profile.category
+        profile.save()
+        return JsonResponse ({'status': 'success', 'message': 'Profile saved'})
+
 
 @login_required
 def register_to_tournament(request):

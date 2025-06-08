@@ -9,6 +9,7 @@ body {
     background-image: url("../images/login-background.png");
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .errorlist {
@@ -109,4 +110,12 @@ label {
 .form-btn:hover {
     border: 2px solid #fff;
     transition: color 0.2s ease-in-out;
+}
+
+@media (max-width: 392px) {
+    .register-form {
+        padding: 20px 15px;
+        width: 330px;
+    }
+ 
 }

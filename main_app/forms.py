@@ -82,7 +82,7 @@ class profileForm(forms.ModelForm):
             "mobile_phone": "Телефон",
             "gender": "Пол",
             "age": "Возраст",
-            "category": "Разряд/Звание", 
+            "category": "Разряд", 
             "role": "Роль игрока"
         } 
 

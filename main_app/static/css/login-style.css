@@ -13,6 +13,7 @@ body {
     background-image: url("../images/login-background.png");
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .login-form-block {
@@ -109,5 +110,17 @@ label {
 .login-form-links a:hover {
     text-decoration: underline;
     transition: text-decoration 0.4s ease-in-out;
+}
+
+@media (max-width: 392px) {
+    .login-form-box {
+        padding: 20px 15px;
+    }
+
+    .login-form-box {
+        width: 330px;
+    }
+
+ 
 }
 

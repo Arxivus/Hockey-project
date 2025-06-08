@@ -16,6 +16,15 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Lato';
+    src: local('Lato'),
+        url('../fonts/Lato-Regular.woff2') format('woff2'),
+        url('../fonts/Lato-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none; 
@@ -28,9 +37,13 @@ input[type="number"]:focus {
     -moz-appearance: textfield;
 }
 
+.container {
+    padding: 0;
+}
+
 a, p, span, td,
 h1, h2, h3, h4, h5 {
-    font-family: Mangrope, sans-serif;
+    font-family: Lato, Mangrope, sans-serif;
 }
 
 body {
@@ -97,4 +110,25 @@ button:active {
     color: #C23636;
     border: 2px solid #C23636;
     background-color: #fff;
+}
+
+@media (max-width: 392px) {
+    .container {
+        max-width: 330px;
+        padding: 0;
+    }
+
+    section {
+        margin-bottom: 20px;
+    }
+
+    .line {
+        display: none;
+    }
+
+    h3 {
+        padding-left: 0;
+    }
+
+ 
 }

@@ -2,23 +2,28 @@
 {% load static %}
 
 {% block link %}
-    <link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
+<link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
+<script type="module" src="{% static 'js/profile.js' %}"></script> 
 {% endblock %}
 
 {% block title %}
-    <title>Личный кабинет</title>
+<title>Личный кабинет</title>
 {% endblock %}
 
 {% block content %}
-    <section class="user-card-section">
-        <div class="container">
-            <div class="user-card">
-                <div class="user-fullname">
-                    <img class="user-avatar" src="{% static 'images/user-avatar.png' %}">
-                    <p>{{ profile.fullname }}</p>
-                </div>
-                <div class="user-info">
+<div class="container">
+    <h3>Ваш профиль</h3>
+</div>
+<section class="user-card-section">
+    <div class="container">
+        <div class="user-card">
+            <div class="user-fullname">
+                <img class="user-avatar" src="{% static 'images/user-avatar.png' %}">
+                <p>{{ profile.fullname }}</p>
+            </div>
+            <div class="user-info">
+                <div class="user-info-items">
                     <div class="user-role">
                         <p><b>{{ profile.get_role_display }}</b></p>
                     </div>
@@ -28,7 +33,48 @@
                     <p>Уровень подготовки: <b>{{ profile.category }}</b></p>
                     <p>Рейтинг игрока: <b>{{ profile.rating }}</b></p>
                 </div>
+                <a class="profile-edit">Редактировать профиль</a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+<div id="overlay"></div>
+<section>
+    <div class="container"></div>
+        <div class="modal-edit">
+            <h3>Введите новые данные</h3>
+            <span class="form-error"></span>
+            <a class="modal-close">close</a>
+            <form method="POST" class="edit-profile-form">
+                {% csrf_token %}
+                <label>Роль: 
+                    <select id="role" class="modal-select-role">
+                        <option value="forward">нападающий</option>
+                        <option value="defender">защитник</option>
+                        <option value="goalkeeper">вратарь</option>
+                    </select>
+                </label>
+                <label>Email: <input id="email" type="email" pattern='[^@\s]+@[^@\s]+\.[^@\s]+' placeholder="test@mail.ru"></label>
+                <label>Телефон: <input id="phone" type="tel" pattern='\+7\d{10}' placeholder="+79999999999"></label>
+                <label>Возраст: <input id="age" type="number" min="6" max="80"></label>
+                <label>Уровень подготовки:
+                    <select id="category" class="modal-select-category">
+                        <option value="новичок">новичок</option>
+                        <option value="любитель">любитель</option>
+                        <option value="III юношеский">III юношеский</option>
+                        <option value="II юношеский">II юношеский</option>
+                        <option value="I юношеский">I юношеский</option>
+                        <option value="III спортивный">III спортивный</option>
+                        <option value="II спортивный">II спортивный</option>
+                        <option value="I спортивный">I спортивный</option>
+                        <option value="КМС">КМС</option>
+                        <option value="ГР">ГР</option>
+                        <option value="МСМК">МСМК</option>
+                    </select>
+                </label>
+                <button type="button" class="modal-save-btn">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock %}

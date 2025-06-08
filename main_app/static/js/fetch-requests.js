@@ -94,6 +94,18 @@ async function checkRegisterStatus() {
     return await response.json()
 }
 
+function saveProfileChanges(newValues) {
+    fetch('/user/edit-profile/', 
+    {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({newValues})
+    })
+    .then(response => response.json())
+    .then(data => console.log(data['message']))
+    .catch(error => console.error('Ошибка сохранения:', error))
+} 
+
 export {
     generateMatches,
     getNextMatch,
@@ -101,5 +113,6 @@ export {
     saveMatchScore,
     getCompetitors,
     getPermissions,
-    checkRegisterStatus
+    checkRegisterStatus,
+    saveProfileChanges
 }

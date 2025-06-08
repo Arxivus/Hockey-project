@@ -65,6 +65,12 @@ a {
     background-color: #fff;
 }
 
+.match-title-block {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
 .matches {
     display: flex;
     flex-direction: column;
@@ -123,6 +129,7 @@ a {
 
 .match-place {
     display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -154,9 +161,14 @@ a {
     border: 2px solid #fff;
 }
 
+.match-save {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .save-score-btn {
     width: max-content;
-    align-self: center;
 }
 
 .vs-img {

@@ -1,7 +1,7 @@
 import { getCompetitors } from './fetch-requests.js'
 
 window.onload = async function() {
-    const data = await getCompetitors()
+    const data = await getCompetitors('/ratings/get-competitors/')
     let competitors = data['competitors']
     const tableHeadersBlock = document.querySelector('.table-headers-block');
     const tableHeaders = document.createElement('table');

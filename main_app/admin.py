@@ -2,7 +2,16 @@ from django.contrib import admin
 from .models import Profile, Competitor, Micromatch, Announsment, Tournament, TournamentGroup
 
 class TournamentAdmin(admin.ModelAdmin):
-    fields = ('tour_id', 'date', 'played_with_matrix')
+    fields = (
+        'tour_id', 
+        'date', 
+        'played_with_matrix', 
+        'playing_groups_ids', 
+        'time_started', 
+        'minutes_btwn_groups',
+        'minutes_btwn_matches',
+        'isEnded'
+    )
     readonly_fields = ('tour_id', 'date')  
     search_fields = ('tour_id',)
 

@@ -2,37 +2,73 @@
 {% load static %}
 
 {% block link %}
-    <link rel="stylesheet" href="{% static 'css/tournaments-style.css' %}">
-    <script type="module" src="{% static 'js/main.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/tournaments-style.css' %}">
+<script type="module" src="{% static 'js/main.js' %}"></script>
 {% endblock %}
 
 {% block title %}
-<title>Турниры</title>
+<title>Турнир</title>
 {% endblock %}
 
 {% block content %}
+<section>
     <div class="container">
         <h3>Турниры</h3>
         <div class="line"></div>
         {% if user.is_authenticated %}
             {% if not perms.main_app.cant_reg_in_tour %}
-                <section class="tournament-block">
-                    <div class="container">
-                        <div class="tournament-register">
-                            <h5 class="register-title">Нажмите на кнопку ниже, чтобы принять участие в турнире!</h5>
-                            <a href="{% url 'register_to_tour' %}"><button class="register-btn">Участвовать в турнире</button></a>
-                        </div>
+            <section class="tournament-block">
+                <div class="container">
+                    <div class="tournament-register">
+                        <h5 class="register-title">Нажмите на кнопку ниже, чтобы принять участие в турнире!</h5>
+                        <a href="{% url 'register_to_tour' %}"><button class="register-btn">Участвовать в турнире</button></a>
                     </div>
-                </section>
+                </div>
+            </section>
             {% endif %}
         {% endif %}
         {% if perms.main_app.can_generate_tour %}
-            <section class="tour-generation">
-                <h4>Создание турнира:</h4>
-                <button class="generate-btn">Начать Турнир</button>
-                <button class="next-match-btn">Следующий матч</button>
-            </section>
+        <section class="tour-generation">
+            <h4>Создание турнира:</h4>
+            <button class="generate-btn">Начать Турнир</button>
+            <button class="next-match-btn">Следующий матч</button>
+        </section>
         {% endif %}
-        <section class="matches"></section>
     </div>
+</section>
+<section>
+    <div class="container">
+        <div class="matches"></div>
+    </div>
+</section>
+<div id="overlay"></div>
+<section>
+    <div class="container"></div>
+    <div class="modal-edit">
+        <h3>Задайте настройки турнира</h3>
+        <span class="form-error"></span>
+        <a class="modal-close">close</a>
+        <form method="POST" class="edit-tour-form">
+            {% csrf_token %}
+            <label>Время начала: <input id="start-time" type="text" placeholder="например, 17:00"></label>
+            <label>Уровень подготовки:
+                <div id="category" class="multiselect-checkbox">
+                    <label><input type="checkbox" name="options" value="1"> 7-10 лет, мальчики</label>
+                    <label><input type="checkbox" name="options" value="2"> 7-10 лет, девочки</label>
+                    <label><input type="checkbox" name="options" value="3"> 11-13 лет, мальчики</label>
+                    <label><input type="checkbox" name="options" value="4"> 11-13 лет, девочки</label>
+                    <label><input type="checkbox" name="options" value="5"> 14-16 лет, юноши</label>
+                    <label><input type="checkbox" name="options" value="6"> 14-16 лет, девушки</label>
+                    <label><input type="checkbox" name="options" value="7"> 17+ лет, мужская</label>
+                    <label><input type="checkbox" name="options" value="8"> 17+ лет, женская</label>
+                </div>
+            </label>
+            
+            <label>Перерыв между группами: <input id="group-delay" type="number" min="1"> минут(-а)</label>
+            <label>Перерыв между матчами: <input id="match-delay" type="number" min="1"> минут(-а)</label>
+            <button type="button" class="modal-save-btn">Начать турнир</button>
+        </form>
+    </div>
+    </div>
+</section>
 {% endblock %}

@@ -1,6 +1,5 @@
 import uuid
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
@@ -40,6 +39,7 @@ class Profile(models.Model):
     age = models.IntegerField(validators=[ MinValueValidator(6),  MaxValueValidator(80) ])
     category = models.CharField(choices=CATEGORY_TYPE, null=True, blank=True)
     rating = models.IntegerField(null=True, default=0)
+    previous_ratings = models.JSONField(default=list)
     role = models.CharField(choices=TEAM_ROLE, null=True, blank=True)
 
     class Meta:
@@ -78,8 +78,13 @@ class Competitor(models.Model):
 
 class Tournament(models.Model):
     tour_id = models.IntegerField(primary_key=True, unique=True, editable=False)
-    date = models.DateField(auto_now_add=True)
+    playing_groups_ids = models.JSONField(default=list)
+    date = models.DateField(default=timezone.now())
+    time_started = models.TimeField(default=timezone.now())
+    minutes_btwn_groups = models.IntegerField(validators=[MinValueValidator(1)], default=10)
+    minutes_btwn_matches = models.IntegerField(validators=[MinValueValidator(1)], default=2)
     played_with_matrix = models.JSONField(default=list)
+    isEnded = models.BooleanField(default=False)
 
     class Meta:
         permissions = [
@@ -93,7 +98,7 @@ class Tournament(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Турнир №{self.tour_id}"
+        return f"Турнир №{self.tour_id} / {self.date.strftime('%d-%m-%Y')}"
 
 
 class TournamentGroup(models.Model):

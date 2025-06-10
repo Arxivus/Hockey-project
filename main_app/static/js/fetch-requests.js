@@ -43,12 +43,6 @@ function getMatchesData(matchesTable, url) {
         .catch(error => console.error('Ошибка получения данных:', error))
 }
 
-function generateMatches(matchesTable, url) {
-    const matchesBlock = document.querySelector('.matches');
-    matchesBlock.innerHTML = ''
-    getMatchesData(matchesTable, url)
-}
-
 function getNextMatch(matchesTable, url) {
     getMatchesData(matchesTable, url)
 }
@@ -74,8 +68,18 @@ function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersI
         .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
-async function getCompetitors() {
-    let response = await fetch('/ratings/get-competitors/', 
+
+
+async function getCompetitors(url) { 
+    return await getData(url)
+}
+
+async function checkRegisterStatus(url) { 
+    return await getData(url)
+}
+
+async function getData(url) {
+    let response = await fetch(url, 
     {
         method: 'GET',
         headers: { 'X-CSRFToken': csrftoken }
@@ -84,15 +88,7 @@ async function getCompetitors() {
     return await response.json()
 } 
 
-async function checkRegisterStatus() {
-    let response = await fetch('/tournaments/check-register/', 
-    {
-        method: 'GET',
-        headers: { 'X-CSRFToken': csrftoken }
-    }).catch(error => console.error('Ошибка обращения', error))
 
-    return await response.json()
-}
 
 function saveProfileChanges(newValues) {
     fetch('/user/edit-profile/', 
@@ -106,8 +102,27 @@ function saveProfileChanges(newValues) {
     .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
+/* function generateMatches(matchesTable, url) {
+    const matchesBlock = document.querySelector('.matches');
+    matchesBlock.innerHTML = ''
+    getMatchesData(matchesTable, url)
+} */
+
+function generateTour(tourSettings, url) {
+    fetch(url, 
+    {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({tourSettings})
+    })
+    .then(response => response.json())
+    .then(data => console.log(data['message']))
+    .catch(error => console.error('Ошибка создания:', error))
+} 
+
 export {
-    generateMatches,
+    generateTour,
+    /* generateMatches, */
     getNextMatch,
     getGeneratedMatches,
     saveMatchScore,

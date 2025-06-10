@@ -31,6 +31,13 @@ def changeRatingValue(players_pool_id, match_players_id, new_ratings):
             player.save()
             if player.profile is not None:
                 player.profile.rating = new_ratings[i]
+                prev_ratings = player.profile.previous_ratings
+              
+                if len(prev_ratings) >= 10:
+                    prev_ratings.pop(0)
+                prev_ratings.append(new_ratings[i])
+                player.profile.previous_ratings = prev_ratings
+
                 player.profile.save()
 
 
@@ -43,7 +50,7 @@ def getNewRatings(A, B, pl_count, players_pool_id):
     A_full = np.vstack([A, A_reg])              # объединение
     B_full = np.hstack([B, B_reg])
 
-    return np.linalg.lstsq(A, B, rcond=None)[0]
+    return np.linalg.lstsq(A_full, B_full, rcond=None)[0]
 
 
 def getSumRatings(players_pool):

@@ -33,9 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) { selectedValues.push(Number(checkbox.value)) }});
 
-        if ( groupDelay.checkValidity() && matchDelay.checkValidity() && selectedValues.length != 0) {
+        if ( startTime.checkValidity() && groupDelay.checkValidity() && matchDelay.checkValidity() && selectedValues.length != 0) {
             const tourSettings = [startTime.value, selectedValues, groupDelay.value, matchDelay.value]
             generateTour(tourSettings, '/tournaments/start-new/')
+            modalWindow.style.display = 'none'
+            overlay.classList.remove('show')
             /* getMatchesTimetable(matchesTable, url) */
 
             /* generateMatches(matchesTable, '/tournaments/start-new/') */ 

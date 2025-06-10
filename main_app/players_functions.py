@@ -97,6 +97,7 @@ def splitIntoGroups(players, age_groups):
             if min_age <= age <= max_age and gender == gender_letter:
                 player.group_id = group_num
                 player.save()
+                break
 
 
 def splitByRole(pl_list): 

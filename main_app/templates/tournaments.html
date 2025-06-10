@@ -50,7 +50,7 @@
         <a class="modal-close">close</a>
         <form method="POST" class="edit-tour-form">
             {% csrf_token %}
-            <label>Время начала: <input id="start-time" type="text" placeholder="например, 17:00"></label>
+            <label>Время начала: <input id="start-time" type="text" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="например, 17:00"></label>
             <label>Уровень подготовки:
                 <div id="category" class="multiselect-checkbox">
                     <label><input type="checkbox" name="options" value="1"> 7-10 лет, мальчики</label>

@@ -149,9 +149,7 @@ def getSavedMatch(tournament, teams, pl_in_team): # сохранение мат�
 
 def generateTimetable(): # генерация расписания (в процессе реализации)
 
-    players = Competitor.objects.all()
-    pl_list = list(players.values())
-    splitIntoGroups(players, age_groups)
+    # вернуть разбиение на группы
 
     teams, pl_in_team = generateMatch(pl_list)
     if pl_in_team is None:
@@ -195,6 +193,9 @@ def start_new_tour_view(request): # запуск нового турнира
                 played_with_matrix = played_with_matrix
             )
             generateGroups(tournament, current_age_groups)
+            players = Competitor.objects.all()
+            splitIntoGroups(players, age_groups)
+            
             #generateTimetable()
             return JsonResponse({'status': 'success', 'message': 'Tournament created'})
             

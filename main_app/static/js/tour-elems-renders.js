@@ -1,10 +1,16 @@
 import { getPermissions, saveMatchScore } from './fetch-requests.js';
 
 async function renderMatches(matches, matchesTable) {
-    if (matches === undefined) {
-        console.log('Nothing to render');
+    console.log(matches);
+    if (matches == undefined || matches.length == 0) {
         return
     } 
+
+    const matchRegister = document.querySelector('.tournament-block');
+    if (matchRegister) {
+        matchRegister.style.display = 'none'
+    }
+    
 
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]

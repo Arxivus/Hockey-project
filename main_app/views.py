@@ -117,11 +117,11 @@ def get_competitors_view(request): # получение списка игрок�
 
 def get_stored_matches_view(request): # получение сранее сгенерированных матчей последнего турнира
     if request.method == 'GET':
-        last_tournament = Tournament.objects.order_by('-tour_id').first()
+        last_tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
         if last_tournament:
             matches = Micromatch.objects.filter(tournament=last_tournament).order_by('created_at').values()
         else:
-            return JsonResponse({'status': 'error', 'message': 'Matches not found'}, status=404)
+            return JsonResponse({'status': 'success', 'matches': []})
 
         matches_list = list(matches)
 
@@ -209,7 +209,7 @@ def get_next_match_view(request): # получение следующего ма
         try:
             players = Competitor.objects.all().values()
             pl_list = list(players)
-            tournament = Tournament.objects.order_by('-tour_id').first()
+            tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
 
             teams, pl_in_team = generateMatch(pl_list)
             if pl_in_team is None:

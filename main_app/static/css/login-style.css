@@ -9,6 +9,7 @@
 }
 
 body {
+    height: 100vh;
     background-color: #111111;
     background-image: url("../images/login-background.png");
     background-repeat: no-repeat;

@@ -1,0 +1,68 @@
+.filter-groups {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filter-groups h4 {
+    margin-bottom: 5px;
+}
+
+.timetable-matches {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.match-card {
+    display: flex;
+    width: 550px;
+    gap: 10px;
+    border-radius: 6px;
+    background-color: #F0F0F0;
+}
+
+.match-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    border-radius: 6px;
+    gap: 15px;
+    background-color: #C23636;
+}
+
+.match-info span {
+    color: #FFF;
+    font-size: 24px;
+}
+
+.teams-block {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px;
+}
+
+.team-block {
+    width: 170px;
+}
+
+@media (max-width: 392px) {
+    .match-card {
+        flex-direction: column;
+        width: 350px;
+        gap: 0;
+    }
+
+    .match-info {
+        flex-direction: row;
+        padding: 10px;
+    }
+
+    .teams-block {
+        padding: 10px;
+    }
+}

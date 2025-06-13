@@ -14,7 +14,7 @@ window.onload = async function() {
     const filterEl = document.querySelector('.filter');
     filterEl.addEventListener('change', function(e) {
         const filterValue = e.target.value;
-        console.log(filterValue);
+ 
         competitors = sortByFilter(competitors, filterValue) 
         renderRatingsTable(competitors)     
     })
@@ -69,10 +69,5 @@ function sortByFilter(players, filter) {
             players.sort((a, b) => b.gender.localeCompare(a.gender));
             break
     }
-    return players
-  
-}
-
-export {
-    renderRatingsTable
+    return players 
 }

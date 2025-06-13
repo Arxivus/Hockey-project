@@ -1,10 +1,13 @@
 import { getPermissions, saveMatchScore } from './fetch-requests.js';
 
 async function renderMatches(matches, matchesTable) {
-    console.log(matches);
     if (matches == undefined || matches.length == 0) {
         return
-    } 
+    }
+    
+    const loading = document.querySelector('.loading');
+    if (loading)
+        loading.style.display = 'none'
 
     const matchRegister = document.querySelector('.tournament-block');
     if (matchRegister) {
@@ -14,7 +17,8 @@ async function renderMatches(matches, matchesTable) {
 
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i]
-        const matchRating = match['matchRating']
+        const matchTime = match['start_time'].slice(0, 5)
+        const matchField = match['field_num']
         const matchId = match['match_id'] 
         const team1Card = getTeamCard(match['team1_players'], match['team1_score'], 1)
         const team2Card = getTeamCard(match['team2_players'], match['team2_score'], 2)
@@ -22,10 +26,10 @@ async function renderMatches(matches, matchesTable) {
         const team1_playersId = getTeamPlayersId(match['team1_players'])
         const team2_playersId = getTeamPlayersId(match['team2_players'])
 
-        const matchCard = await getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId)  
+        const matchCard = await getMatchCard(team1Card, team2Card, matchTime, matchField, matchId, team1_playersId, team2_playersId)  
         matchCard.setAttribute('data-uuid', matchId) 
 
-        matchesTable.prepend(matchCard)
+        matchesTable.append(matchCard)
     }
 }
 
@@ -75,7 +79,7 @@ function getTeamCard(team, team_score, num) {
     return teamCard
 }
 
-async function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_playersId, team2_playersId) {
+async function getMatchCard(team1Card, team2Card, matchTime, matchField, matchId, team1_playersId, team2_playersId) {
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
 
@@ -90,7 +94,7 @@ async function getMatchCard(team1Card, team2Card, matchRating, matchId, team1_pl
     const matchPlaceBlock = document.createElement('div')
     matchPlaceBlock.classList.add('match-place')
     const matchPlace = document.createElement('h4'); 
-    matchPlace.textContent = '12:00 / Поле №1'
+    matchPlace.textContent = `${matchTime} / Поле №${matchField}`
     matchPlaceBlock.append(matchTitleBlock, matchPlace)
 
     const matchSaveBlock = document.createElement('div');

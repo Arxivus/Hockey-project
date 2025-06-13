@@ -19,19 +19,7 @@ table {
 }
 
 .table-filter h4 {
-  margin-bottom: 0;
-}
-
-.filter {
-  cursor: pointer;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 10px;
-  background-color: #D9E4F2;
-}
-
-.filter option {
-  border: none;
+  margin-bottom: 5px;
 }
 
 td {

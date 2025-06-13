@@ -1,6 +1,8 @@
+import math
+from datetime import datetime, timedelta
 from itertools import combinations, product
-from .models import TournamentGroup, Competitor
-from .players_functions import splitByRole
+from .models import TournamentGroup, Competitor, Tournament, Micromatch, uuid
+from .players_functions import splitByRole, updatePlayersMatrix, isEnoughInGroup
 
 
 
@@ -74,80 +76,151 @@ def getTeamsForMatch(key_age, players_by_role, age_diff, team_comp):
     
     return getBalancedTeams(processed_roles, team_comp, top_n)
 
+
+def prepareTeams(group):
+    id = group.group_id
+    players = Competitor.objects.filter(group_id=id).values()
+
+    if not isEnoughInGroup(players, group):
+        return [], 0
+
+    pl_list = list(players)
+    if group.group_age_pool[1] <= 10:
+        team_composition = {'forward': 2, 'defender': 2, 'goalkeeper': 0, }
+        pl_in_team = 4
+    else:
+        team_composition = {'forward': 3, 'defender': 2, 'goalkeeper': 1}
+        pl_in_team = 6
+
+    forwards, defenders, goalkeepers = splitByRole(pl_list)
+    fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
+    df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
+    gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
+    players_by_role = {'forward': fw_sorted, 'defender': df_sorted, 'goalkeeper': gk_sorted} 
+
+    less_matches = 10000
+    less_matches_age = 0
+    for key, role_pls in players_by_role.items():
+        if role_pls != []:
+            pl = role_pls[0]         # игрок с наим. количеством матчей
+            if pl['matches_played'] < less_matches:
+                less_matches = pl['matches_played']
+                less_matches_age = pl['age']
+
+    if less_matches < 20:
+        try:
+            best_teams = getTeamsForMatch(
+                less_matches_age,
+                players_by_role, 
+                group.age_spread, 
+                team_composition
+            )
+        except:
+            print('balancer error')
+
+    else:
+        print('All in group played their matches')
+        group.stopped_played = True
+        group.save()
+        return [], 0
+        
+    return (best_teams, pl_in_team)
+
+
+def generateMatch(group_id): # вызывается после сохранения результата одного из матчей (group_id получать)
+    group = TournamentGroup.objects.filter(group_id=group_id).first()
+    if group.stopped_played:
+        return [], 0
+    else:
+        return prepareTeams(group)
+
 # ------------------------------------------------------------------------------------------------------------
 
+def add_minutes(time, minutes):
+    dummy_datetime = datetime.combine(datetime.today().date(), time)
+    new_datetime = dummy_datetime + timedelta(minutes=minutes)
+    return new_datetime.time()
 
-def generateMatch(pl_list):
-    groups = TournamentGroup.objects.order_by('group_id').all()
-    for group in groups:
-        if group.stopped_played:
+# --------------------------------------------------------------------------------------------------------------
+
+def generateTimetable(tournament): # генерация расписания (первых матчей всех групп)
+    groups_ids = tournament.playing_groups_ids
+    timetable_matches = [] 
+    last_time = tournament.time_started
+    group_delay = int(tournament.minutes_btwn_groups)
+    match_delay = int(tournament.minutes_btwn_matches)
+    field_num = 1
+    i = 0
+
+    for group_id in groups_ids:
+        group = TournamentGroup.objects.filter(group_id=group_id).first()
+        pl_in_group = Competitor.objects.filter(group_id=group_id).values()
+        
+        if not isEnoughInGroup(pl_in_group, group) or group.stopped_played:
             continue
 
-        else:
-            id = group.group_id
-            players = Competitor.objects.filter(group_id=id).values()
-
-            if players == None or len(players) < 8:
-                print('not enough players in group', id)
-                continue
-
-            pl_list = list(players)
-
-            if group.group_age_pool[1] <= 10:
-                team_composition = {'forward': 2, 'defender': 2, 'goalkeeper': 0, }
-                pl_in_team = 4
+        pl_in_team = 6 if group.age_spread > 1 else 4
+        matches_count = math.ceil((len(pl_in_group) * 10) / (pl_in_team * 2))
+    
+        for _ in range(matches_count):
+            last_time = add_minutes(last_time, 1 + match_delay)
+            match_time = last_time
+            
+            teams, pl_in_team = prepareTeams(group)
+            match = getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team)
+            timetable_matches.append(match)
+            
+            i += 1
+            if group_id == 1 or group_id == 2:
+                if i % 2 == 0:
+                    field_num = 1 if field_num == 2 else 2
             else:
-                team_composition = {'forward': 3, 'defender': 2, 'goalkeeper': 1}
-                pl_in_team = 6
-
-            forwards, defenders, goalkeepers = splitByRole(pl_list)
-
-            fw_sorted = sorted(forwards, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
-            df_sorted = sorted(defenders, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
-            gk_sorted = sorted(goalkeepers, key=lambda x: (x['matches_played'], x['age'], x['rating'])) 
-            players_by_role = {'forward': fw_sorted, 'defender': df_sorted, 'goalkeeper': gk_sorted} 
-
-            less_matches = 10000
-            less_matches_age = 0
-            for key, role_pls in players_by_role.items():
-                if role_pls != []:
-                    pl = role_pls[0]         # игрок с наим. количеством матчей
-                    if pl['matches_played'] < less_matches:
-                        less_matches = pl['matches_played']
-                        less_matches_age = pl['age']
-
-            if less_matches < 20:
-                try:
-                    best_teams = getTeamsForMatch(
-                        less_matches_age,
-                        players_by_role, 
-                        group.age_spread, 
-                        team_composition
-                    )
-                except:
-                    print('balancer error')
-
-            else:
-                print('All in group played their matches')
-                group.stopped_played = True
-                group.save()
-                continue
-
-            return (best_teams, pl_in_team)
+                field_num = 1 if field_num == 2 else 2
+            
+           
+        last_time = add_minutes(last_time, group_delay)
+        field_num = 1
+        i = 0
+  
+    return timetable_matches
 
 # -------------------------------------------------------------------------------------------------------------------------------------
 
-def getMatchObject(id, team1, team2, pl_in_team):
+def getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team): # сохранение матча в базе
+    team1 = teams[0]
+    team2 = teams[1]
+    match_uniq_id = uuid.uuid4()
+    match = getMatchObject(match_uniq_id, group_id, match_time, field_num, team1, team2, pl_in_team)
+    updatePlayersMatrix(tournament, team1, team2)
+    
+    Micromatch.objects.create(
+            tournament = tournament,
+            group_id = match['group_id'],
+            match_id = match['match_id'],
+            matchRating = match['match_rating'],
+            team1_players = match['team1_players'],
+            team2_players = match['team2_players'],
+            start_time = match['start_time'],
+            field_num = match['field_num']
+    )
+
+    return match
+
+
+def getMatchObject(id, group_id, match_time, field_num, team1, team2, pl_in_team):
    
     team1_fw, team1_df, team1_gk = splitByRole(team1)
     team2_fw, team2_df, team2_gk = splitByRole(team2)
     ratings_sum = 0
     for player in list(team1) + list(team2):
         ratings_sum += player['rating']
-
+  
     match = {
+        'group_id' : group_id,
         'match_id': id,
-        'matchRating': round(ratings_sum / (pl_in_team * 2)),
+        'start_time' : match_time,
+        'field_num' : field_num,
+        'match_rating': round(ratings_sum / (pl_in_team * 2)),
                     
         'team1_players' : {
             'Защитники': [{'id': d['player_id'], 'name': d['name'], 'rate': d['rating']} for d in team1_df],

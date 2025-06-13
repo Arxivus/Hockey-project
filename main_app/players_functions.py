@@ -7,6 +7,15 @@ def isRegister(request):
     already_register = Competitor.objects.filter(profile=profile).exists()
     return True if already_register else False
 
+def isEnoughInGroup(players, group):
+    if players == None or len(players) < 8: 
+        print('not enough players in group', group.group_id)
+        group.stopped_played = True 
+        group.save()
+        return False
+    
+    return True
+
 
 @login_required
 def addToCompetitors(request):
@@ -23,12 +32,10 @@ def addToCompetitors(request):
     else:
         match profile.age:
             case int() if profile.age <= 10:
-                rating = profile.age * 100
-            case int() if 10 < profile.age <= 14: 
                 rating = profile.age * 150
-            case int( ) if 14 < profile.age <= 16:
+            case int( ) if 11 <= profile.age <= 15:
                 rating = 2200
-            case int( ) if profile.age > 16:
+            case int( ) if profile.age >= 16:
                 rating = 2500   
 
     Competitor.objects.create(
@@ -76,10 +83,10 @@ def generateGroups(tournament, age_groups):
     
     for group_num, age_pool, gender_letter in age_groups:
         spread = 1
-        if age_pool[0] == 14:
+        if age_pool[0] == 11:
             spread = 2
-        elif age_pool[0] == 17:
-            spread = 100
+        elif age_pool[0] == 16:
+            spread = 80
 
         TournamentGroup.objects.create(
             tournament = tournament,

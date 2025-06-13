@@ -4,6 +4,8 @@ from main_app import views
 
 urlpatterns = [
     path('', views.home_page, name='home'),
+    path('timetable/', views.timetable_page, name='timetable'),
+    path('timetable/get-matches/', views.get_stored_matches_view, name='get_stored_matches'),
     path('user/', views.user_profile, name='user'),
     path('user/edit-profile/', views.user_edit_profile, name='user_edit_profile'),
     path('tournaments/', views.tournaments_page, name='tournaments'),

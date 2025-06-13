@@ -1,0 +1,33 @@
+{% extends 'pattern.html' %}
+{% load static %}
+
+{% block link %}
+    <link rel="stylesheet" href="{% static 'css/timetable-style.css' %}">
+    <script type="module" src="{% static 'js/timetable.js' %}"></script> 
+{% endblock %}
+
+{% block title %}
+<title>Расписание</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Расписание</h3>
+        <div class="line"></div>
+        <section class="filter-groups">
+            <h4>Группы:</h4>
+            <select class="filter">
+                <option value="0">Все группы</option>
+                <option value="1">6-10 лет, мальчики</option>
+                <option value="2">6-10 лет, девочки</option>
+                <option value="3">11-15 лет, юноши</option>
+                <option value="4">11-15 лет, девушки</option>
+                <option value="5">16+ лет, мужская</option>
+                <option value="6">16+ лет, женская</option>
+            </select>
+        </section>    
+        <section class="timetable-block">
+            <div class="timetable-matches"></div>
+        </section>
+    </div>
+{% endblock %}

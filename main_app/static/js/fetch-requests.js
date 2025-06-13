@@ -68,7 +68,9 @@ function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersI
         .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
-
+async function getTimetableMatches(url) { 
+    return await getData(url)
+}
 
 async function getCompetitors(url) { 
     return await getData(url)
@@ -129,5 +131,6 @@ export {
     getCompetitors,
     getPermissions,
     checkRegisterStatus,
-    saveProfileChanges
+    saveProfileChanges,
+    getTimetableMatches
 }

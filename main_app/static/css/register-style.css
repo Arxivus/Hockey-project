@@ -31,12 +31,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 730px;
-    padding: 30px 90px;
-    gap: 60px;
+    width: 720px;
+    padding: 60px;
+    gap: 40px;
     background-color: rgb(255, 255, 255, 0.24);
     border-radius: 36px;
-    margin: 50px;
+    margin: 50px 0;
 }
 
 .register-form-fields {
@@ -97,14 +97,6 @@ label {
 
 .form-additional-info .form-field {
     width: 45%;
-}
-
-.form-btn {
-    font-size: 20px;
-    background-color: #C23636;
-    padding: 10px 30px;
-    border: 2px solid #C23636;
-    border-radius: 20px;
 }
 
 .form-btn:hover {

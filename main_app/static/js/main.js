@@ -33,15 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) { selectedValues.push(Number(checkbox.value)) }});
 
-        if ( startTime.checkValidity() && groupDelay.checkValidity() && matchDelay.checkValidity() && selectedValues.length != 0) {
+        if ( startTime.value != '' && startTime.checkValidity() && groupDelay.checkValidity() && matchDelay.checkValidity() && selectedValues.length != 0) {
             const tourSettings = [startTime.value, selectedValues, groupDelay.value, matchDelay.value]
+            const loading = document.querySelector('.loading');
+            loading.style.display = 'flex'
+
             generateTour(tourSettings, '/tournaments/start-new/')
             modalWindow.style.display = 'none'
             overlay.classList.remove('show')
-            /* getMatchesTimetable(matchesTable, url) */
+            setTimeout(function() {location.reload()}, 3000);
 
             /* generateMatches(matchesTable, '/tournaments/start-new/') */ 
-            /* setTimeout(function() {location.reload()}, 500); */
+            
         }
 
         else {
@@ -51,9 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
     })
 
-    getNextMatchBtn.addEventListener('click', function() {
+    /* getNextMatchBtn.addEventListener('click', function() {
         getNextMatch(matchesTable, '/tournaments/get-next-match/')
-    })
+    }) */
 });
 
 async function checkRegister(){

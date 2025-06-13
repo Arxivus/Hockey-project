@@ -3,18 +3,21 @@ from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import F
-from .models import Profile, Competitor, Tournament, Micromatch, Announsment, uuid
+from .models import Profile, Competitor, Tournament, Micromatch, Announsment
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
-from .match_generator import generateMatch, getMatchObject
-from .players_functions import splitIntoGroups, updatePlayersMatrix, generateGroups, addToCompetitors, isRegister
+from .match_generator import generateMatch, generateTimetable
+from .players_functions import splitIntoGroups, generateGroups, addToCompetitors, isRegister
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
     announsments = Announsment.objects.all().values()
     announs_list = list(reversed(announsments)) 
     return render(request, 'home.html', {'announs_list' : announs_list})
+
+def timetable_page(request):
+    return render(request, 'timetable.html')
 
 def tournaments_page(request):
     return render(request, 'tournaments.html')
@@ -119,44 +122,12 @@ def get_stored_matches_view(request): # получение сранее сген
     if request.method == 'GET':
         last_tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
         if last_tournament:
-            matches = Micromatch.objects.filter(tournament=last_tournament).order_by('created_at').values()
+            matches = Micromatch.objects.filter(tournament=last_tournament).order_by('start_time').values()
         else:
             return JsonResponse({'status': 'success', 'matches': []})
 
         matches_list = list(matches)
-
         return JsonResponse({'status': 'success', 'matches': matches_list}) 
-        
-
-def getSavedMatch(tournament, teams, pl_in_team): # сохранение матча в базе
-    matchContainer = []
-    team1 = teams[0]
-    team2 = teams[1]
-    match_uniq_id = uuid.uuid4()
-    match = getMatchObject(match_uniq_id, team1, team2, pl_in_team)
-    updatePlayersMatrix(tournament, team1, team2)
-    matchContainer.append(match)
-
-    Micromatch.objects.create(
-            tournament = tournament,
-            match_id = match['match_id'],
-            matchRating = match['matchRating'],
-            team1_players = match['team1_players'],
-            team2_players = match['team2_players'],
-    )
-
-    return matchContainer
-
-def generateTimetable(): # генерация расписания (в процессе реализации)
-
-    # вернуть разбиение на группы
-
-    teams, pl_in_team = generateMatch(pl_list)
-    if pl_in_team is None:
-        return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
-            
-    matchContainer = getSavedMatch(tournament, teams, pl_in_team)
-    return JsonResponse({'status': 'success', 'message': 'New tournament has been started', 'matches': matchContainer}) 
 
 
 @permission_required('myapp.can_start_tour', raise_exception=True)
@@ -175,16 +146,15 @@ def start_new_tour_view(request): # запуск нового турнира
             data = json.loads(request.body)
             settings = data['tourSettings']
             age_groups = [
-                (1, (7, 10), 'M'), (2, (7, 10), 'W'), 
-                (3, (11, 13), 'M'), (4, (11, 13), 'W'), 
-                (5, (14, 16), 'M'), (6, (14, 16), 'W'),
-                (7, (17, 99), 'M'), (8, (17, 99), 'W'),
+                (1, (6, 10), 'M'), (2, (6, 10), 'W'), 
+                (3, (11, 15), 'M'), (4, (11, 15), 'W'), 
+                (5, (16, 80), 'M'), (6, (16, 80), 'W'),
             ]
             current_age_groups = [group for group in age_groups if group[0] in settings[1]]
 
             size = Competitor.objects.all().order_by('-player_id').first().player_id + 1
             played_with_matrix = [ [[0,0] for _  in range(size)] for _ in range(size) ]
-
+            
             tournament = Tournament.objects.create(
                 time_started = datetime.strptime(settings[0], '%H:%M').time(),
                 playing_groups_ids = settings[1],
@@ -192,26 +162,30 @@ def start_new_tour_view(request): # запуск нового турнира
                 minutes_btwn_matches = settings[3],
                 played_with_matrix = played_with_matrix
             )
+
             generateGroups(tournament, current_age_groups)
             players = Competitor.objects.all()
             splitIntoGroups(players, age_groups)
-            
-            #generateTimetable()
-            return JsonResponse({'status': 'success', 'message': 'Tournament created'})
+
+            matches = generateTimetable(tournament)
+            return JsonResponse({'status': 'success', 'message': 'Tournament created', 'matches' : matches})
             
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
+
+
+
+
+
 @permission_required('myapp.can_generate_match', raise_exception=True)
-def get_next_match_view(request): # получение следующего матча турнира
+def get_next_match_view(request): # получение следующего матча турнира (временно отключено)
     if request.method == 'GET':
         try:
-            players = Competitor.objects.all().values()
-            pl_list = list(players)
             tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
 
-            teams, pl_in_team = generateMatch(pl_list)
+            teams, pl_in_team = generateMatch(group_id)
             if pl_in_team is None:
                 return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
 
@@ -221,6 +195,10 @@ def get_next_match_view(request): # получение следующего ма
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
         
+
+
+
+
 
 def save_match_view(request, match_id): # сохранение результатов матча, обновление Rt
     if request.method == 'POST':

@@ -79,10 +79,10 @@ class Competitor(models.Model):
 class Tournament(models.Model):
     tour_id = models.IntegerField(primary_key=True, unique=True, editable=False)
     playing_groups_ids = models.JSONField(default=list)
-    date = models.DateField(default=timezone.now())
-    time_started = models.TimeField(default=timezone.now())
-    minutes_btwn_groups = models.IntegerField(validators=[MinValueValidator(1)], default=10)
-    minutes_btwn_matches = models.IntegerField(validators=[MinValueValidator(1)], default=2)
+    date = models.DateField(default=timezone.now)
+    time_started = models.TimeField(default=timezone.now)
+    minutes_btwn_groups = models.IntegerField(validators=[MinValueValidator(0)], default=10)
+    minutes_btwn_matches = models.IntegerField(validators=[MinValueValidator(0)], default=1)
     played_with_matrix = models.JSONField(default=list)
     isEnded = models.BooleanField(default=False)
 
@@ -115,13 +115,16 @@ class TournamentGroup(models.Model):
 
 class Micromatch(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, null=True, related_name='matches')
+    group_id = models.IntegerField(null=True)
     match_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     matchRating = models.IntegerField()
     team1_players = models.JSONField()
     team2_players = models.JSONField()
     team1_score = models.IntegerField(default=0)
     team2_score = models.IntegerField(default=0)
-    created_at = models.DateTimeField(default=timezone.now())
+    isPlayed = models.BooleanField(default=False)
+    start_time = models.TimeField(default=timezone.now)
+    field_num = models.IntegerField(default=1)
 
     class Meta:
         permissions = [
@@ -130,7 +133,7 @@ class Micromatch(models.Model):
         ]
 
     def __str__(self):
-        return f"Микроматч дата: {self.created_at.astimezone().strftime('%d-%m-%Y')} / время: {self.created_at.astimezone().strftime('%H:%M')}"
+        return f"Микроматч / время: {self.start_time.strftime('%H:%M')}"
     
     
 

@@ -133,5 +133,9 @@ footer {
         padding: 15px 0px;
         z-index: 100;
     }
+
+    .menu-item p {
+        font-size: 14px;
+    }
    
 }

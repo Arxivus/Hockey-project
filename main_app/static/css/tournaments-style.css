@@ -54,17 +54,6 @@ a {
     margin: 0;
 }
 
-.next-match-btn {
-    background-color: #533131;
-    border-color: #533131;
-}
-
-.next-match-btn:active {
-    color: #533131;
-    border-color: #533131;
-    background-color: #fff;
-}
-
 .match-title-block {
     display: flex;
     gap: 15px;

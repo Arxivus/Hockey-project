@@ -26,6 +26,16 @@ button:hover {
     padding: 20px 30px;
 }
 
+.generate-btn {
+    border-color: #000;
+    background-color: #000;
+}
+
+.generate-btn:active {
+    color: #000;
+    border-color: #000;
+}
+
 .register-btn:disabled {
     color: lightgray;
     background-color: gray;
@@ -40,6 +50,14 @@ button:hover {
 
 a {
     color: #fff;
+}
+
+.nav-page {
+    color: #f00;
+}
+
+.nav-page:hover {
+    text-decoration: underline;
 }
 
 /**/
@@ -60,7 +78,9 @@ a {
     align-items: center;
 }
 
-.matches {
+.matches, 
+.played-matches, 
+.players-group {
     display: flex;
     flex-direction: column;
     align-items: center;

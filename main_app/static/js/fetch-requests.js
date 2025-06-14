@@ -43,13 +43,30 @@ function getMatchesData(matchesTable, url) {
         .catch(error => console.error('Ошибка получения данных:', error))
 }
 
-function getNextMatch(matchesTable, url) {
-    getMatchesData(matchesTable, url)
-}
-
 function getGeneratedMatches(matchesTable, url) {
     getMatchesData(matchesTable, url)
 }
+
+function getNextMatch(matchesTable, url) {
+    getMatchesData(matchesTable, url)
+}
+/* function getNextMatch(matchesTable, groupId, url) {
+    fetch(url, 
+        {
+            method: 'GET',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: JSON.stringify({ group_id: groupId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data['message']) {
+                console.log(data['message']);
+            }
+            renderMatches(data['matches'], matchesTable);
+        }) 
+        .catch(error => console.error('Ошибка получения данных:', error))
+} */
+
 
 function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId) {
     fetch(`/tournaments/save-match/${matchId}/`, 
@@ -103,12 +120,6 @@ function saveProfileChanges(newValues) {
     .then(data => console.log(data['message']))
     .catch(error => console.error('Ошибка сохранения:', error))
 } 
-
-/* function generateMatches(matchesTable, url) {
-    const matchesBlock = document.querySelector('.matches');
-    matchesBlock.innerHTML = ''
-    getMatchesData(matchesTable, url)
-} */
 
 function generateTour(tourSettings, url) {
     fetch(url, 

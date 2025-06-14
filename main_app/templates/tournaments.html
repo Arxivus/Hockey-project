@@ -11,9 +11,10 @@
 {% endblock %}
 
 {% block content %}
-<section>
+<section id="start">
     <div class="container">
-        <h3>Турниры</h3>
+        <h3>Турнир</h3>
+        <a href="#played" class="nav-page">Перейти к отыгранным матчам</a>
         <div class="line"></div>
         {% if user.is_authenticated %}
             {% if not perms.main_app.cant_reg_in_tour %}
@@ -28,10 +29,10 @@
             {% endif %}
         {% endif %}
         {% if perms.main_app.can_generate_tour %}
-        <section class="tour-generation">
+        <div class="tour-generation">
             <h4>Создание турнира:</h4>
             <button class="generate-btn">Начать Турнир</button>
-        </section>
+        </div>
         {% endif %}
     </div>
 </section>
@@ -42,6 +43,15 @@
                 <h4>Генерация расписания</h4>
                 <span class="loader"></span>
             </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div id="played" class="container">
+        <h3>Отыгранные матчи</h3>
+        <a href="#start" class="nav-page">Вернуться в начало страницы</a>
+        <div class="line"></div>
+        <div class="played-matches">
         </div>
     </div>
 </section>

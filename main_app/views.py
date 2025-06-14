@@ -7,8 +7,8 @@ from .models import Profile, Competitor, Tournament, Micromatch, Announsment
 from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
-from .match_generator import generateMatch, generateTimetable
-from .players_functions import splitIntoGroups, generateGroups, addToCompetitors, isRegister
+from .match_generator import generateMatch, generateTimetable, getSavedMatch
+from .players_functions import splitIntoGroups, generateGroups, addToCompetitors, isRegister, getCreationMatchInfo
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
@@ -168,37 +168,30 @@ def start_new_tour_view(request): # запуск нового турнира
             splitIntoGroups(players, age_groups)
 
             matches = generateTimetable(tournament)
-            return JsonResponse({'status': 'success', 'message': 'Tournament created', 'matches' : matches})
+            return JsonResponse({'status': 'success', 'message': 'Турнир создан', 'matches' : matches})
             
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 
-
-
-
-
-
-@permission_required('myapp.can_generate_match', raise_exception=True)
-def get_next_match_view(request): # получение следующего матча турнира (временно отключено)
+def get_next_match_view(request, group_id): # получение следующего матча турнира (после сохранения счета матча)
     if request.method == 'GET':
         try:
             tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
-
+            matchContainer = []
             teams, pl_in_team = generateMatch(group_id)
-            if pl_in_team is None:
-                return JsonResponse({'status': 'error', 'message': 'Tournament has ended'})
-
-            matchContainer = getSavedMatch(tournament, teams, pl_in_team)
-            return JsonResponse({'status': 'success', 'matches': matchContainer})
+            
+            if teams == []:
+                return JsonResponse({'status': 'success', 'message': f'Группа {group_id} отыграла матчи', 'matches': matchContainer})
+            
+            match_time, field_num = getCreationMatchInfo(tournament, group_id)
+            matchContainer.append(getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team))
+            
+            return JsonResponse({'status': 'success', 'message': 'Матч сгенерирован', 'matches': matchContainer})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
         
-
-
-
-
 
 def save_match_view(request, match_id): # сохранение результатов матча, обновление Rt
     if request.method == 'POST':
@@ -213,6 +206,7 @@ def save_match_view(request, match_id): # сохранение результа�
 
             match.team1_score = new_score1
             match.team2_score = new_score2
+            match.isPlayed = True
             match.save()
 
             team1_playersId = data['team1_playersId']
@@ -223,10 +217,10 @@ def save_match_view(request, match_id): # сохранение результа�
             updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId)
             updateRatings(tournament, team1_playersId, team2_playersId)
 
-            return JsonResponse({'status': 'success', 'message': 'Match saved'})
+            return JsonResponse({'status': 'success', 'message': 'Матч сохранен'})
 
         except Micromatch.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Match not found'}, status=404)
+            return JsonResponse({'status': 'error', 'message': 'Матч не найден'}, status=404)
 
         except Exception as e:
             return JsonResponse({'status': 'error','message': str(e)}, status=500)

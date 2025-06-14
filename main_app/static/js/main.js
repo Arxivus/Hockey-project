@@ -1,8 +1,7 @@
-import { generateTour, getNextMatch, getGeneratedMatches, checkRegisterStatus } from './fetch-requests.js'
+import { generateTour, getGeneratedMatches, checkRegisterStatus } from './fetch-requests.js'
 
 document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.querySelector('.generate-btn');
-    const getNextMatchBtn = document.querySelector('.next-match-btn');
     const matchesTable = document.querySelector('.matches');
     const modalWindow = document.querySelector('.modal-edit');
     const closeBtn = document.querySelector('.modal-close');
@@ -43,20 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.classList.remove('show')
             setTimeout(function() {location.reload()}, 3000);
 
-            /* generateMatches(matchesTable, '/tournaments/start-new/') */ 
-            
         }
 
         else {
             const error = document.querySelector('.form-error');
             error.textContent = 'Неверный формат данных!'
-        }
-            
-    })
-
-    /* getNextMatchBtn.addEventListener('click', function() {
-        getNextMatch(matchesTable, '/tournaments/get-next-match/')
-    }) */
+        }       
+    })   
 });
 
 async function checkRegister(){

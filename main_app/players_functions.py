@@ -1,4 +1,5 @@
-from .models import TournamentGroup, Competitor, Profile
+from datetime import datetime, timedelta
+from .models import TournamentGroup, Competitor, Profile, Micromatch
 from django.contrib.auth.decorators import login_required
 
 
@@ -15,6 +16,12 @@ def isEnoughInGroup(players, group):
         return False
     
     return True
+
+
+def addMinutes(time, minutes):
+    dummy_datetime = datetime.combine(datetime.today().date(), time)
+    new_datetime = dummy_datetime + timedelta(minutes=minutes)
+    return new_datetime.time()
 
 
 @login_required
@@ -76,6 +83,27 @@ def updatePlayersMatrix(tournament, team1, team2):
     tournament.played_with_matrix = matrix
     tournament.save() 
 
+
+def getCreationMatchInfo(tournament, group_id):
+    last_matches = Micromatch.objects.filter(tournament=tournament, group_id=group_id).order_by('-start_time')[:2]
+    last_match = last_matches[0]
+    prelast_match = last_matches[1]
+    print(last_match, group_id)
+    
+    match_delay = tournament.minutes_btwn_matches
+    match_time = addMinutes(last_match.start_time, 1 + match_delay)
+    
+    if group_id == 1 or group_id == 2:
+        if last_match.field_num == prelast_match.field_num:
+            match_field = 1 if last_match.field_num == 2 else 2
+        else:
+            match_field = last_match.field_num
+    else:
+        match_field = 1 if last_match.field_num == 2 else 2
+    
+    return (match_time, match_field)
+    
+    
 
 
 def generateGroups(tournament, age_groups):

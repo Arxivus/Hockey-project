@@ -1,8 +1,7 @@
 import math
-from datetime import datetime, timedelta
 from itertools import combinations, product
 from .models import TournamentGroup, Competitor, Tournament, Micromatch, uuid
-from .players_functions import splitByRole, updatePlayersMatrix, isEnoughInGroup
+from .players_functions import splitByRole, updatePlayersMatrix, isEnoughInGroup, addMinutes
 
 
 
@@ -76,13 +75,14 @@ def getTeamsForMatch(key_age, players_by_role, age_diff, team_comp):
     
     return getBalancedTeams(processed_roles, team_comp, top_n)
 
+# -------------------------------------------------------------------------------------------------------------------------
 
 def prepareTeams(group):
     id = group.group_id
     players = Competitor.objects.filter(group_id=id).values()
 
     if not isEnoughInGroup(players, group):
-        return [], 0
+        return ([], 0)
 
     pl_list = list(players)
     if group.group_age_pool[1] <= 10:
@@ -99,15 +99,21 @@ def prepareTeams(group):
     players_by_role = {'forward': fw_sorted, 'defender': df_sorted, 'goalkeeper': gk_sorted} 
 
     less_matches = 10000
+    max_matches = -1
     less_matches_age = 0
     for key, role_pls in players_by_role.items():
         if role_pls != []:
-            pl = role_pls[0]         # игрок с наим. количеством матчей
-            if pl['matches_played'] < less_matches:
-                less_matches = pl['matches_played']
-                less_matches_age = pl['age']
+            pl_l = role_pls[0]         # игрок с наим. количеством матчей
+            pl_m = role_pls[-1]         # игрок с наиб. количеством матчей
+            
+            if pl_l['matches_played'] < less_matches:
+                less_matches = pl_l['matches_played']
+                less_matches_age = pl_l['age']
+                
+            if pl_m['matches_played'] > max_matches:
+                max_matches = pl_m['matches_played']
 
-    if less_matches < 20:
+    if less_matches < 20 and max_matches < 25:
         try:
             best_teams = getTeamsForMatch(
                 less_matches_age,
@@ -122,7 +128,7 @@ def prepareTeams(group):
         print('All in group played their matches')
         group.stopped_played = True
         group.save()
-        return [], 0
+        return ([], 0)
         
     return (best_teams, pl_in_team)
 
@@ -130,16 +136,9 @@ def prepareTeams(group):
 def generateMatch(group_id): # вызывается после сохранения результата одного из матчей (group_id получать)
     group = TournamentGroup.objects.filter(group_id=group_id).first()
     if group.stopped_played:
-        return [], 0
+        return ([], 0)
     else:
         return prepareTeams(group)
-
-# ------------------------------------------------------------------------------------------------------------
-
-def add_minutes(time, minutes):
-    dummy_datetime = datetime.combine(datetime.today().date(), time)
-    new_datetime = dummy_datetime + timedelta(minutes=minutes)
-    return new_datetime.time()
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -147,6 +146,7 @@ def generateTimetable(tournament): # генерация расписания (п
     groups_ids = tournament.playing_groups_ids
     timetable_matches = [] 
     last_time = tournament.time_started
+    group_time_end = last_time
     group_delay = int(tournament.minutes_btwn_groups)
     match_delay = int(tournament.minutes_btwn_matches)
     field_num = 1
@@ -160,10 +160,12 @@ def generateTimetable(tournament): # генерация расписания (п
             continue
 
         pl_in_team = 6 if group.age_spread > 1 else 4
-        matches_count = math.ceil((len(pl_in_group) * 10) / (pl_in_team * 2))
-    
+        formula = (len(pl_in_group) * 10) / (pl_in_team * 2)
+        matches_count = math.ceil(formula)
+        group_time_end = addMinutes(last_time, ((matches_count * 2) + (matches_count * match_delay))) 
+        print(last_time, group_time_end)
         for _ in range(matches_count):
-            last_time = add_minutes(last_time, 1 + match_delay)
+            last_time = addMinutes(last_time, 1 + match_delay)
             match_time = last_time
             
             teams, pl_in_team = prepareTeams(group)
@@ -171,14 +173,14 @@ def generateTimetable(tournament): # генерация расписания (п
             timetable_matches.append(match)
             
             i += 1
-            if group_id == 1 or group_id == 2:
+            if group_id == 1 or group_id == 2: # младшие играют 2 матча на 1-ом поле
                 if i % 2 == 0:
                     field_num = 1 if field_num == 2 else 2
             else:
                 field_num = 1 if field_num == 2 else 2
             
            
-        last_time = add_minutes(last_time, group_delay)
+        last_time = addMinutes(group_time_end, group_delay) 
         field_num = 1
         i = 0
   

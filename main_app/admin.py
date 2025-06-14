@@ -20,7 +20,7 @@ class CompetitorAdmin(admin.ModelAdmin):
     list_filter = ('group_id', 'gender')
 
 class MicromatchAdmin(admin.ModelAdmin):
-    search_fields = ('created_at',)
+    search_fields = ('start_time',)
     list_filter = ('tournament__tour_id',)
 
 admin.site.register(Profile)

@@ -74,7 +74,7 @@ ul {
 }
 
 section {
-    margin-bottom: 50px;
+    margin-bottom: 100px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .line {
-    height: 1px;
+    height: 2px;
     background-color: #f00;
     margin-bottom: 50px;
 }

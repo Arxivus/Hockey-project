@@ -1,10 +1,10 @@
-import { getPermissions, saveMatchScore } from './fetch-requests.js';
+import { getPermissions, saveMatchScore, getNextMatch } from './fetch-requests.js';
 
 async function renderMatches(matches, matchesTable) {
     if (matches == undefined || matches.length == 0) {
         return
     }
-    
+    console.log(matches);
     const loading = document.querySelector('.loading');
     if (loading)
         loading.style.display = 'none'
@@ -20,17 +20,38 @@ async function renderMatches(matches, matchesTable) {
         const matchTime = match['start_time'].slice(0, 5)
         const matchField = match['field_num']
         const matchId = match['match_id'] 
+        const matchGroupId = match['group_id']
         const team1Card = getTeamCard(match['team1_players'], match['team1_score'], 1)
         const team2Card = getTeamCard(match['team2_players'], match['team2_score'], 2)
 
         const team1_playersId = getTeamPlayersId(match['team1_players'])
         const team2_playersId = getTeamPlayersId(match['team2_players'])
 
-        const matchCard = await getMatchCard(team1Card, team2Card, matchTime, matchField, matchId, team1_playersId, team2_playersId)  
+        const matchCard = await getMatchCard(matchesTable, team1Card, team2Card, matchGroupId, matchTime, matchField, matchId, team1_playersId, team2_playersId)  
         matchCard.setAttribute('data-uuid', matchId) 
 
-        matchesTable.append(matchCard)
+        const playedMatchesTable = document.querySelector('.played-matches');
+        if (playedMatchesTable && match['isPlayed'] == true) {
+            playedMatchesTable.append(matchCard)
+        }
+            
+        else { 
+            const playersGroup = document.querySelector(`.players-group[data-group-id="${matchGroupId}"]`);
+            if (playersGroup) {
+                playersGroup.append(matchCard) }
+            else {
+                const group = document.createElement('div');
+                group.className = 'players-group';
+                group.style.display = 'flex'
+                group.style.width = '100%'
+                group.dataset.groupId = matchGroupId;
+                group.append(matchCard)
+                matchesTable.append(group) 
+            } 
+        }   
     }
+
+    console.log('Матчи успешно загружены');
 }
 
 function createTeamRoleEl(roleName, rolePlayers) {
@@ -79,9 +100,10 @@ function getTeamCard(team, team_score, num) {
     return teamCard
 }
 
-async function getMatchCard(team1Card, team2Card, matchTime, matchField, matchId, team1_playersId, team2_playersId) {
+async function getMatchCard(matchesTable, team1Card, team2Card, group_id, matchTime, matchField, matchId, team1_playersId, team2_playersId) {
     const matchCard = document.createElement('div')
     matchCard.classList.add('match-card')
+    matchCard.setAttribute('data-group', group_id)
 
     const matchTitleBlock = document.createElement('div');
     matchTitleBlock.classList.add('match-title-block')
@@ -114,11 +136,15 @@ async function getMatchCard(team1Card, team2Card, matchTime, matchField, matchId
         saveScoreBtn.textContent = 'Сохранить счет'
         matchTitleBlock.append(saveScoreBtn)
         saveScoreBtn.addEventListener('click', (event) => {
-        const currentCard = event.currentTarget.closest('.match-card')
-        const score1 = currentCard.querySelector('.team1-score-input').value
-        const score2 = currentCard.querySelector('.team2-score-input').value
-        saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId);
-    })}
+            const currentCard = event.currentTarget.closest('.match-card')
+            const score1 = currentCard.querySelector('.team1-score-input').value
+            const score2 = currentCard.querySelector('.team2-score-input').value
+
+            saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId);
+            getNextMatch(matchesTable, `/tournaments/get-next-match/${group_id}`)
+            currentCard.style.display = 'none'
+        }
+    )}
     
     const matchTeams = document.createElement('div')
     matchTeams.classList.add('match-teams')

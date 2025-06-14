@@ -11,14 +11,13 @@ class createUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = ""
-        self.fields['username'].label = "Логин"
-        self.fields['password1'].label = "Пароль"
-        self.fields['password2'].label = "Повторите пароль"
-
         self.fields['password1'].error_messages = {
             'required': _('Пароль обязателен для заполнения'),  
         }
-
+        
+    username = forms.CharField(label='Логин')
+    password1 = forms.CharField(label='Пароль', widget=forms.TextInput)
+    password2 = forms.CharField(label='Повторите пароля', widget=forms.TextInput)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -92,7 +91,7 @@ class loginForm(forms.Form):
         self.label_suffix = ""
         
     username = forms.CharField(label='Логин', max_length=100)
-    password = forms.CharField(label='Пароль', max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput, label='Пароль', max_length=100)
     
     def clean(self):
         cleaned_data = super().clean()

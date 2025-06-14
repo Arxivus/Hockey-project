@@ -79,7 +79,7 @@ def getTeamsForMatch(key_age, players_by_role, age_diff, team_comp):
 
 def prepareTeams(group):
     id = group.group_id
-    players = Competitor.objects.filter(group_id=id).values()
+    players = Competitor.objects.filter(group_id=id, banned=False).values()
 
     if not isEnoughInGroup(players, group):
         return ([], 0)
@@ -154,7 +154,7 @@ def generateTimetable(tournament): # генерация расписания (п
 
     for group_id in groups_ids:
         group = TournamentGroup.objects.filter(group_id=group_id).first()
-        pl_in_group = Competitor.objects.filter(group_id=group_id).values()
+        pl_in_group = Competitor.objects.filter(group_id=group_id, banned=False).values()
         
         if not isEnoughInGroup(pl_in_group, group) or group.stopped_played:
             continue

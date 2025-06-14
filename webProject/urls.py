@@ -18,7 +18,7 @@ urlpatterns = [
     path('tournaments/save-match/<uuid:match_id>/', views.save_match_view, name='save_match'),
     path('ratings/', views.ratings_page, name='ratings'),
     path('ratings/get-competitors/', views.get_competitors_view, name='get_competitors'),
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin:index'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),

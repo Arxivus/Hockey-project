@@ -7,7 +7,7 @@
 
 table {
   border-collapse: collapse;
-  width: 700px;
+  width: 90%;
   border-radius: 15px;
   background-color: #D9E4F2;  
 }
@@ -23,7 +23,7 @@ table {
 }
 
 td {
-  width: 100px;
+  width: 15%;
   padding: 15px 20px;
   text-align: center;
   border: 1px solid #9DA8D6;
@@ -31,20 +31,16 @@ td {
 }
 
 table td:first-child {
-  width: 10%;
+  width: 5%;
 }
 
 table td:nth-child(2) {
-  width: 250px;
+  width: 20%;
 }
 
 .table-rows tr:hover {
   background-color:  #a9c0de;
   transition: background-color 0.2s ease-in-out
-}
-
-.table-headers {
-  width: 700px;
 }
 
 .table-headers td {
@@ -64,4 +60,26 @@ table tr th:first-child {
 table tr td:last-child,
 table tr th:last-child {
   border-right: 0;
+}
+
+@media (max-width: 392px) { 
+  
+  table {
+    width: 100%;
+  } 
+  
+  td {
+    width: 20%;
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+
+  table td:nth-child(2) {
+    min-width: 100px;
+  }
+
+  .table-filter {
+    flex-direction: column;
+  }
+
 }

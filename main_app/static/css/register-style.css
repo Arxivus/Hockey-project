@@ -109,5 +109,9 @@ label {
         padding: 20px 15px;
         width: 330px;
     }
+
+    body {
+        background-image: linear-gradient(#9A1618, #340708, #340708);
+    }
  
 }

@@ -3,13 +3,10 @@ import { getCompetitors } from './fetch-requests.js'
 window.onload = async function() {
     const data = await getCompetitors('/ratings/get-competitors/')
     let competitors = data['competitors']
+    
     const tableHeadersBlock = document.querySelector('.table-headers-block');
-    const tableHeaders = document.createElement('table');
-    tableHeaders.classList.add('table-headers')
-
     const rateTableHeaders = createTableRow('№', 'ФИО', 'Возраст', 'Пол', 'Рейтинг')
-    tableHeaders.append(rateTableHeaders)
-    tableHeadersBlock.append(tableHeaders)
+    tableHeadersBlock.append(rateTableHeaders)
     
     const filterEl = document.querySelector('.filter');
     filterEl.addEventListener('change', function(e) {

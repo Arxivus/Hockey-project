@@ -110,7 +110,7 @@ def check_register(request):
 def get_competitors_view(request): # получение списка игроков для таблицы рейтингов
     if request.method == 'GET':
         try:
-            competitors = Competitor.objects.all().order_by('-rating').values()
+            competitors = Competitor.objects.filter(banned=False).all().order_by('-rating').values()
             comp_list = list(competitors)
             return JsonResponse({'status': 'success', 'competitors': comp_list}) 
         

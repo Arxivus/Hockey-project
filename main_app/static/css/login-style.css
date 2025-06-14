@@ -25,7 +25,13 @@ body {
     justify-content: center;
     overflow: auto;
     width: 100%;
-    height: 100%;   
+    height: 100%;
+    gap: 40px;   
+}
+
+.mobile-logo {
+    display: none;
+    width: 142px;
 }
 
 .login-form-block a {
@@ -84,7 +90,7 @@ label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 35px;
+    gap: 40px;
 }
 
 .login-form-fields {
@@ -105,7 +111,7 @@ a:hover {
 }
 
 .big-link {
-    font-size: 22px;
+    font-size: 20px;
 }
 
 @media (max-width: 392px) {
@@ -117,6 +123,16 @@ a:hover {
         width: 330px;
     }
 
- 
+    body {
+        background-image: linear-gradient(#9A1618, #340708, #340708);
+    }
+
+    .mobile-logo {
+        display: block;
+    }
+
+    .login-form {
+        gap: 50px;
+    }
 }
 

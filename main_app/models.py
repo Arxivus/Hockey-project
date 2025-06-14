@@ -65,6 +65,7 @@ class Competitor(models.Model):
     matches_played = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     goals_taken = models.IntegerField(default=0)
+    banned = models.BooleanField(default=False  )   
 
     def save(self, *args, **kwargs):
         if not self.player_id:

@@ -50,22 +50,6 @@ function getGeneratedMatches(matchesTable, url) {
 function getNextMatch(matchesTable, url) {
     getMatchesData(matchesTable, url)
 }
-/* function getNextMatch(matchesTable, groupId, url) {
-    fetch(url, 
-        {
-            method: 'GET',
-            headers: { 'X-CSRFToken': csrftoken },
-            body: JSON.stringify({ group_id: groupId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data['message']) {
-                console.log(data['message']);
-            }
-            renderMatches(data['matches'], matchesTable);
-        }) 
-        .catch(error => console.error('Ошибка получения данных:', error))
-} */
 
 
 function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId) {
@@ -108,7 +92,6 @@ async function getData(url) {
 } 
 
 
-
 function saveProfileChanges(newValues) {
     fetch('/user/edit-profile/', 
     {
@@ -121,21 +104,30 @@ function saveProfileChanges(newValues) {
     .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
+
 function generateTour(tourSettings, url) {
+    postData(tourSettings, url)
+} 
+
+function shiftMatchesTime(time, url) {
+    postData(time, url)
+}
+
+
+function postData(value, url) {
     fetch(url, 
     {
             method: 'POST',
             headers: { 'X-CSRFToken': csrftoken },
-            body: JSON.stringify({tourSettings})
+            body: JSON.stringify({value})
     })
     .then(response => response.json())
     .then(data => console.log(data['message']))
-    .catch(error => console.error('Ошибка создания:', error))
-} 
+    .catch(error => console.error('Произошла ошибка:', error))
+}
 
 export {
     generateTour,
-    /* generateMatches, */
     getNextMatch,
     getGeneratedMatches,
     saveMatchScore,
@@ -143,5 +135,6 @@ export {
     getPermissions,
     checkRegisterStatus,
     saveProfileChanges,
-    getTimetableMatches
+    getTimetableMatches,
+    shiftMatchesTime
 }

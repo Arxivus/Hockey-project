@@ -163,7 +163,7 @@ def generateTimetable(tournament): # генерация расписания (п
         formula = (len(pl_in_group) * 10) / (pl_in_team * 2)
         matches_count = math.ceil(formula)
         group_time_end = addMinutes(last_time, ((matches_count * 2) + (matches_count * match_delay))) 
-        print(last_time, group_time_end)
+        
         for _ in range(matches_count):
             last_time = addMinutes(last_time, 1 + match_delay)
             match_time = last_time

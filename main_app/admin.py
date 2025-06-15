@@ -22,9 +22,12 @@ class CompetitorAdmin(admin.ModelAdmin):
 class MicromatchAdmin(admin.ModelAdmin):
     search_fields = ('start_time',)
     list_filter = ('tournament__tour_id', )
-    ordering = ('start_time',)  
+    ordering = ('start_time',)
+    
+class ProfileAdmin(admin.ModelAdmin):
+    search_fields = ('fullname',)  
 
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Competitor, CompetitorAdmin)
 admin.site.register(Tournament, TournamentAdmin)
 admin.site.register(Micromatch, MicromatchAdmin)

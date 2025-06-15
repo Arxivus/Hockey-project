@@ -88,7 +88,6 @@ def getCreationMatchInfo(tournament, group_id):
     last_matches = Micromatch.objects.filter(tournament=tournament, group_id=group_id).order_by('-start_time')[:2]
     last_match = last_matches[0]
     prelast_match = last_matches[1]
-    print(last_match, group_id)
     
     match_delay = tournament.minutes_btwn_matches
     match_time = addMinutes(last_match.start_time, 1 + match_delay)

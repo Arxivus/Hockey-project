@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-<section id="start">
-    <div class="container">
+<div class="container">
+    <section id="start">
         <h3>Турнир</h3>
         <a href="#played" class="nav-page">Перейти к отыгранным матчам</a>
         <div class="line"></div>
@@ -28,59 +28,72 @@
             </section>
             {% endif %}
         {% endif %}
-        {% if perms.main_app.can_generate_tour %}
-        <div class="tour-generation">
-            <h4>Создание турнира:</h4>
-            <button class="generate-btn">Начать Турнир</button>
+        <div class="tour-controls">
+            {% if perms.main_app.can_generate_tour %}
+                <div class="tour-generation">
+                    <h4>Создание турнира:</h4>
+                    <button class="generate-btn">Создать расписание</button>
+                </div>
+            {% endif %}
+            {% if perms.main_app.can_shift_timetable %}
+                <div class="shift_time">
+                    <h4>Сдвинуть время матчей:</h4>
+                    <button class="shift-btn">Указать время</button>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
-    </div>
-</section>
-<section>
-    <div class="container">
+    </section>
+    <section>
         <div class="matches">
             <div class="loading">
-                <h4>Генерация расписания</h4>
+                <h4>Обработка данных</h4>
                 <span class="loader"></span>
             </div>
         </div>
-    </div>
-</section>
-<section>
-    <div id="played" class="container">
+    </section>
+    <section id="played">
         <h3>Отыгранные матчи</h3>
         <a href="#start" class="nav-page">Вернуться в начало страницы</a>
         <div class="line"></div>
         <div class="played-matches">
         </div>
-    </div>
-</section>
-<div id="overlay"></div>
-<section>
-    <div class="container"></div>
-    <div class="modal-edit">
-        <h3>Задайте настройки турнира</h3>
-        <span class="form-error"></span>
-        <a class="modal-close">close</a>
-        <form method="POST" class="edit-tour-form">
-            {% csrf_token %}
-            <label>Время начала: <input id="start-time" type="text" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="например, 17:00"></label>
-            <label>Уровень подготовки:
-                <div id="category" class="multiselect-checkbox">
-                    <label><input type="checkbox" name="options" value="1"> 6-10 лет, мальчики</label>
-                    <label><input type="checkbox" name="options" value="2"> 6-10 лет, девочки</label>
-                    <label><input type="checkbox" name="options" value="3"> 11-15 лет, юноши</label>
-                    <label><input type="checkbox" name="options" value="4"> 11-15 лет, девушки</label>
-                    <label><input type="checkbox" name="options" value="5"> 16+ лет, мужская</label>
-                    <label><input type="checkbox" name="options" value="6"> 16+ лет, женская</label>
-                </div>
-            </label>
-            
-            <label>Перерыв между группами: <input id="group-delay" type="number" min="1"> минут(-а)</label>
-            <label>Перерыв между матчами: <input id="match-delay" type="number" min="0"> минут(-а)</label>
-            <button type="button" class="modal-save-btn">Начать турнир</button>
-        </form>
-    </div>
-    </div>
-</section>
+    </section>
+    <div id="overlay"></div>
+    <section>
+        <div class="modal-edit">
+            <h3>Задайте настройки турнира</h3>
+            <span class="form-error"></span>
+            <a class="modal-close">close</a>
+            <form method="POST" class="edit-form">
+                {% csrf_token %}
+                <label>Время начала: <input id="start-time" type="text" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="например, 17:00"></label>
+                <label>Уровень подготовки:
+                    <div id="category" class="multiselect-checkbox">
+                        <label><input type="checkbox" name="options" value="1"> 6-10 лет, мальчики</label>
+                        <label><input type="checkbox" name="options" value="2"> 6-10 лет, девочки</label>
+                        <label><input type="checkbox" name="options" value="3"> 11-15 лет, юноши</label>
+                        <label><input type="checkbox" name="options" value="4"> 11-15 лет, девушки</label>
+                        <label><input type="checkbox" name="options" value="5"> 16+ лет, мужская</label>
+                        <label><input type="checkbox" name="options" value="6"> 16+ лет, женская</label>
+                    </div>
+                </label>
+                
+                <label>Перерыв между группами: <input id="group-delay" type="number" min="1"> минут(-а)</label>
+                <label>Перерыв между матчами: <input id="match-delay" type="number" min="0"> минут(-а)</label>
+                <button type="button" class="modal-save-btn">Начать турнир</button>
+            </form>
+        </div>
+        <div class="modal-time-edit">
+            <h3>Задайте время</h3>
+            <span class="shift-form-error"></span>
+            <a class="modal-time-close">close</a>
+            <form method="POST" class="edit-form">
+                {% csrf_token %}
+                <h5>Укажите в минутах, введите отрицательное число (-10) для сдвига назад и положительное (10), чтобы сдвинуть вперед</h5>
+                <label>Сдвинуть несыгранные матчи на: <input id="matches-shift" type="number"> минут(-у)</label>
+                <button type="button" class="modal-shift-btn">Подвинуть матчи</button>
+            </form>
+        </div>
+    </section>
+</div>
 {% endblock %}

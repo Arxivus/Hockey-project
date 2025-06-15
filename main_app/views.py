@@ -8,7 +8,7 @@ from .forms import createUserForm, profileForm, loginForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, generateTimetable, getSavedMatch
-from .players_functions import splitIntoGroups, generateGroups, addToCompetitors, isRegister, getCreationMatchInfo
+from .players_functions import splitIntoGroups, generateGroups, addToCompetitors, isRegister, getCreationMatchInfo, addMinutes
 from .rating_update import updateRatings, updatMatchPlayersScore
 
 def home_page(request):
@@ -106,6 +106,29 @@ def check_register(request):
         return JsonResponse({ 'status': 'success', 'value': True }) 
     return JsonResponse({ 'status': 'success', 'value': False })
 
+@permission_required('myapp.can_shift_timetable', raise_exception=True)
+def shift_matches_view(request):
+    if request.method == 'POST':
+        try: 
+            data = json.loads(request.body)
+            shift_time = int(data['value'])
+            
+            last_tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
+            if last_tournament:
+                unplayed_matches = Micromatch.objects.filter(tournament=last_tournament, isPlayed=False).order_by('start_time')
+    
+                for tour_match in unplayed_matches:
+                    tour_match.start_time = addMinutes(tour_match.start_time, shift_time)
+                    tour_match.save()
+                    
+                return JsonResponse({'status': 'success', 'message': 'Время матчей изменено'})
+            else:
+                return JsonResponse({'status': 'success', 'message': 'Нет активных турниров'})
+        
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+
 
 def get_competitors_view(request): # получение списка игроков для таблицы рейтингов
     if request.method == 'GET':
@@ -144,7 +167,7 @@ def start_new_tour_view(request): # запуск нового турнира
             )
 
             data = json.loads(request.body)
-            settings = data['tourSettings']
+            settings = data['value']
             age_groups = [
                 (1, (6, 10), 'M'), (2, (6, 10), 'W'), 
                 (3, (11, 15), 'M'), (4, (11, 15), 'W'), 

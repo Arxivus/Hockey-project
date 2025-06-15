@@ -16,6 +16,7 @@ urlpatterns = [
     path('tournaments/check-permissions/', views.get_user_permissions, name='get_user_permissions'),
     path('tournaments/get-stored-matches/', views.get_stored_matches_view, name='get_stored_matches'),
     path('tournaments/save-match/<uuid:match_id>/', views.save_match_view, name='save_match'),
+    path('tournaments/shift-matches-time/', views.shift_matches_view, name='shift_matches'),
     path('ratings/', views.ratings_page, name='ratings'),
     path('ratings/get-competitors/', views.get_competitors_view, name='get_competitors'),
     path('admin/', admin.site.urls, name='admin:index'),

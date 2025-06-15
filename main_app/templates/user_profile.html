@@ -38,6 +38,16 @@
         </div>
     </div>
 </section>
+<section>
+    <div class="container">
+        <h3>Предыдущие 10 значений рейтингов</h3>
+        <div class="last-ratings">
+            {% for rating in profile.previous_ratings %}
+                <span class="last-rating">{{ rating }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 <div id="overlay"></div>
 <section>
     <div class="container"></div>

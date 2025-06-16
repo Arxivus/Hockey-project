@@ -41,6 +41,8 @@ class Profile(models.Model):
     rating = models.IntegerField('Рейтинг', null=True, default=0)
     previous_ratings = models.JSONField('Прошлые рейтинги', default=list)
     role = models.CharField('Роль', choices=TEAM_ROLE, null=True, blank=True)
+    tg_chat_id = models.BigIntegerField(null=True)
+    
 
     class Meta:
         verbose_name = 'Профиль пользователя'        
@@ -132,6 +134,7 @@ class Micromatch(models.Model):
     group_id = models.IntegerField('ID группы', null=True)
     match_id = models.UUIDField('ID матча', primary_key=True, default=uuid.uuid4, editable=False)
     matchRating = models.IntegerField('Средний рейтинг')
+    players_ids = models.JSONField('ID игроков', default=list)
     team1_players = models.JSONField('Команда 1')
     team2_players = models.JSONField('Команда 2')
     team1_score = models.IntegerField('Счет первой команды', default=0)

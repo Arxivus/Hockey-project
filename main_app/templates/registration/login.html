@@ -18,7 +18,7 @@
             <img class="mobile-logo" src="{% static 'images/mobile-logo.svg' %}">
             <div class="login-form-box">
                 <form method="POST" class="login-form">
-                    <h3 class="login-form-title">Войти в профиль</h3>
+                    <h2 class="login-form-title">Войти в профиль</h2>
                     {% csrf_token %}
                     <div class="login-form-elements">
                         <div class="login-form-fields">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="login-form-links">
-                            <a href="">Забыли пароль?</a>
+                            <a href="{% url 'password' %}">Забыли пароль?</a>
                             <a href="{% url 'register' %}">Регистрация</a>
                         </div>
                     </div>

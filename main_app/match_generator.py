@@ -200,6 +200,7 @@ def getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team
             group_id = match['group_id'],
             match_id = match['match_id'],
             matchRating = match['match_rating'],
+            players_ids = match['players_ids'],
             team1_players = match['team1_players'],
             team2_players = match['team2_players'],
             start_time = match['start_time'],
@@ -216,22 +217,26 @@ def getMatchObject(id, group_id, match_time, field_num, team1, team2, pl_in_team
     ratings_sum = 0
     for player in list(team1) + list(team2):
         ratings_sum += player['rating']
-  
+    
+    all_players = team1 + team2
+    players_ids = [pl['player_id'] for pl in all_players]
+    
     match = {
         'group_id' : group_id,
         'match_id': id,
-        'start_time' : match_time,
+        'start_time' : match_time,  
         'field_num' : field_num,
         'match_rating': round(ratings_sum / (pl_in_team * 2)),
+        'players_ids' : players_ids,
                     
         'team1_players' : {
-            'Защитники': [{'id': d['player_id'], 'name': d['name'], 'rate': d['rating']} for d in team1_df],
-            'Нападающие': [{'id': f['player_id'], 'name': f['name'], 'rate': f['rating']} for f in team1_fw]
+            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team1_df],
+            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team1_fw]
         },
 
         'team2_players' : {
-            'Защитники': [{'id': d['player_id'], 'name': d['name'], 'rate': d['rating']} for d in team2_df],
-            'Нападающие': [{'id': f['player_id'], 'name': f['name'], 'rate': f['rating']} for f in team2_fw]
+            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team2_df],
+            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team2_fw]
         },
 
         'team1_score' : 0,
@@ -239,7 +244,7 @@ def getMatchObject(id, group_id, match_time, field_num, team1, team2, pl_in_team
     }
 
     if pl_in_team != 4:
-        match['team1_players']['Вратарь'] = [{'id': g['player_id'], 'name': g['name'], 'rate': g['rating']} for g in team1_gk]
-        match['team2_players']['Вратарь'] = [{'id': g['player_id'], 'name': g['name'], 'rate': g['rating']} for g in team2_gk]
+        match['team1_players']['Вратарь'] = [{'name': g['name'], 'rate': g['rating']} for g in team1_gk]
+        match['team2_players']['Вратарь'] = [{'name': g['name'], 'rate': g['rating']} for g in team2_gk]
 
     return match

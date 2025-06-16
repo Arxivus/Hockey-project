@@ -7,20 +7,22 @@
 .announsment {
     border-radius: 18px;
     padding: 20px 40px;
-    background-color: #DDE5F2
-    /* background-image: linear-gradient(90deg,rgba(221, 229, 242, 1) 40%, rgba(234, 186, 187, 1) 80%); */
+    background-color: #DDE5F2;
+}
+
+.announsment p {
+    text-indent: 20px;
 }
 
 @media (max-width: 960px) {
     .announsment {
         padding: 8px 14px;
-        font-size: 13px;
-        line-height: 18px;
+        font-size: 16px;
         box-shadow: 0 4px 4px 0 #1A326940;
     }
 
     .announsment h5 {
-        font-size: 15px;
+        font-size: 20px;
         margin-bottom: 5px;
     }
 }

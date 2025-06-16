@@ -1,11 +1,23 @@
-import { saveProfileChanges } from './fetch-requests.js'
+import { saveProfileChanges, getCompetitorMatches } from './fetch-requests.js'
+import { renderTimetableMatches } from './timetable.js'
 
-window.onload = () => {
+window.onload = async () => {
     const editProfile = document.querySelector('.profile-edit');
     const closeBtn = document.querySelector('.modal-close');
     const saveBtn = document.querySelector('.modal-save-btn');
     const modalWindow = document.querySelector('.modal-edit');
     const overlay = document.getElementById('overlay')
+
+    const matchesTable = document.querySelector('.timetable-matches');
+
+    if (matchesTable) {
+        const user_id = document.querySelector('.user-avatar').dataset.userId;
+        const data = await getCompetitorMatches(`/user/get-matches/${user_id}`)
+        console.log(data['matches']);
+        renderTimetableMatches(data['matches'], matchesTable)
+    }
+    
+
 
     if (editProfile) {
         editProfile.addEventListener('click', () => {

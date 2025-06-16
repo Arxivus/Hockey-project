@@ -7,6 +7,7 @@ urlpatterns = [
     path('timetable/', views.timetable_page, name='timetable'),
     path('timetable/get-matches/', views.get_stored_matches_view, name='get_stored_matches'),
     path('user/', views.user_profile, name='user'),
+    path('user/get-matches/<int:user_id>', views.user_matches_view, name='user_matches'),
     path('user/edit-profile/', views.user_edit_profile, name='user_edit_profile'),
     path('tournaments/', views.tournaments_page, name='tournaments'),
     path('tournaments/reg-in-tour', views.register_to_tournament, name='register_to_tour'),
@@ -22,7 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin:index'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', views.login_view, name='login'),
+    path('login/password', views.password_view, name='password'),
     path('register/', views.register_view, name='register'),
+    path('bot/<int:user_id>', views.get_chatID_view, name='get_chatID'),
     path('logout/', views.logout_view, name='logout'),
     
 ]

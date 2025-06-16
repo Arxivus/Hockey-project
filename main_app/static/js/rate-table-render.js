@@ -5,7 +5,7 @@ window.onload = async function() {
     let competitors = data['competitors']
     
     const tableHeadersBlock = document.querySelector('.table-headers-block');
-    const rateTableHeaders = createTableRow('№', 'ФИО', 'Возраст', 'Пол', 'Рейтинг')
+    const rateTableHeaders = createTableRow('№', 'Участник', 'Возраст', 'Пол', 'Рейтинг')
     tableHeadersBlock.append(rateTableHeaders)
     
     const filterEl = document.querySelector('.filter');

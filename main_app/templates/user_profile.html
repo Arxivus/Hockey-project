@@ -3,6 +3,7 @@
 
 {% block link %}
 <link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
+<link rel="stylesheet" href="{% static 'css/timetable-style.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-style.css' %}">
 <script type="module" src="{% static 'js/profile.js' %}"></script> 
 {% endblock %}
@@ -19,7 +20,7 @@
     <div class="container">
         <div class="user-card">
             <div class="user-fullname">
-                <img class="user-avatar" src="{% static 'images/user-avatar.png' %}">
+                <img class="user-avatar" data-user-id="{{ user_id }}" src="{% static 'images/user-avatar.png' %}">
                 <p>{{ profile.fullname }}</p>
             </div>
             <div class="user-info">
@@ -34,6 +35,7 @@
                     <p>Рейтинг игрока: <b>{{ profile.rating }}</b></p>
                 </div>
                 <a class="profile-edit">Редактировать профиль</a>
+                <a class="bot" href="{% url 'get_chatID' user.id  %}">БОТ</a>
             </div>
         </div>
     </div>
@@ -48,26 +50,40 @@
         </div>
     </div>
 </section>
+<section>
+    <div class="container">
+        <h3>Ваши следующие матчи</h3>
+        <div class="timetable-matches"></div>
+    </div>
+</section>
 <div id="overlay"></div>
 <section>
-    <div class="container"></div>
+    <div class="container">
         <div class="modal-edit">
-            <h3>Введите новые данные</h3>
+            <h3>Редактирование профиля</h3>
             <span class="form-error"></span>
-            <a class="modal-close">close</a>
+            <a class="modal-close">
+                <svg fill="#000000" width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" fill-rule="evenodd"/>
+</svg>
+            </a>
             <form method="POST" class="edit-profile-form">
                 {% csrf_token %}
-                <label>Роль: 
-                    <select id="role" class="modal-select-role">
-                        <option value="forward">нападающий</option>
-                        <option value="defender">защитник</option>
-                        <option value="goalkeeper">вратарь</option>
-                    </select>
-                </label>
-                <label>Email: <input id="email" type="email" pattern='[^@\s]+@[^@\s]+\.[^@\s]+' placeholder="test@mail.ru"></label>
-                <label>Телефон: <input id="phone" type="tel" pattern='\+7\d{10}' placeholder="+79999999999"></label>
-                <label>Возраст: <input id="age" type="number" min="6" max="80"></label>
-                <label>Уровень подготовки:
+                <div>
+                    <p>Email</p>
+                    <input id="email" type="email" pattern='[^@\s]+@[^@\s]+\.[^@\s]+' placeholder="test@mail.ru">
+                </div>
+                <div>
+                    <p>Телефон</p>
+                    <input id="phone" type="tel" pattern='\+7\d{10}' placeholder="+79999999999">
+                </div>
+                <div>
+                    <p>Возраст</p>
+                    <input id="age" type="number" min="6" max="80">
+                </div>
+                <div class="edit-form-selectors">
+                    <div>
+                    <p>Уровень подготовки</p>
                     <select id="category" class="modal-select-category">
                         <option value="новичок">новичок</option>
                         <option value="любитель">любитель</option>
@@ -81,8 +97,17 @@
                         <option value="ГР">ГР</option>
                         <option value="МСМК">МСМК</option>
                     </select>
-                </label>
-                <button type="button" class="modal-save-btn">Сохранить изменения</button>
+                </div>
+                <div>
+                    <p>Роль</p> 
+                    <select id="role" class="modal-select-role">
+                        <option value="forward">нападающий</option>
+                        <option value="defender">защитник</option>
+                        <option value="goalkeeper">вратарь</option>
+                    </select>
+                </div>
+                </div>
+                <button type="button" class="modal-save-btn">Готово</button>
             </form>
         </div>
     </div>

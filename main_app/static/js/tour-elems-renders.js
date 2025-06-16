@@ -4,7 +4,7 @@ async function renderMatches(matches, matchesTable) {
     if (matches == undefined || matches.length == 0) {
         return
     }
-    console.log(matches);
+    
     const loading = document.querySelector('.loading');
     if (loading)
         loading.style.display = 'none'

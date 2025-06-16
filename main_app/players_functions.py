@@ -4,9 +4,13 @@ from django.contrib.auth.decorators import login_required
 
 
 def isRegister(request):
-    profile = Profile.objects.get(user=request.user)
-    already_register = Competitor.objects.filter(profile=profile).exists()
-    return True if already_register else False
+    try:
+        profile = Profile.objects.get(user=request.user)
+        already_register = Competitor.objects.filter(profile=profile).exists()
+        return True if already_register else False
+    except:
+        return False
+    
 
 def isEnoughInGroup(players, group):
     if players == None or len(players) < 8: 

@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/elements-style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/register-style.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="register-form-block">
+            <form method="POST" class="register-form">
+                <h2 class="register-form-title">Telegram-бот</h2>
+                {% csrf_token %}
+                <div class="register-form-fields">
+                    <div class="form-main-info">
+                        <div class="form-descr">
+                            <p>Чтобы <b class="hightlight">сбрасывать пароль</b> и получать <b class="hightlight">уведомления о матчах</b>, подключите бота</p>
+                            <p>Вам нужно лишь начать с ним чат и передать его ID</p>
+                            <div>
+                                <p>Найти нашего бота в поисковой строке телеграмма:</p>
+                                <a class="hightlight">@spartakovezTour_bot</a>
+                            </div>
+                            <div>
+                                <p>Или по ссылке:</p>
+                                <a href="https://web.telegram.org/a/#7459750513" class="hightlight">https://web.telegram.org/a/#7459750513</a>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            {{form.chat_id.label_tag}}
+                            {{form.chat_id.errors}}
+                            {{form.chat_id}}
+                        </div>
+                    </div>
+                </div>
+                <button id="form-button" class="form-btn" type="submit">Готово</button>
+            </form>
+        </div>    
+    </div>
+</body>

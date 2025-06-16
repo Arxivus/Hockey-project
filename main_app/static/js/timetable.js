@@ -1,6 +1,7 @@
 import { getTimetableMatches } from './fetch-requests.js'
 
 window.onload = async function() {
+    const matchesTable = document.querySelector('.timetable-matches');
     const data = await getTimetableMatches('/timetable/get-matches/')
     const matches = data['matches']
 
@@ -12,15 +13,14 @@ window.onload = async function() {
         const filterValue = e.target.value;
 
         const filteredMatches = filterMatches(matches, filterValue) 
-        renderTimetableMatches(filteredMatches)     
+        renderTimetableMatches(filteredMatches, matchesTable)     
     })
 
-    renderTimetableMatches(matches) 
+    renderTimetableMatches(matches, matchesTable) 
 }
 
 
-function renderTimetableMatches(matches) {
-    const matchesTable = document.querySelector('.timetable-matches');
+function renderTimetableMatches(matches, matchesTable) {
     matchesTable.innerHTML = ''
 
     for (let i = 0; i < matches.length; i++) {
@@ -89,4 +89,8 @@ function filterMatches(matches, filter) {
         const filtered = matches.filter(match => match['group_id'] == filter);
         return filtered
     }   
+}
+
+export {
+    renderTimetableMatches
 }

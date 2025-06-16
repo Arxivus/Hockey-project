@@ -58,7 +58,7 @@ body {
     padding-left: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #D9D9D9;
+    background-color: #FFFFFF;
 }
 
 .form-btn,
@@ -66,7 +66,7 @@ body {
 a, 
 label {
     margin-bottom: 0;
-    color: #fff;
+    color: #FFFFFF;
 }
 
 label {
@@ -100,18 +100,50 @@ label {
 }
 
 .form-btn:hover {
-    border: 2px solid #fff;
+    border: 2px solid #FFFFFF;
     transition: color 0.2s ease-in-out;
 }
+
+/**/
+
+.form-descr {
+    display: flex;
+    flex-direction: column;
+    gap: 20px   ;
+    font-size: 20px;
+    text-indent: 20px;
+    color: #FFFFFF;
+}
+
+.form-descr a {
+    overflow-wrap: break-word
+}
+
+.hightlight {
+    color: #f00;
+}
+
+/**/
 
 @media (max-width: 392px) {
     .register-form {
         padding: 20px 15px;
         width: 330px;
+        gap: 20px;
     }
 
     body {
         background-image: linear-gradient(#9A1618, #340708, #340708);
+    }
+
+    .form-main-info, 
+    .register-form-fields,
+    .form-main-info {
+        gap: 8px;
+    }
+
+    .form-additional-info {
+        row-gap: 8px;
     }
  
 }

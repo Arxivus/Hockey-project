@@ -81,6 +81,10 @@ async function checkRegisterStatus(url) {
     return await getData(url)
 }
 
+async function getCompetitorMatches(url) {
+    return await getData(url)
+}
+
 async function getData(url) {
     let response = await fetch(url, 
     {
@@ -136,5 +140,6 @@ export {
     checkRegisterStatus,
     saveProfileChanges,
     getTimetableMatches,
-    shiftMatchesTime
+    shiftMatchesTime,
+    getCompetitorMatches
 }

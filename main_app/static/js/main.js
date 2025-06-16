@@ -18,41 +18,44 @@ document.addEventListener('DOMContentLoaded', function() {
     getGeneratedMatches(matchesTable, '/tournaments/get-stored-matches/')
 
     checkRegister('/tournaments/check-register/')
-    
-    generateBtn.addEventListener('click', function() {
-            modalTourWindow.style.display = 'flex'
+
+    if (shiftTimeBtn) {
+        shiftTimeBtn.addEventListener('click', () => {
+            modalTimeWindow.style.display = 'flex'
             overlay.classList.add('show')
-    })
+        })
 
-    closeBtn.addEventListener('click', () => {
-        modalTourWindow.style.display = 'none'
-        overlay.classList.remove('show')
-    })
-
-    saveTourSettingsBtn.addEventListener('click', (e) => {
-        generateBySettings(e, modalTourWindow, overlay)       
-    }) 
-
-
-
-    shiftTimeBtn.addEventListener('click', () => {
-        modalTimeWindow.style.display = 'flex'
-        overlay.classList.add('show')
-    })
-
-    closeBtn2.addEventListener('click', () => {
-        modalTimeWindow.style.display = 'none'
-        overlay.classList.remove('show')
-    })
+        closeBtn2.addEventListener('click', () => {
+            modalTimeWindow.style.display = 'none'
+            overlay.classList.remove('show')
+        })
     
-    shiftTime.addEventListener('click', (e) => {
-        shiftByTime(e, modalTimeWindow, overlay)
-    })
+        shiftTime.addEventListener('click', (e) => {
+            shiftByTime(e, modalTimeWindow, overlay)
+        })
+    }
+
+
+    if (generateBtn) {
+        generateBtn.addEventListener('click', () => {
+                modalTourWindow.style.display = 'flex'
+                overlay.classList.add('show')
+        })
+
+        closeBtn.addEventListener('click', () => {
+            modalTourWindow.style.display = 'none'
+            overlay.classList.remove('show')
+        })
+        
+        saveTourSettingsBtn.addEventListener('click', (e) => {
+            generateBySettings(e, modalTourWindow, overlay)       
+        }) 
+    }
 });
 
 
-async function checkRegister(){
-    const isRegistered = await checkRegisterStatus()
+async function checkRegister(url) {
+    const isRegistered = await checkRegisterStatus(url)
     if (isRegistered['value']) {
         const registerBtn = document.querySelector('.register-btn');
         registerBtn.style.display = 'none'

@@ -2,9 +2,10 @@ import json
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.db.models import F
 from .models import Profile, Competitor, Tournament, Micromatch, Announsment
-from .forms import createUserForm, profileForm, loginForm
+from .forms import createUserForm, profileForm, loginForm, chatBotForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from .match_generator import generateMatch, generateTimetable, getSavedMatch
@@ -53,25 +54,46 @@ def register_view(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            return redirect('login')
+            return redirect('get_chatID', user_id=user.id)
     else:
         form = createUserForm()
         profile_form = profileForm()
         
     return render(request, 'registration/register.html', {'form': form, 'profile_form': profile_form })
 
+def password_view(request):
+    return render(request, 'registration/password.html')
+
+
+def get_chatID_view(request,  user_id):
+    if request.method == 'POST':
+        form = chatBotForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(id=user_id)
+            chat_id = form.cleaned_data['chat_id']
+            user.profile.tg_chat_id = chat_id
+            user.profile.save()
+            return redirect('login')
+        else:
+            form = chatBotForm()
+            return render(request, 'registration/bot_link.html', {'form': form})
+    else:
+        form = chatBotForm()  
+    return render(request, 'registration/bot_link.html', {'form': form})
+
 
 def get_user_permissions(request):
     if request.method == 'GET':
         return JsonResponse ({
             'canSaveScore': request.user.has_perm('main_app.can_save_score'),
+            'canShiftTime': request.user.has_perm('main_app.can_shift_timetable'),
         })
 
 
 @login_required
 def user_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'user_profile.html', { 'profile': profile })
+    return render(request, 'user_profile.html', { 'profile': profile, 'user_id' : request.user.id })
 
 @login_required
 def user_edit_profile(request):
@@ -89,6 +111,21 @@ def user_edit_profile(request):
         return JsonResponse ({'status': 'success', 'message': 'Profile saved'})
 
 
+def user_matches_view(request, user_id):
+    try:
+        competitor = Competitor.objects.select_related('profile__user').get(profile__user__id=user_id)
+        pl_id = competitor.player_id
+        last_tournament = Tournament.objects.filter(isEnded=False).order_by('-tour_id').first()
+        if last_tournament:
+            matches = Micromatch.objects.filter(tournament=last_tournament, isPlayed=False, players_ids__contains=[pl_id]).order_by('start_time').values()
+            matches_list = list(matches)
+            return JsonResponse({'status': 'succes', 'message': 'Матчи игрока получены', 'matches': matches_list})
+        else:
+            return JsonResponse({'status': 'succes', 'message': 'Нет активных турниров', 'matches': []})
+    
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e), 'matches': []}, status=404)
+
 @login_required
 def register_to_tournament(request):
     if isRegister(request):
@@ -104,9 +141,10 @@ def register_to_tournament(request):
 def check_register(request):
     if isRegister(request):
         return JsonResponse({ 'status': 'success', 'value': True }) 
-    return JsonResponse({ 'status': 'success', 'value': False })
+    else:
+        return JsonResponse({ 'status': 'success', 'value': False })
 
-@permission_required('myapp.can_shift_timetable', raise_exception=True)
+
 def shift_matches_view(request):
     if request.method == 'POST':
         try: 

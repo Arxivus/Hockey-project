@@ -36,7 +36,7 @@
                 </div>
             {% endif %}
             {% if perms.main_app.can_shift_timetable %}
-                <div class="shift_time">
+                <div class="shift-time">
                     <h4>Сдвинуть время матчей:</h4>
                     <button class="shift-btn">Указать время</button>
                 </div>
@@ -61,13 +61,21 @@
     <div id="overlay"></div>
     <section>
         <div class="modal-edit">
-            <h3>Задайте настройки турнира</h3>
+            <h3>Настройки турнира</h3>
             <span class="form-error"></span>
-            <a class="modal-close">close</a>
+            <a class="modal-close">
+                <svg fill="#000000" width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" fill-rule="evenodd"/>
+</svg>
+            </a>
             <form method="POST" class="edit-form">
                 {% csrf_token %}
-                <label>Время начала: <input id="start-time" type="text" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="например, 17:00"></label>
-                <label>Уровень подготовки:
+                <div>
+                    <p>Время начала: </p>
+                    <input id="start-time" type="text" pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" placeholder="например, 17:00">
+                </div>
+                <div>
+                    <p>Уровень подготовки:</p>
                     <div id="category" class="multiselect-checkbox">
                         <label><input type="checkbox" name="options" value="1"> 6-10 лет, мальчики</label>
                         <label><input type="checkbox" name="options" value="2"> 6-10 лет, девочки</label>
@@ -76,21 +84,34 @@
                         <label><input type="checkbox" name="options" value="5"> 16+ лет, мужская</label>
                         <label><input type="checkbox" name="options" value="6"> 16+ лет, женская</label>
                     </div>
-                </label>
+                </div>
                 
-                <label>Перерыв между группами: <input id="group-delay" type="number" min="1"> минут(-а)</label>
-                <label>Перерыв между матчами: <input id="match-delay" type="number" min="0"> минут(-а)</label>
+                <div>
+                    <p>Перерыв между группами (в минутах):</p>
+                    <input id="group-delay" type="number" min="1">
+                </div>
+                <div>
+                    <p>Перерыв между матчами (в минутах):</p>    
+                    <input id="match-delay" type="number" min="0">
+                </div>
                 <button type="button" class="modal-save-btn">Начать турнир</button>
             </form>
         </div>
         <div class="modal-time-edit">
             <h3>Задайте время</h3>
             <span class="shift-form-error"></span>
-            <a class="modal-time-close">close</a>
+            <a class="modal-time-close">
+                <svg fill="#000000" width="20px" height="20px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" fill-rule="evenodd"/>
+</svg>
+            </a>
             <form method="POST" class="edit-form">
                 {% csrf_token %}
                 <h5>Укажите в минутах, введите отрицательное число (-10) для сдвига назад и положительное (10), чтобы сдвинуть вперед</h5>
-                <label>Сдвинуть несыгранные матчи на: <input id="matches-shift" type="number"> минут(-у)</label>
+                <div>
+                    <p>Сдвинуть несыгранные на:</p>
+                    <input id="matches-shift" type="number">
+                </div>
                 <button type="button" class="modal-shift-btn">Подвинуть матчи</button>
             </form>
         </div>

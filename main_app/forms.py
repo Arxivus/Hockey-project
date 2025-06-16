@@ -15,9 +15,9 @@ class createUserForm(UserCreationForm):
             'required': _('Пароль обязателен для заполнения'),  
         }
         
-    username = forms.CharField(label='Логин')
-    password1 = forms.CharField(label='Пароль', widget=forms.TextInput)
-    password2 = forms.CharField(label='Повторите пароля', widget=forms.TextInput)
+    username = forms.CharField(label='Username в telegram (без @)')
+    password1 = forms.CharField(label='Придумайте пароль', widget=forms.TextInput)
+    password2 = forms.CharField(label='Повторите пароль', widget=forms.TextInput)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -102,3 +102,10 @@ class loginForm(forms.Form):
         if user is None:
             raise ValidationError("Неверный логин или пароль")
         return cleaned_data
+    
+class chatBotForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ""
+        
+    chat_id = forms.IntegerField(label='Введите ID чата (набор цифр)')

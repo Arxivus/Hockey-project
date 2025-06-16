@@ -17,7 +17,7 @@ body {
     background-position: center;
 }
 
-.login-form-block {
+.login-form-block, .password-block {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -38,7 +38,8 @@ body {
     align-self: center;
 }
 
-.login-form-elements {
+.login-form-elements,
+.password-instructions {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -48,16 +49,21 @@ body {
     color: #fd0101;
 }
 
+.hightlight {
+    color: #f00;
+}
+
 .form-btn,
-.login-form-title, 
+.login-form-title,
+.password-card, 
 a, 
 label {
     margin-bottom: 0;
-    color: #fff;
+    color: #FFFFFF;
 }
 
 .form-btn:hover {
-    border: 2px solid #fff;
+    border: 2px solid #FFFFFF;
     transition: color 0.2s ease-in-out;
 }
 
@@ -73,10 +79,10 @@ label {
     padding-left: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #D9D9D9;
+    background-color: #FFFFFF;
 }
 
-.login-form-box { 
+.login-form-box, .password-card { 
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -86,7 +92,7 @@ label {
     border-radius: 36px; 
 }
 
-.login-form {
+.login-form, .password-card-elems {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,12 +120,23 @@ a:hover {
     font-size: 20px;
 }
 
+/**/ 
+.password-card-elems p {
+    text-indent: 20px;
+    font-size: 20px;
+}
+
+.password-instructions {
+    gap: 30px;
+}
+
+
 @media (max-width: 392px) {
-    .login-form-box {
+    .login-form-box, .password-card {
         padding: 20px 15px;
     }
 
-    .login-form-box {
+    .login-form-box, .password-card {
         width: 330px;
     }
 

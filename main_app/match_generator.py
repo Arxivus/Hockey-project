@@ -1,6 +1,6 @@
 import math
 from itertools import combinations, product
-from .models import TournamentGroup, Competitor, Tournament, Micromatch, uuid
+from .models import TournamentGroup, Competitor, Micromatch, uuid
 from .players_functions import splitByRole, updatePlayersMatrix, isEnoughInGroup, addMinutes
 
 
@@ -230,13 +230,13 @@ def getMatchObject(id, group_id, match_time, field_num, team1, team2, pl_in_team
         'players_ids' : players_ids,
                     
         'team1_players' : {
-            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team1_df],
-            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team1_fw]
+            'Защитники': [{'id': d['player_id'], 'name': d['name'], 'rate': d['rating']} for d in team1_df],
+            'Нападающие': [{'id': f['player_id'],'name': f['name'], 'rate': f['rating']} for f in team1_fw]
         },
 
         'team2_players' : {
-            'Защитники': [{'name': d['name'], 'rate': d['rating']} for d in team2_df],
-            'Нападающие': [{'name': f['name'], 'rate': f['rating']} for f in team2_fw]
+            'Защитники': [{'id': d['player_id'], 'name': d['name'], 'rate': d['rating']} for d in team2_df],
+            'Нападающие': [{'id': f['player_id'], 'name': f['name'], 'rate': f['rating']} for f in team2_fw]
         },
 
         'team1_score' : 0,
@@ -244,7 +244,7 @@ def getMatchObject(id, group_id, match_time, field_num, team1, team2, pl_in_team
     }
 
     if pl_in_team != 4:
-        match['team1_players']['Вратарь'] = [{'name': g['name'], 'rate': g['rating']} for g in team1_gk]
-        match['team2_players']['Вратарь'] = [{'name': g['name'], 'rate': g['rating']} for g in team2_gk]
+        match['team1_players']['Вратарь'] = [{'id': g['player_id'], 'name': g['name'], 'rate': g['rating']} for g in team1_gk]
+        match['team2_players']['Вратарь'] = [{'id': g['player_id'],'name': g['name'], 'rate': g['rating']} for g in team2_gk]
 
     return match

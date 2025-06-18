@@ -96,7 +96,7 @@ def user_profile(request):
     return render(request, 'user_profile.html', { 'profile': profile, 'user_id' : request.user.id })
 
 @login_required
-def user_edit_profile(request):
+def user_edit_profile(request):  # редактирование информации в профиле
     if request.method == 'POST':
         profile = get_object_or_404(Profile, user=request.user)
         data = json.loads(request.body)
@@ -111,7 +111,7 @@ def user_edit_profile(request):
         return JsonResponse ({'status': 'success', 'message': 'Profile saved'})
 
 
-def user_matches_view(request, user_id):
+def user_matches_view(request, user_id): # матчи отображаемые в профиле
     try:
         competitor = Competitor.objects.select_related('profile__user').get(profile__user__id=user_id)
         pl_id = competitor.player_id
@@ -138,14 +138,14 @@ def register_to_tournament(request):
         return redirect('tournaments')
     
 @login_required
-def check_register(request):
+def check_register(request): # проверка регистрации на турнир
     if isRegister(request):
         return JsonResponse({ 'status': 'success', 'value': True }) 
     else:
         return JsonResponse({ 'status': 'success', 'value': False })
 
 
-def shift_matches_view(request):
+def shift_matches_view(request): # сдвиг по времени неотыгранных матчей
     if request.method == 'POST':
         try: 
             data = json.loads(request.body)
@@ -200,8 +200,7 @@ def start_new_tour_view(request): # запуск нового турнира
                 matches_played = 0,
                 goals_scored = 0,
                 goals_taken = 0,
-                rating = F('start_rating')
-                #start_rating = F('rating')
+                start_rating = F('rating')
             )
 
             data = json.loads(request.body)
@@ -270,7 +269,7 @@ def save_match_view(request, match_id): # сохранение результа�
             match.isPlayed = True
             match.save()
 
-            team1_playersId = data['team1_playersId']
+            team1_playersId = data['team1_playersId'] 
             team2_playersId = data['team2_playersId']
 
             tournament = match.tournament
@@ -279,9 +278,6 @@ def save_match_view(request, match_id): # сохранение результа�
             updateRatings(tournament, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Матч сохранен'})
-
-        except Micromatch.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Матч не найден'}, status=404)
 
         except Exception as e:
             return JsonResponse({'status': 'error','message': str(e)}, status=500)

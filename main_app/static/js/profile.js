@@ -13,7 +13,6 @@ window.onload = async () => {
     if (matchesTable) {
         const user_id = document.querySelector('.user-avatar').dataset.userId;
         const data = await getCompetitorMatches(`/user/get-matches/${user_id}`)
-        console.log(data['matches']);
         renderTimetableMatches(data['matches'], matchesTable)
     }
     
@@ -46,7 +45,6 @@ window.onload = async () => {
         }
 
         else {
-            console.log(newEmail.checkValidity(),newPhone.checkValidity(),  newAge.checkValidity());
             const error = document.querySelector('.form-error');
             error.textContent = 'Неверный формат данных!'
         }

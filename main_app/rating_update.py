@@ -1,12 +1,9 @@
-from .models import Competitor, Profile
+from .models import Competitor
 import numpy as np
 
-# протестировать изменение рейтингов
-# добавить pool 
 
 def updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId): 
     all_match_id = list(team1_playersId) + list(team2_playersId)
-
     for id in all_match_id:
         player = Competitor.objects.get(player_id=id)
 

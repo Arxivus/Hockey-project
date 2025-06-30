@@ -30,8 +30,8 @@
     justify-content: center;
     padding: 10px;
     border-radius: 6px;
-    gap: 8px;
-    background-color: #C23636;
+    gap: 16px;
+    background-color: #000;
 }
 
 .match-info span {
@@ -51,12 +51,13 @@
     padding-right: 5px;
     padding-left: 5px;
     border: 1px solid #D9E4F2;
-    border-radius: 15px;
-    background-color: #D9E4F2;
+    border-radius: 6px;
+    background-color: #ca4f4f;
 }
 
 .team-players {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 2px;
 }

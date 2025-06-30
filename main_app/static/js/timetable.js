@@ -50,10 +50,14 @@ function getTeamBlock(team) {
         const roleName = teamRoles[i]
         const rolePlayers = team[roleName];
 
-        rolePlayers.forEach((player) => {
+        rolePlayers.forEach((player, index) => {
             const playerEl = document.createElement('p');
-            playerEl.textContent = `${player.id},`
-            playersBlock.append(playerEl)
+            if (i + index === teamRoles.length + rolePlayers.length - 2) {
+                playerEl.textContent = player.id
+            } else {
+                playerEl.textContent = `${player.id},`
+            }
+            playersBlock.append(playerEl);
         }); 
     }
     

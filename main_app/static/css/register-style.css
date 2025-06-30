@@ -123,6 +123,11 @@ label {
     color: #f00;
 }
 
+a:hover {
+    text-decoration: underline;
+    transition: text-decoration 0.4s ease-in-out;
+}
+
 /**/
 
 @media (max-width: 392px) {

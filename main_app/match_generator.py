@@ -149,7 +149,7 @@ def generateTimetable(tournament): # генерация расписания (п
     group_time_end = last_time
     group_delay = int(tournament.minutes_btwn_groups)
     match_delay = int(tournament.minutes_btwn_matches)
-    field_num = 1
+    field_num = 2
     i = 0
 
     for group_id in groups_ids:
@@ -165,21 +165,22 @@ def generateTimetable(tournament): # генерация расписания (п
         group_time_end = addMinutes(last_time, ((matches_count * 2) + (matches_count * match_delay))) 
         
         for _ in range(matches_count):
-            last_time = addMinutes(last_time, 1 + match_delay)
+            
+            
+            if group_id == 1 or group_id == 2: # младшие играют 2 матча на 1-ом поле
+                if i % 2 == 0:
+                    field_num = 1 if field_num == 2 else 2
+                    last_time = addMinutes(last_time, 1 + match_delay)
+            else:
+                field_num = 1 if field_num == 2 else 2
+                last_time = addMinutes(last_time, 1 + match_delay)
+            i += 1
             match_time = last_time
             
             teams, pl_in_team = prepareTeams(group)
             match = getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team)
             timetable_matches.append(match)
-            
-            i += 1
-            if group_id == 1 or group_id == 2: # младшие играют 2 матча на 1-ом поле
-                if i % 2 == 0:
-                    field_num = 1 if field_num == 2 else 2
-            else:
-                field_num = 1 if field_num == 2 else 2
-            
-           
+             
         last_time = addMinutes(group_time_end, group_delay) 
         field_num = 1
         i = 0

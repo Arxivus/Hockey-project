@@ -33,6 +33,7 @@
                     <p>Возраст: <b>{{ profile.age }}</b></p>
                     <p>Уровень подготовки: <b>{{ profile.category }}</b></p>
                     <p>Рейтинг игрока: <b>{{ profile.rating }}</b></p>
+                    <p>ID игрока: <b><ins>{{ comp_id }}</ins></b></p>
                 </div>
                 <a class="profile-edit">Редактировать профиль</a>
                 <a class="bot" href="{% url 'get_chatID' user.id  %}">БОТ</a>

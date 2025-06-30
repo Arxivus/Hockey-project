@@ -93,7 +93,15 @@ def get_user_permissions(request):
 @login_required
 def user_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'user_profile.html', { 'profile': profile, 'user_id' : request.user.id })
+    try:
+        if profile:
+            competitor = Competitor.objects.get(profile=profile)
+            if competitor:
+                comp_id = competitor.player_id
+    except:
+        comp_id = 'Сейчас вы не участвуете в турнире'
+        
+    return render(request, 'user_profile.html', { 'profile': profile, 'user_id' : request.user.id, 'comp_id' : comp_id })
 
 @login_required
 def user_edit_profile(request):  # редактирование информации в профиле

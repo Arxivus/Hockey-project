@@ -64,7 +64,7 @@ function createTeamRoleEl(roleName, rolePlayers) {
 
     rolePlayers.forEach((player) => {
         const playerEl = document.createElement('p');
-        playerEl.textContent = `${player.name}, ${player.rate}`
+        playerEl.textContent = `${player.name}`
         playersBlock.append(playerEl)
     }); 
     
@@ -121,11 +121,6 @@ async function getMatchCard(matchesTable, team1Card, team2Card, group_id, matchT
 
     const matchSaveBlock = document.createElement('div');
     matchSaveBlock.classList.add('match-save')
-
-    /* const VS = document.createElement('img');
-    VS.classList.add('vs-img')
-    VS.setAttribute('src', '/static/images/vs.png')
-    matchSaveBlock.append(VS) */
 
     const perms = await getPermissions('/tournaments/check-permissions/')
     

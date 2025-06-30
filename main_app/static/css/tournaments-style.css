@@ -327,8 +327,11 @@ select:focus-visible {
     }
 
     .shift-time {
+        margin-bottom: 20px;
+    }
+
+    .shift-time, .tour-generation {
         flex-direction: column;
-        margin-top: 30px;
     }
 
     .match-card {

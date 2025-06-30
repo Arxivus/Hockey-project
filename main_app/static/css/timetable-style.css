@@ -5,64 +5,97 @@
     gap: 10px;
 }
 
-.filter-groups h4 {
+.filter-groups h4, h5 {
     margin-bottom: 5px;
 }
 
 .timetable-matches {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 30px;
 }
 
 .match-card {
     display: flex;
-    width: 550px;
-    gap: 10px;
+    flex-direction: column;
+    width: 300px;
     border-radius: 6px;
     background-color: #F0F0F0;
 }
 
 .match-info {
+    width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 18px;
+    padding: 10px;
     border-radius: 6px;
-    gap: 15px;
+    gap: 8px;
     background-color: #C23636;
 }
 
 .match-info span {
     color: #FFF;
-    font-size: 24px;
+    font-size: 22px;
+    text-align: center;
 }
 
 .teams-block {
     display: flex;
-    justify-content: space-between;
-    padding: 18px;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
 }
 
-.team-block {
-    width: 170px;
+.team-block:first-child {
+    padding-right: 5px;
+    padding-left: 5px;
+    border: 1px solid #D9E4F2;
+    border-radius: 15px;
+    background-color: #D9E4F2;
+}
+
+.team-players {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.team-players p {
+    max-width: max-content;
 }
 
 @media (max-width: 392px) {
+    .timetable-matches {
+        justify-content: center;
+        gap: 18px;
+    }
+
     .match-card {
-        flex-direction: column;
-        width: 350px;
+        width: 100%;
         gap: 0;
     }
 
     .match-info {
-        flex-direction: row;
-        padding: 10px;
+        width: 100%;
+        gap: 20px;
+        padding: 8px;
     }
 
     .teams-block {
-        padding: 10px;
+        flex-direction: row;
+        padding: 8px;
+    }
+
+    .match-info {
+        padding: 5px;
+    }
+
+    .match-info span {
+        font-size: 20px;
+    }
+
+    h5 {
+        font-size: 18px;
     }
 }

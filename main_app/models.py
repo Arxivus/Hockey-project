@@ -35,12 +35,12 @@ class Profile(models.Model):
     fullname = models.CharField('ФИО', max_length=200)
     email = models.CharField(max_length=100)
     mobile_phone = models.CharField('Телефон', max_length=20)
-    gender = models.CharField('Пол', choices=GENDER_TYPE)
-    age = models.IntegerField('Возраст', validators=[ MinValueValidator(6),  MaxValueValidator(80) ])
-    category = models.CharField('Уровень подготовки', choices=CATEGORY_TYPE, null=True, blank=True)
+    gender = models.CharField('Пол', choices=GENDER_TYPE, max_length=20)
+    age = models.IntegerField('Возраст', null=True) 
+    category = models.CharField('Уровень подготовки', choices=CATEGORY_TYPE, null=True, blank=True, max_length=20)
     rating = models.IntegerField('Рейтинг', null=True, default=0)
     previous_ratings = models.JSONField('Прошлые рейтинги', default=list)
-    role = models.CharField('Роль', choices=TEAM_ROLE, null=True, blank=True)
+    role = models.CharField('Роль', choices=TEAM_ROLE, null=True, blank=True, max_length=20)
     tg_chat_id = models.BigIntegerField(null=True)
     
 
@@ -59,9 +59,9 @@ class Competitor(models.Model):
     player_id = models.IntegerField('ID игрока', primary_key=True, unique=True, editable=False) 
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField('Имя', max_length=50)
-    role = models.CharField('Роль', choices=TEAM_ROLE, default='forward')
-    age = models.IntegerField('Возраст')
-    gender = models.CharField('Пол', choices=GENDER_TYPE, default='M')
+    role = models.CharField('Роль', choices=TEAM_ROLE, default='forward', max_length=20)
+    age = models.IntegerField('Возраст', null=True)
+    gender = models.CharField('Пол', choices=GENDER_TYPE, default='M', max_length=20)
 
     rating = models.IntegerField('Рейтинг', null=True)
     start_rating = models.IntegerField(null=True)
@@ -78,7 +78,7 @@ class Competitor(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"ID: {self.player_id}, {self.name}, {self.role}, {self.age}, сыграно: {self.matches_played} матчей"
+        return f"ID: {self.player_id}, {self.name}, {self.role}, {self.age}, сыграно: {self.matches_played} матчей, {self.rating}"
     
     class Meta:
         verbose_name = 'Участник'        
@@ -118,7 +118,7 @@ class TournamentGroup(models.Model):
     group_id = models.IntegerField('ID группы')
     group_age_pool = models.JSONField('Диапазон возраста', default=tuple)
     age_spread = models.IntegerField('Разброс по возрасту в матче', default=1)
-    group_gender = models.CharField('Пол участников') 
+    group_gender = models.CharField('Пол участников', max_length=20) 
     stopped_played = models.BooleanField('Закончила играть', default=False)
 
     def __str__(self):

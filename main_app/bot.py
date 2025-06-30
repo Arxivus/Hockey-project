@@ -1,15 +1,13 @@
 import telebot
-import os
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'webProject.settings')
-django.setup()
 from django.contrib.auth.models import User
 from django.db import transaction
 
 token = '7459750513:AAHV7NXVo9FPrJIzVxzshN6v7h19b8g2nug'
-
 bot = telebot.TeleBot(token)
+
+def run_bot():
+    print('done')
+    bot.polling(none_stop=True)
   
 @bot.message_handler(commands = ['start'])
 def start(message):
@@ -60,7 +58,5 @@ def get_new_password(message):
             print(e)
             bot.send_message(chat_id, 'Не удалось установить пароль. Проверьте пароль или попробуйте еще раз позже')
     
-    
-bot.polling(none_stop=True)
 
         

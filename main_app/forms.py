@@ -90,7 +90,7 @@ class loginForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.label_suffix = ""
         
-    username = forms.CharField(label='Логин', max_length=100)
+    username = forms.CharField(label='Username в telegram (без @)', max_length=100)
     password = forms.CharField(widget=forms.PasswordInput, label='Пароль', max_length=100)
     
     def clean(self):

@@ -28,19 +28,19 @@ function renderTimetableMatches(matches, matchesTable) {
         const matchTime = match['start_time'].slice(0, 5)
         const matchField = match['field_num']
         const matchGroupId = match['group_id']
-        const team1Block = getTeamBlock(match['team1_players'], 1)
-        const team2Block = getTeamBlock(match['team2_players'], 2)
+        const matchScore1 = match['team1_score']
+        const matchScore2 = match['team2_score']
+        const team1Block = getTeamBlock(match['team1_players'])
+        const team2Block = getTeamBlock(match['team2_players'])
 
-        const matchCard = getMatchCard(matchGroupId, matchTime, matchField, team1Block, team2Block)  
+        const matchCard = getMatchCard(matchGroupId, matchTime, matchField, team1Block, team2Block, matchScore1, matchScore2)  
         matchesTable.append(matchCard)
     }
 }
 
-function getTeamBlock(team, teamNum) {
+function getTeamBlock(team) {
     const teamBlock = document.createElement('div');
     teamBlock.classList.add('team-block')
-    const teamTitle = document.createElement('h5');
-    teamTitle.textContent = `Команда ${teamNum}`
 
     const playersBlock = document.createElement('div')
     playersBlock.classList.add('team-players')
@@ -52,16 +52,16 @@ function getTeamBlock(team, teamNum) {
 
         rolePlayers.forEach((player) => {
             const playerEl = document.createElement('p');
-            playerEl.textContent = `${player.name}`
+            playerEl.textContent = `${player.id},`
             playersBlock.append(playerEl)
         }); 
     }
     
-    teamBlock.append(teamTitle, playersBlock)
+    teamBlock.append(playersBlock)
     return teamBlock
 }
 
-function getMatchCard(matchGroupId, matchTime, fieldNum, team1Block, team2Block) {
+function getMatchCard(matchGroupId, matchTime, fieldNum, team1Block, team2Block,  matchScore1, matchScore2) {
     const matchCard = document.createElement('div');
     matchCard.setAttribute('data-group', matchGroupId)
     matchCard.classList.add('match-card')
@@ -72,8 +72,10 @@ function getMatchCard(matchGroupId, matchTime, fieldNum, team1Block, team2Block)
     time.textContent = matchTime
     const field = document.createElement('span');
     field.textContent = `Поле №${fieldNum}`
-    matchInfo.append(time, field)
-
+    const score = document.createElement('span');
+    score.textContent = `${matchScore1}:${matchScore2}`
+    matchInfo.append(time, field, score)
+    
     const teamsBlock = document.createElement('div');
     teamsBlock.classList.add('teams-block')
     teamsBlock.append(team1Block, team2Block) 

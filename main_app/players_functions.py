@@ -31,6 +31,10 @@ def addMinutes(time, minutes):
 @login_required
 def addToCompetitors(request):
     profile = Profile.objects.get(user=request.user)
+    
+    if profile.role == 'coach' or profile.role == 'referee':
+        return
+    
     fullname = profile.fullname
     split_name = fullname.split()
     fs_name = split_name[0]

@@ -208,6 +208,7 @@ def start_new_tour_view(request): # запуск нового турнира
                 matches_played = 0,
                 goals_scored = 0,
                 goals_taken = 0,
+                
                 start_rating = F('rating')
             )
 
@@ -232,7 +233,7 @@ def start_new_tour_view(request): # запуск нового турнира
             )
 
             generateGroups(tournament, current_age_groups)
-            players = Competitor.objects.all()
+            players = Competitor.objects.filter(banned=False)
             splitIntoGroups(players, age_groups)
 
             matches = generateTimetable(tournament)
@@ -254,8 +255,7 @@ def get_next_match_view(request, group_id): # получение следующ�
             
             match_time, field_num = getCreationMatchInfo(tournament, group_id)
             matchContainer.append(getSavedMatch(tournament, group_id, match_time, field_num, teams, pl_in_team))
-            
-            return JsonResponse({'status': 'success', 'message': 'Матч сгенерирован', 'matches': matchContainer})
+            return JsonResponse({'status': 'success', 'matches': matchContainer})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
@@ -281,9 +281,7 @@ def save_match_view(request, match_id): # сохранение результа�
             team2_playersId = data['team2_playersId']
 
             tournament = match.tournament
-
-            updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId)
-            updateRatings(tournament, team1_playersId, team2_playersId)
+            updatMatchPlayersScore(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId)
 
             return JsonResponse({'status': 'success', 'message': 'Матч сохранен'})
 

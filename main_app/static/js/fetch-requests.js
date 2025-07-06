@@ -52,9 +52,8 @@ function getNextMatch(matchesTable, url) {
 }
 
 
-function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId) {
-    fetch(`/tournaments/save-match/${matchId}/`, 
-        {
+function saveMatchScore(url, score1, score2, team1_playersId, team2_playersId) {
+    return fetch(url, {
             method: 'POST',
             headers: { 'X-CSRFToken': csrftoken },
             body: JSON.stringify({ 
@@ -63,10 +62,10 @@ function saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersI
                 team1_playersId: team1_playersId,
                 team2_playersId: team2_playersId
             })
-        })
-        .then(response => response.json())
-        .then(data => console.log(data['message']))
-        .catch(error => console.error('Ошибка сохранения:', error))
+    })
+    .then(response => response.json())
+    .then(data => console.log(data['message']))
+    .catch(error => console.error('Ошибка сохранения:', error))
 } 
 
 async function getTimetableMatches(url) { 

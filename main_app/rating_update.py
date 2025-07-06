@@ -2,7 +2,7 @@ from .models import Competitor
 import numpy as np
 
 
-def updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_playersId): 
+def updatMatchPlayersScore(tournament, diff_score1, diff_score2, team1_playersId, team2_playersId): 
     all_match_id = list(team1_playersId) + list(team2_playersId)
     for id in all_match_id:
         player = Competitor.objects.get(player_id=id)
@@ -16,6 +16,8 @@ def updatMatchPlayersScore(diff_score1, diff_score2, team1_playersId, team2_play
             player.goals_taken += diff_score1
 
         player.save()
+    
+    updateRatings(tournament, team1_playersId, team2_playersId)
 
 # -------------------------------------------------------------------------------------------
 
@@ -39,12 +41,11 @@ def changeRatingValue(players_pool_id, match_players_id, new_ratings):
 
 
 def getNewRatings(A, B, pl_count, players_pool_id):
-    lambda_reg = 1                              # параметр регуляризации
     current_ratings = np.array([Competitor.objects.get(player_id=id).rating for id in players_pool_id])
-    A_reg = np.identity(pl_count) * lambda_reg  # добавляем lambda * ||x||^2
-    B_reg = current_ratings * lambda_reg        # обеспечение небольшого разброса с прошлым рейтингом
+    A_reg = np.identity(pl_count)  # создает единичную матрицу
+    B_reg = current_ratings # обеспечение небольшого разброса с прошлым рейтингом
 
-    A_full = np.vstack([A, A_reg])              # объединение
+    A_full = np.vstack([A, A_reg])              # добавление к исходным матрицам уравнений
     B_full = np.hstack([B, B_reg])
 
     return np.linalg.lstsq(A_full, B_full, rcond=None)[0]
@@ -58,11 +59,11 @@ def getSumRatings(players_pool):
 
 
 def addEquationInSystem(matches_played_matrix, player, match_players_id, A_matrix, B_matrix, pos, players_pool):
-    delta_coeff = 200
+    delta_coeff = 300
     scored = player.goals_scored
     taken = player.goals_taken
-    if scored + taken == 0 or player.matches_played == 0:
-        return
+    if scored + taken == 0: 
+        scored, taken = 0.01, 0.01
 
     delta = delta_coeff * (scored - taken) / (scored + taken) # правая часть уравнения
 
@@ -71,8 +72,8 @@ def addEquationInSystem(matches_played_matrix, player, match_players_id, A_matri
     for id in players_pool:
         matches_with = matches_played_matrix[player.player_id][id][0] 
         matches_against = matches_played_matrix[player.player_id][id][1]
-        coeff = 1 / (player.matches_played * pl_in_team)
-
+        coeff = 1 / (player.matches_played * pl_in_team) 
+        
         A_matrix[pos][i] = coeff * matches_with - coeff * matches_against
         i += 1
     B_matrix[pos] = delta
@@ -102,5 +103,5 @@ def updateRatings(tournament, team1_playersId, team2_playersId):
 
     new_ratings = getNewRatings(coeff_matrix, res_matrix, pl_count, players_pool_id) # новые рейтинги всех игроков матча
     rounded_ratings = [round(i) for i in new_ratings]
-
+    print(rounded_ratings)
     changeRatingValue(players_pool_id, match_players_id, rounded_ratings)

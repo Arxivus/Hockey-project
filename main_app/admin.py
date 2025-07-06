@@ -25,7 +25,8 @@ class MicromatchAdmin(admin.ModelAdmin):
     ordering = ('start_time',)
     
 class ProfileAdmin(admin.ModelAdmin):
-    search_fields = ('fullname',)
+    search_fields = ('fullname', )
+    list_filter = ('role', )
 
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Competitor, CompetitorAdmin)

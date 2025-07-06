@@ -82,7 +82,7 @@ class profileForm(forms.ModelForm):
             "gender": "Пол",
             "age": "Возраст",
             "category": "Разряд", 
-            "role": "Роль игрока"
+            "role": "Роль"
         } 
 
 class loginForm(forms.Form):

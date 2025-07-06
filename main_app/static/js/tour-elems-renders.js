@@ -51,7 +51,7 @@ async function renderMatches(matches, matchesTable) {
         }   
     }
 
-    console.log('Матчи успешно загружены');
+    console.log('Матчи загружены');
 }
 
 function createTeamRoleEl(roleName, rolePlayers) {
@@ -135,8 +135,9 @@ async function getMatchCard(matchesTable, team1Card, team2Card, group_id, matchT
             const score1 = currentCard.querySelector('.team1-score-input').value
             const score2 = currentCard.querySelector('.team2-score-input').value
 
-            saveMatchScore(matchId, score1, score2, team1_playersId, team2_playersId);
-            getNextMatch(matchesTable, `/tournaments/get-next-match/${group_id}`)
+            saveMatchScore(`/tournaments/save-match/${matchId}/`, score1, score2, team1_playersId, team2_playersId)
+                .then(() => getNextMatch(matchesTable, `/tournaments/get-next-match/${group_id}`))
+           
             currentCard.style.display = 'none'
         }
     )}

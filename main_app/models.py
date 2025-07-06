@@ -13,7 +13,9 @@ GENDER_TYPE = (
 TEAM_ROLE = (
     ('forward','нападающий'),
     ('defender', 'защитник'),
-    ('goalkeeper','вратарь')
+    ('goalkeeper','вратарь'),
+    ('referee','судья'),
+    ('coach','тренер'),
 )
 
 CATEGORY_TYPE = (
@@ -52,7 +54,7 @@ class Profile(models.Model):
         ]
 
     def __str__(self):
-        return self.fullname
+        return f'{self.fullname} / {self.role}' 
 
 
 class Competitor(models.Model):
